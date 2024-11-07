@@ -1,0 +1,28 @@
+.navbar {
+    top: 0;
+    left: 0;
+    width: 100%;
+    position: fixed;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #acc3af;
+}
+
+.logo img {
+    border-radius: 10px;
+    background: #acc3af;
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.nav-buttons {
+    display: flex;
+}
+
+.navbutton {
+    background-color: #ddd0b2;
+    white-space: nowrap;
+    margin-right: 10px;
+}
