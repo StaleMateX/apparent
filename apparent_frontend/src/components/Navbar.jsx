@@ -1,20 +1,19 @@
-import { Link } from "react-router-dom"
+import { NavLink } from "react-router-dom"
 import "./Navbar.css"
 import logo from "../logo.png"
 
 export function Navbar() {
-    return(
+    return (
         <div className="navbar">
-            <div className="logo"><img src={logo}/></div>
+            <div className="logo"><img src={logo} alt="logo" /></div>
             <div className="navbuttons">
-            <Link to="/"><button className="navbutton">Home</button></Link>
-            <Link to="/Profile"><button className="navbutton">Profile</button></Link>
-            <Link to="/About"><button className="navbutton">About</button></Link>
-            <Link to="/Contact"><button className="navbutton">Contact</button></Link>
-            <Link to="/CareMap"><button className="navbutton">Map</button></Link>
+                <NavLink to="/" className="navbutton" activeClassName="active">Home</NavLink>
+                <NavLink to="/Profile" className="navbutton" activeClassName="active">Profile</NavLink>
+                <NavLink to="/About" className="navbutton" activeClassName="active">About</NavLink>
+                <NavLink to="/Contact" className="navbutton" activeClassName="active">Contact</NavLink>
+                <NavLink to="/CareMap" className="navbutton" activeClassName="active">Map</NavLink>
+                <NavLink to="/Forum" className="navbutton" activeClassName="active">Forum</NavLink>
             </div>
-
         </div>
-
     )
 }
