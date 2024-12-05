@@ -4,7 +4,8 @@ import './Forum.css';
 
 export function Forum() {
     const [posts, setPosts] = useState([]);
-    const [newPost, setNewPost] = useState('');
+    const [newPostTitle, setNewPostTitle] = useState('');
+    const [newPostContent, setNewPostContent] = useState('');
 
     // Fetch posts when the component loads
     useEffect(() => {
@@ -26,11 +27,12 @@ export function Forum() {
             const response = await fetch('http://127.0.0.1:8000/api/forum/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ content: newPost }),
+                body: JSON.stringify({ title: newPostTitle, content: newPostContent }),
             });
             const post = await response.json();
             setPosts([...posts, post]);
-            setNewPost('');
+            setNewPostTitle('');
+            setNewPostContent('');
         } catch (error) {
             console.error('Error creating post:', error);
         }
@@ -51,10 +53,16 @@ export function Forum() {
         <div className="forum-container">
             <h1>Forum</h1>
             <div>
+                <input
+                    type="text"
+                    value={newPostTitle}
+                    onChange={(e) => setNewPostTitle(e.target.value)}
+                    placeholder="Post Title"
+                />
                 <textarea
-                    value={newPost}
-                    onChange={(e) => setNewPost(e.target.value)}
-                    placeholder="Write a new post"
+                    value={newPostContent}
+                    onChange={(e) => setNewPostContent(e.target.value)}
+                    placeholder="Write your content here..."
                 />
                 <button onClick={handleSubmit}>Submit</button>
             </div>
@@ -64,7 +72,10 @@ export function Forum() {
                 <ul>
                     {posts.map((post) => (
                         <li key={post.id} className="post-item">
-                            <span>{post.content}</span>
+                            <div>
+                                <strong>{post.title}</strong>
+                                <p>{post.content}</p>
+                            </div>
                             <button
                                 className="delete-button"
                                 onClick={() => handleDelete(post.id)}

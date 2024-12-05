@@ -41,6 +41,17 @@ button:hover {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-direction: column;
+}
+
+.post-item strong {
+    font-size: 16px;
+    color: #333;
+}
+
+.post-item p {
+    margin: 5px 0;
+    color: #555;
 }
 
 .delete-button {
