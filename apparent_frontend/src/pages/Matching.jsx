@@ -1,8 +1,9 @@
-class NumericalMatchingParameter {
-    constructor(min, max) {
-        this.min = min;
-        this.max = max;
+function MatchPercentage(arg, target, min, max) {
+    if (arg < min || max < arg) {
+        return 0;
     }
+
+    return 1 - Math.abs(target - arg) / Math.abs(target);
 }
 
 export function Matching() {
