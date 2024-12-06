@@ -25,4 +25,6 @@ router.register(r'forum', PostViewSet)
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(router.urls)),  # Includes all API routes
+    path('register/', include('register.urls')),
+    path('login/', include('login.urls')), 
 ]
