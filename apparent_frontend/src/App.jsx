@@ -7,6 +7,7 @@ import { Home } from './pages/Home'
 import { Map } from './pages/Map'
 import { UserProfile } from './pages/UserProfile'
 import { Forum } from './pages/Forum'
+import { Matching } from './pages/Matching'
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/Profile" element={<UserProfile/>}/>
           <Route path="/CareMap" element={<Map/>}/>
           <Route path="/Forum" element={<Forum/>}/>
+          <Route path="/Matching" element={<Matching/>}/>
         </Route>
       </Routes>
     </Router>
