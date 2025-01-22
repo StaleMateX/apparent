@@ -17,6 +17,7 @@ dist/
 
 # Environment variables
 .env
+venv/
 
 # IDE specific files
 .vscode/
