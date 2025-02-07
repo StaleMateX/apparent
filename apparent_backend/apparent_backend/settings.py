@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',  # For Django REST Framework
     'corsheaders',     # For handling CORS
     'forum',           # Forum
+    'pins',            # Map Pins
 ]
 
 MIDDLEWARE = [
@@ -138,3 +139,12 @@ CORS_ALLOW_METHODS = [
     "DELETE",
     "OPTIONS",
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
+
+# Allow users to register with unique email and username
+AUTH_USER_MODEL = 'auth.User'

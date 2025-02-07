@@ -1,0 +1,27 @@
+.about-container {
+    max-width: 800px;
+    margin: 150px auto;
+    padding: 20px;
+    background-color: #2d2d2d;
+    color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.about-container h1, .about-container h2, .about-container h3 {
+    color: #4CAF50;
+    margin-bottom: 15px;
+}
+
+.about-container p {
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.about-container ul {
+    margin: 10px 0 20px 20px;
+}
+
+.about-container li {
+    margin-bottom: 10px;
+}

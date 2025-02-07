@@ -1,0 +1,46 @@
+/* This root code is in Reset.css fails DRY */
+:root {
+  --bg-color-primary-light: #854db2ff;
+  --bg-color-secondary-light: #e4e2f3ff;
+  --bg-color-primary-dark: #35281dff;
+ }
+
+.bg-color-light{
+  background-color: var(--bg-color-secondary-light);
+}
+
+.picture-container {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 2;
+}
+
+.profile-picture {
+  min-height: 15rem;
+  min-width: 15rem;
+}
+
+.info-container {
+  display: flex;
+  flex-direction: column;
+  justify-content:space-around;
+  flex-grow: 1;
+}
+
+.centered-label {
+  display: flex;
+  flex-direction:row;
+  align-items: center;
+  justify-content: center;
+}
+
+.hide-scrollbar {
+  /* Hide scrollbar for Chrome, Safari, and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.about-me-form{
+  width: 150%;
+}

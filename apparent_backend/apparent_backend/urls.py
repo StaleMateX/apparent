@@ -17,12 +17,30 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from forum.views import PostViewSet
+from forum.views import PostViewSet, CommentViewSet  # Import CommentViewSet
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 
 router = DefaultRouter()
 router.register(r'forum', PostViewSet)
+router.register(r'forum', PostViewSet, basename='forum')  # Posts API
+router.register(r'comments', CommentViewSet, basename='comments')  # Comments API
 
 urlpatterns = [
+    # Admin routes
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),  # Includes all API routes
+
+    # API routes
+    path('api/', include(router.urls)),  # Includes routes for PostViewSet and CommentViewSet
+
+    # User management routes
+    path('register/', include('register.urls')),  # Custom registration API
+    path('login/', include('login.urls')),  # Custom login API
+
+    # JWT authentication routes
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    # Map Pins routes
+    path('api/pins/', include('pins.urls')),
 ]

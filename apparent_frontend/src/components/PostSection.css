@@ -1,0 +1,20 @@
+/* This Root code is in UserProfileInfo.css fails DRY */
+
+:root {
+    --bg-color-primary-light: #854db2ff;
+    --bg-color-secondary-light: #e4e2f3ff;
+    --bg-color-primary-dark: #35281dff;
+   }
+
+.custom-button-toolbar{
+    background-color: gainsboro;
+}
+
+.custom-button-group {
+    flex-grow: 1;
+}
+
+  .custom-button{
+    background-color: var(--bg-color-primary-light);
+    border: none;
+  }
