@@ -9,10 +9,13 @@ export function PostSection() {
   return (
     <>
       <ButtonToolbar
-        className="custom-button-toolbar"
+        className="custom-button-toolbar mb-3"
         aria-label="Toolbar with a button group"
       >
-        <ButtonGroup className="custom-button-group me-3" aria-label="First group">
+        <ButtonGroup
+          className="custom-button-group me-3"
+          aria-label="First group"
+        >
           <Button className="custom-button">Profile Feed</Button>
           <Button className="custom-button">Your Posts</Button>
           <Button className="custom-button">Favorites</Button>
