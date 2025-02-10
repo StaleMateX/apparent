@@ -1,9 +1,8 @@
 .home-container {
     text-align: center;
     padding: 100px;
-    font-family: Arial, sans-serif;
-    color: #fff;
-    background-color: #121212; /* Dark background */
+    font-family: inherit;
+    color:darkslategray;
     min-height: 100vh; /* Ensures full-page height */
     display: flex;
     flex-direction: column;
@@ -27,7 +26,6 @@
     max-width: 600px;
     text-align: left;
     line-height: 1.6;
-    background-color: #1e1e1e; /* Slightly lighter dark background */
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
