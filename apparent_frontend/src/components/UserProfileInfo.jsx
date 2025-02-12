@@ -6,11 +6,24 @@ import { ProfilePicture } from "../components/ProfilePicture";
 // The top portion of the profile page with user info. Write permissions for user/readonly permissions for friends' profile pages.
 export function UserProfileInfo() {
   return (
+    <>
     <Stack direction="horizontal" gap={3}>
       <div className="picture-container mt-2">
         {/* <ProfilePicture firstName="Johnny" lastName="Cash"/> */}
         <ProfilePicture className="profile-picture" />
-        <Form className="d-flex centered-label">
+        <p className="first-last-name"><strong>Brandi Keylor</strong></p>
+      </div>
+      <div className="p-2 info-container">
+        <p className="info-text">CollegeName</p>
+        <p className="info-text">City, State</p>
+        <p className="info-text">Passed Backgroud: True/False/In progress</p>
+      </div>
+      <div className="p-2 info-container">
+        <p className="info-text">Hobbies: ...</p>
+        <p className="info-text">Children: 4 yrs, 1 yr, Baby on the way</p>
+      </div>
+    </Stack>
+    <Form className="d-flex centered-label">
           <Form.Group controlId="exampleForm.ControlTextarea1">
             <Form.Label className="centered-label pt-2">About Me</Form.Label>
             <Form.Control
@@ -20,17 +33,6 @@ export function UserProfileInfo() {
             />
           </Form.Group>
         </Form>
-      </div>
-      <div className="p-2 info-container">
-        <p>FirstName LastName</p>
-        <p>CollegeName</p>
-        <p>City, State</p>
-        <p>Passed Backgroud: True/False/In progress</p>
-      </div>
-      <div className="p-2 info-container">
-        <p>Hobbies: ...</p>
-        <p>Children: 4 yrs, 1 yr, Baby on the way</p>
-      </div>
-    </Stack>
+    </>
   );
 }

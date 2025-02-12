@@ -1,19 +1,18 @@
 .about-container {
     max-width: 800px;
-    margin: 150px auto;
+    margin: 2rem auto;
     padding: 20px;
-    color: #ffffff;
+    color: inherit;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .about-container h1, .about-container h2, .about-container h3 {
-    color: #4CAF50;
+    color: var(--bg-color-primary-light);
     margin-bottom: 15px;
 }
 
 .about-container p {
-    line-height: 1.6;
+    line-height: inherit;
     margin-bottom: 20px;
 }
 

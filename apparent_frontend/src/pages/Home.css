@@ -2,7 +2,6 @@
     text-align: center;
     padding: 100px;
     font-family: inherit;
-    color:darkslategray;
     min-height: 100vh; /* Ensures full-page height */
     display: flex;
     flex-direction: column;
@@ -12,6 +11,7 @@
 
 .welcome-text {
     font-size: 2.5rem;
+    color: var(--bg-color-primary-light);
     margin-bottom: 20px;
 }
 
@@ -47,16 +47,20 @@
 }
 
 .login-button {
-    background-color: #4824d8;
+    background-color: var(--bg-color-primary-light);
     color: #fff;
     padding: 10px 20px;
     font-size: 1rem;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-left: 10px; /* Adds spacing between text and button */
+    margin: 10px 5px 5px; /* Adds spacing between text and button */
 }
 
 .login-button:hover {
     background-color: #3216a0;
+}
+
+.brand-color-light{
+    color: var(--bg-color-primary-light);
 }

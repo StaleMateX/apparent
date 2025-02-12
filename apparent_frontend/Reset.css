@@ -26,3 +26,15 @@ main {
     align-items: center;
     background-color: var(--bg-color-secondary-light);
 }
+
+h1, h2, h3 {
+    color: var(--bg-color-primary-light);
+}
+
+.red-pin {
+    color: red;
+}
+
+.blue-pin {
+     color: blue;
+}
