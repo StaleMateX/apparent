@@ -38,3 +38,7 @@
   .icons {
     height: 1.5rem;
   }
+
+  .dropdown-menu {
+    min-width: auto;
+  }

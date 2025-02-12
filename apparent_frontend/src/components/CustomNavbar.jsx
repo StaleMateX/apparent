@@ -112,7 +112,13 @@ export function CustomNavbar() {
                 aria-label="Search"
               />
             </Form>
-            <Nav className="ms-auto">
+            <Nav.Link className="me-5 ms-auto" href="#/CareMap">
+              <FontAwesomeIcon className="icons" icon={faMapLocationDot} />
+            </Nav.Link>
+            <Nav.Link className="me-5" href="#/Forum">
+              <FontAwesomeIcon className="icons" icon={faBullhorn} />
+            </Nav.Link>
+            <Nav className="me-5">
               <NavDropdown
                 className="me-5"
                 title={<FontAwesomeIcon className="icons" icon={faUser} />}
@@ -122,16 +128,10 @@ export function CustomNavbar() {
                 <NavDropdown.Item href="#/About">About</NavDropdown.Item>
                 <NavDropdown.Item href="#/Contact">Contact Us</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="#/login">Login</NavDropdown.Item>
-                <NavDropdown.Item href="#/register">Register</NavDropdown.Item>
+                <NavDropdown.Item href="#/login">Logout</NavDropdown.Item>{" "}
+                {/* todo: handleLogout */}
               </NavDropdown>
             </Nav>
-            <Nav.Link className="me-5" href="#/CareMap">
-              <FontAwesomeIcon className="icons" icon={faMapLocationDot} />
-            </Nav.Link>
-            <Nav.Link className="me-5" href="#/Forum">
-              <FontAwesomeIcon className="icons" icon={faBullhorn} />
-            </Nav.Link>
           </Container>
         </Navbar>
       ))}
