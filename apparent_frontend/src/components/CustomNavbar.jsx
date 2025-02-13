@@ -26,7 +26,7 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Offcanvas from "react-bootstrap/Offcanvas";
 
-export function CustomNavbar() {
+export function CustomNavbar({ onLogout }) {
   return (
     <>
       {/* false, 'sm', 'md', 'lg', 'xl', 'xxl' dynamically input one of these based on browser window size*/}
@@ -128,7 +128,9 @@ export function CustomNavbar() {
                 <NavDropdown.Item href="#/About">About</NavDropdown.Item>
                 <NavDropdown.Item href="#/Contact">Contact Us</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item href="#/login">Logout</NavDropdown.Item>{" "}
+                <NavDropdown.Item onClick={() => onLogout()} href="#/login">
+                  Logout
+                </NavDropdown.Item>{" "}
                 {/* todo: handleLogout */}
               </NavDropdown>
             </Nav>
