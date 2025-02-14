@@ -1,0 +1,10 @@
+main {
+    max-width: 55rem;
+    min-height: 50rem;
+    margin-inline: auto;
+    border: 1px solid black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-color-secondary-light);
+}

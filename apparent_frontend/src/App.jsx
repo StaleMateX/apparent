@@ -8,7 +8,7 @@ import { ProfilePage } from "./pages/ProfilePage";
 import { Forum } from "./pages/Forum";
 import { Matching } from "./pages/Matching";
 import { Messages } from "./pages/Messages";
-import { Login } from "./pages/Login";
+import { LoginPage } from "./pages/LoginPage";
 import { Register } from "./pages/Register";
 import { useState } from "react";
 import { PrivateLayout } from "./components/Layouts/PrivateLayout";
@@ -30,8 +30,8 @@ function App() {
       <Routes>
         {/* Public Routes */}
         <Route element={<PublicLayout />}>
-          <Route path="/" element={<Login onLogin={handleLogin} />} />
-          <Route path="/login" element={<Login onLogin={handleLogin} />} />
+          <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
+          <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
           <Route path="/register" element={<Register />} />
           <Route path="/home" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
@@ -40,10 +40,14 @@ function App() {
 
         {/* Private Routes */}
         <Route element={<PrivateLayout onLogout={handleLogout} />}>
-          <Route element={<PrivateRoutes isLoggedIn={isLoggedIn} />}>
-            <Route path="/home" element={<Home />} />
+          <Route
+            element={
+              <PrivateRoutes onLogin={setIsLoggedIn} isLoggedIn={isLoggedIn} />
+            }
+          >
+            {/* <Route path="/home" element={<Home />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/about" element={<About />} />
+            <Route path="/about" element={<About />} /> */}
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/caremap" element={<Map />} />
             <Route path="/forum" element={<Forum />} />
