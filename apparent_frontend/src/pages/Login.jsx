@@ -17,7 +17,7 @@ export function Login({ onLogin }) {
     if (response.ok) {
       localStorage.setItem("token", data.access); // Save token for authenticated requests
       onLogin(); // Trigger login state update
-      navigate("/"); // Redirect to home
+      navigate("/Profile"); // Redirect to home
     } else {
       alert("Invalid credentials"); // Handle error response
     }

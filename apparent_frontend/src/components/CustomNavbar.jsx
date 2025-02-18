@@ -128,10 +128,9 @@ export function CustomNavbar({ onLogout }) {
                 <NavDropdown.Item href="#/About">About</NavDropdown.Item>
                 <NavDropdown.Item href="#/Contact">Contact Us</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item onClick={() => onLogout()} href="#/login">
+                <NavDropdown.Item onClick={() => onLogout()} href="/">
                   Logout
-                </NavDropdown.Item>{" "}
-                {/* todo: handleLogout */}
+                </NavDropdown.Item>
               </NavDropdown>
             </Nav>
           </Container>
