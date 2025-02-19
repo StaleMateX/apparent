@@ -128,7 +128,7 @@ export function CustomNavbar({ onLogout }) {
                 <NavDropdown.Item href="#/About">About</NavDropdown.Item>
                 <NavDropdown.Item href="#/Contact">Contact Us</NavDropdown.Item>
                 <NavDropdown.Divider />
-                <NavDropdown.Item onClick={() => onLogout()} href="/">
+                <NavDropdown.Item onClick={onLogout} href="#/login">
                   Logout
                 </NavDropdown.Item>
               </NavDropdown>

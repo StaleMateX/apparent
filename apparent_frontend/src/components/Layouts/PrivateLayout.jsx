@@ -8,7 +8,7 @@ export function PrivateLayout({ onLogout }) {
       {/* main is good for inspecting the dom
 Outlet acts as a dynamic componenet that will render a bunch of child routes. */}
       <CustomNavbar onLogout={onLogout} />
-      <main>
+      <main className="private-layout">
         <Outlet />
       </main>
     </>
