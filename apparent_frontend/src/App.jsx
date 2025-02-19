@@ -33,21 +33,19 @@ function App() {
           <Route path="/" element={<LoginPage onLogin={handleLogin} />} />
           <Route path="/login" element={<LoginPage onLogin={handleLogin} />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/home" element={<Home />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/about" element={<About />} />
         </Route>
 
         {/* Private Routes */}
         <Route element={<PrivateLayout onLogout={handleLogout} />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/about" element={<About />} />
           <Route
             element={
               <PrivateRoutes onLogin={setIsLoggedIn} isLoggedIn={isLoggedIn} />
             }
           >
-            {/* <Route path="/home" element={<Home />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/about" element={<About />} /> */}
+            {/*  */}
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/caremap" element={<Map />} />
             <Route path="/forum" element={<Forum />} />
