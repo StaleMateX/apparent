@@ -4,13 +4,13 @@ import Card from "react-bootstrap/Card";
 function cardWithImage() {}
 function cardNoImage() {}
 
-export function PostCard() {
+export function PostCard({ firstName, lastName }) {
   return (
     <>
       <Card className="text-center m-2">
         <Card.Header>
-          <Card.Img variant="top" src="holder.js/100px180" /> First Last
-          timeposted{" "}
+          <Card.Img variant="top" src="holder.js/100px180" /> {firstName}{" "}
+          {lastName} timeposted{" "}
         </Card.Header>
         <Card.Body>
           <Card.Title>Special title treatment</Card.Title>

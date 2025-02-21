@@ -5,7 +5,7 @@ import ButtonGroup from "react-bootstrap/ButtonGroup";
 import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import Stack from "react-bootstrap/Stack";
 
-export function PostSection() {
+export function PostSection({ firstName, lastName }) {
   return (
     <>
       <ButtonToolbar
@@ -27,7 +27,7 @@ export function PostSection() {
           <Button className="custom-button">Post Something</Button>
         </ButtonGroup>
       </ButtonToolbar>
-      <PostCard />
+      <PostCard firstName={firstName} lastName={lastName} />
     </>
   );
 }

@@ -15,5 +15,9 @@ export default defineConfig({
     hmr: {
       overlay: false, // ✅ Disables Vite's WebSocket error overlay (to debug WebSocket errors)
     },
+    proxy: {
+      '/api': 'http://127.0.0.1:8000',
+    },
+    open: './index.html',
   },
 });
