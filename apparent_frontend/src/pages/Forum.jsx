@@ -1,15 +1,63 @@
 import { useState, useEffect } from 'react';
 import './Forum.css';
+import { useNavigate } from 'react-router-dom';
 
-export function Forum() {
+export function Forum({ onLogout }) {
     const [posts, setPosts] = useState([]);
     const [newPostTitle, setNewPostTitle] = useState('');
     const [newPostContent, setNewPostContent] = useState('');
     const [newCommentContent, setNewCommentContent] = useState('');
+    const navigate = useNavigate();
+    const [currentUser, setCurrentUser] = useState(null);
 
     useEffect(() => {
         fetchPosts();
+        fetchUser();
     }, []);
+
+    const fetchUser = async () => {
+        const token = localStorage.getItem("token");
+        if (!token) {
+            console.log("No token found.");
+            return;
+        }
+
+        try {
+            const response = await fetch("http://127.0.0.1:8000/api/userProfile/", {
+                method: "GET",
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                    "Content-Type": "application/json",
+                },
+            });
+
+            //console.log("Response Status:", response.status); // Log response status
+            const userData = await response.json();
+            //console.log("Fetched User Data:", userData); // Log the fetched data
+
+            if (response.ok && Array.isArray(userData) && userData.length > 0) {
+                const user = userData[0];  // Extract the first object
+
+                //console.log("Extracted User:", user); // Debugging log
+
+                setCurrentUser({
+                    username: user?.username || "N/A",
+                    firstName: user?.first_name || "N/A",
+                    lastName: user?.last_name || "N/A",
+                });
+
+                // console.log("Updated currentUser:", {
+                //     username: user?.username,
+                //     firstName: user?.first_name,
+                //     lastName: user?.last_name,
+                // });
+            } else {
+                console.error("User data is not in expected format:", userData);
+            }
+        } catch (error) {
+            console.error("Error fetching user info:", error);
+        }
+    };
 
     const fetchPosts = async () => {
         const token = localStorage.getItem('token');
@@ -29,7 +77,9 @@ export function Forum() {
 
             if (response.status === 401) {
                 console.error('Unauthorized: Token may be invalid or expired.');
-                // Optionally redirect the user to the login page
+                onLogout();
+                // Redirect to login page
+                navigate('/login');
                 return;
             }
 
@@ -113,6 +163,17 @@ export function Forum() {
         }
     };
 
+    // useEffect(() => {
+    //     console.log("Current User:", currentUser?.username);
+    //     posts.forEach((post) => {
+    //         console.log("Post User:", post.user);
+    //         post.comments.forEach((comment) => {
+    //             console.log("Comment User:", comment.user);
+    //         });
+    //     });
+    // }, [currentUser, posts]);
+
+
     return (
             <div className="forum-container">
             <h1>Forum</h1>
@@ -136,7 +197,11 @@ export function Forum() {
                     <div key={post.id} className="post-container">
                         <div className="post-header">
                             <strong>{post.title}</strong> <span className="post-user"> by {post.user} </span>
-                            <button onClick={() => handleDeletePost(post.id)}>Delete Post</button>
+                            {currentUser?.username === post.user && (
+                                <button onClick={() => handleDeletePost(post.id)}>
+                                    Delete Post
+                                </button>
+                            )}
                         </div>
                         <p className="post-content">{post.content}</p>
                         <h3>Comments</h3>
@@ -144,7 +209,13 @@ export function Forum() {
                             {post.comments.map((comment) => (
                                 <div key={comment.id} className="comment">
                                     <strong>{comment.user}:</strong> <span className="comment-content">{comment.content}</span>
-                                    <button onClick={() => handleDeleteComment(comment.id)}>Delete</button>
+                                    {currentUser?.username === comment.user && (
+                                        <button
+                                            onClick={() => handleDeleteComment(comment.id)}
+                                        >
+                                            Delete
+                                        </button>
+                                    )}
                                 </div>
                             ))}
                             <div className="comment-form">

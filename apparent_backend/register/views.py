@@ -2,8 +2,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from .serializers import RegisterSerializer
+from rest_framework.permissions import AllowAny  # This allows any user, even unauthenticated
 
 class RegisterView(APIView):
+    permission_classes = [AllowAny]  # Disable authentication for registration view
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():

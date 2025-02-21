@@ -1,12 +1,28 @@
 import React, { useState, useEffect } from "react";
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
-import "./Map.css";
 import "mapbox-gl/dist/mapbox-gl.css";
+import "./Map.css";
+import { useNavigate } from "react-router-dom";
 
 export function Map() {
   const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
   // console.log(import.meta.env.VITE_MAPBOX_ACCESS_TOKEN);
   // console.log("Mapbox Token:", MAPBOX_TOKEN);
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/userProfile/", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setCurrentUser(data); // Save user data
+      })
+      .catch((error) => console.error("Error fetching user profile:", error));
+  }, []);
 
   const [viewport, setViewport] = useState({
     latitude: 40.77,
@@ -52,31 +68,6 @@ export function Map() {
     const { lngLat } = event;
     setNewPin({ longitude: lngLat.lng, latitude: lngLat.lat });
   };
-
-  // Save new pin
-  // const handleSavePin = () => {
-  //     const pin = {
-  //         id: Date.now(), // Unique ID for the pin
-  //         longitude: newPin.longitude,
-  //         latitude: newPin.latitude,
-  //         ...formData, // Include form data
-  //     };
-  //     setPins([...pins, pin]); // Add the new pin to the list
-  //     setNewPin(null); // Close the popup
-  //     setFormData({ title: "", about: "", specificLocation: "", availableTime: "", contactInfo: "" }); // Reset form data
-  // };
-
-  // Delete a pin
-  // const handleDeletePin = (id) => {
-  //     setPins(pins.filter(pin => pin.id !== id)); // Remove the pin with the specified ID
-  //     setSelectedPin(null); // Close the popup if the pin was selected
-  // };
-
-  // Update a pin after editing
-  // const handleSaveEdit = () => {
-  //     setPins(pins.map(pin => (pin.id === selectedPin.id ? { ...selectedPin, ...formData } : pin))); // Update the selected pin
-  //     setIsEditing(false); // Exit editing mode
-  // };
 
   // Save new pin to backend
   const handleSavePin = () => {
@@ -167,21 +158,14 @@ export function Map() {
   };
 
   return (
-    <div className="map-container"
-      // style={{
-      //   marginTop: "80px",
-      //   marginLeft: "-10%",
-      //   width: "100vw",
-      //   height: "calc(100vh - 120px)",
-      // }}
-    >
+    <div className="map-container">
       <ReactMapGL
         {...viewport}
         onMove={(event) => setViewport(event.viewState)} // Enable panning and zooming
         mapboxAccessToken={MAPBOX_TOKEN}
         mapStyle="mapbox://styles/mapbox/streets-v11"
         onContextMenu={handleRightClick} // Right-click to add pin
-        style={{ width: "100%", height: "100%" }}
+        
       >
         {pins.map((pin) => (
           <Marker
@@ -439,44 +423,50 @@ export function Map() {
                     <strong>Contact Information:</strong>{" "}
                     {selectedPin.contactInfo}
                   </p>
-                  <button
-                    onClick={() => {
-                      setIsEditing(true);
-                      setFormData({
-                        title: selectedPin.title,
-                        about: selectedPin.about,
-                        specificLocation: selectedPin.specificLocation,
-                        availableTime: selectedPin.availableTime,
-                        contactInfo: selectedPin.contactInfo,
-                      });
-                    }}
-                    style={{
-                      background: "#555",
-                      color: "#fff",
-                      padding: "5px 10px",
-                      border: "none",
-                      borderRadius: "3px",
-                      cursor: "pointer",
-                      marginTop: "10px",
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeletePin(selectedPin.id)}
-                    style={{
-                      background: "#ff4d4d",
-                      color: "#fff",
-                      padding: "5px 10px",
-                      border: "none",
-                      borderRadius: "3px",
-                      cursor: "pointer",
-                      marginTop: "10px",
-                      marginLeft: "5px",
-                    }}
-                  >
-                    Delete
-                  </button>
+
+                  {currentUser &&
+                    selectedPin.user.username === currentUser.username && (
+                      <>
+                        <button
+                          onClick={() => {
+                            setIsEditing(true);
+                            setFormData({
+                              title: selectedPin.title,
+                              about: selectedPin.about,
+                              specificLocation: selectedPin.specificLocation,
+                              availableTime: selectedPin.availableTime,
+                              contactInfo: selectedPin.contactInfo,
+                            });
+                          }}
+                          style={{
+                            background: "#555",
+                            color: "#fff",
+                            padding: "5px 10px",
+                            border: "none",
+                            borderRadius: "3px",
+                            cursor: "pointer",
+                            marginTop: "10px",
+                          }}
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDeletePin(selectedPin.id)}
+                          style={{
+                            background: "#ff4d4d",
+                            color: "#fff",
+                            padding: "5px 10px",
+                            border: "none",
+                            borderRadius: "3px",
+                            cursor: "pointer",
+                            marginTop: "10px",
+                            marginLeft: "5px",
+                          }}
+                        >
+                          Delete
+                        </button>
+                      </>
+                    )}
                 </>
               )}
             </div>
