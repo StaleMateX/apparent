@@ -1,0 +1,14 @@
+.profile-picture-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color:🟣;
+    position:relative;
+    flex-direction: column;
+}
+
+.profile-picture {
+    height: 10rem;
+    width: 10rem;
+    border:  2px solid white;
+}

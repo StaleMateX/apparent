@@ -1,20 +1,27 @@
-/* src/pages/Forum.css */
-
 .forum-container {
-    margin: 20px auto;
-    max-width: 600px;
+    margin: 180px auto;
+    max-width: 800px;
     font-family: Arial, sans-serif;
-    text-align: center;
+    text-align: left;
 }
 
-textarea {
+h1, h2 {
+    text-align: center;
+    color: #4684c2;
+}
+
+h3 {
+    color: #c8783e;
+}
+
+input, textarea {
     width: 100%;
-    height: 80px;
     padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #8b4f4f;
+    margin: 10px 0;
+    border: 1px solid #ccc;
     border-radius: 4px;
-    resize: none;
+    box-sizing: border-box;
+    font-size: 14px;
 }
 
 button {
@@ -31,39 +38,88 @@ button:hover {
     background-color: #45a049;
 }
 
-.post-item {
-    list-style-type: none;
+.post-container {
     border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
-    margin: 10px 0;
-    background-color: #428fca;
+    border-radius: 8px;
+    margin: 20px 0;
+    background-color: #f8f9fa;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.post-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-direction: column;
+    margin-bottom: 10px;
 }
 
-.post-item strong {
-    font-size: 16px;
-    color: #333;
+.post-header strong {
+    font-size: 18px;
+    color: #2c3e50;
 }
 
-.post-item p {
-    margin: 5px 0;
-    color: #555;
-}
-
-.delete-button {
-    background-color: #f44336;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
+.post-header button {
     font-size: 12px;
+    padding: 5px 10px;
+    background-color: #e74c3c;
 }
 
-.delete-button:hover {
-    background-color: #d32f2f;
+.post-header button:hover {
+    background-color: #c0392b;
+}
+
+.post-content {
+    color: #555;
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.comment-container {
+    margin: 15px 0;
+    padding: 10px;
+    border-top: 1px solid #ddd;
+}
+
+.comment {
+    margin: 10px 0;
+    padding: 10px;
+    background-color: #eef2f3;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.comment strong {
+    font-size: 14px;
+    color: #34495e;
+}
+
+.comment button {
+    background-color: #e74c3c;
+    padding: 5px;
+    font-size: 12px;
+    float: right;
+    margin-left: 10px;
+}
+
+.comment button:hover {
+    background-color: #c0392b;
+}
+
+.comment-form {
+    margin-top: 10px;
+}
+
+textarea {
+    resize: none;
+}
+
+.post-user {
+    font-weight: bold;
+    color: #3498db; 
+}
+
+.comment-content {
+    color: #2c3e50; 
+    font-style: italic;
 }

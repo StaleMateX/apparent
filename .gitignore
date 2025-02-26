@@ -1,0 +1,30 @@
+# Byte-compiled / optimized / DLL files
+__pycache__\
+# ignores all files that are .pyc, .pyo, and .pyd
+*.py[cod]
+
+
+# Django specific
+db.sqlite3
+media/
+
+# Node.js dependencies
+node_modules/
+
+# Build directories
+build/
+dist/
+
+# Environment variables
+.env
+venv/
+
+# IDE specific files
+.vscode/
+.idea/
+
+# Logs
+*.log
+
+# OS generated files
+.DS_Store

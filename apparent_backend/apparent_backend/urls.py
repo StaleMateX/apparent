@@ -17,14 +17,44 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from forum.views import PostViewSet
+from forum.views import PostViewSet, CommentViewSet  # Import CommentViewSet
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.conf import settings
+from django.conf.urls.static import static
+from userProfile.views import ProfileViewSet
 
 router = DefaultRouter()
-router.register(r'forum', PostViewSet)
+#router.register(r'forum', PostViewSet)
+router.register(r'forum', PostViewSet, basename='forum')  # Posts API
+router.register(r'comments', CommentViewSet, basename='comments')  # Comments API
+router.register(r'userProfile', ProfileViewSet, basename='userProfile')
 
 urlpatterns = [
+    # Admin routes
     path('admin/', admin.site.urls),
-    path('api/', include(router.urls)),  # Includes all API routes
-    path('register/', include('register.urls')),
-    path('login/', include('login.urls')), 
+
+    # API routes
+    path('api/', include(router.urls)),  # Includes routes for PostViewSet and CommentViewSet
+    path('api/profile/', include('userProfile.urls')),
+
+    # User management routes
+    path('register/', include('register.urls')),  # Custom registration API
+    path('login/', include('login.urls')),  # Custom login API
+
+    # JWT authentication routes
+    path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    # Map Pins routes
+    path('api/pins/', include('pins.urls')),
+
+    # # User Profiles routes
+    # path('api/', include('userProfile.urls')),
 ]
+
+# Serve media files during development
+if settings.DEBUG:
+      urlpatterns += [
+          path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+          #static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+      ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

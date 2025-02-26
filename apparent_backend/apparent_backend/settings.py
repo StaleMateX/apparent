@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -40,6 +39,10 @@ INSTALLED_APPS = [
     'rest_framework',  # For Django REST Framework
     'corsheaders',     # For handling CORS
     'forum',           # Forum
+    'pins',            # Map Pins
+    'userProfile',      # User Profiles
+    'register',        # User register
+    'login',           # User login
 ]
 
 MIDDLEWARE = [
@@ -129,6 +132,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # CORS Settings
 CORS_ALLOW_ALL_ORIGINS = True  # Allows all origins for development. Restrict in production.
 
+# This allows for REACT's default port to run
+# CORS_ORIGIN_WHITELIST = ('http://localhost:3000',)
+
 # Optional: If you want to allow specific HTTP methods
 CORS_ALLOW_METHODS = [
     "GET",
@@ -138,3 +144,27 @@ CORS_ALLOW_METHODS = [
     "DELETE",
     "OPTIONS",
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer',
+    ],
+    'DEFAULT_PARSER_CLASSES': [
+        'rest_framework.parsers.JSONParser',
+        'rest_framework.parsers.MultiPartParser',
+        'rest_framework.parsers.FormParser',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+}
+
+# Allow users to register with unique email and username
+AUTH_USER_MODEL = 'auth.User'
+
+# Handle File Uploads
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'

@@ -1,12 +1,6 @@
-import { Link } from "react-router-dom"
-import logo from "../logo.png"
+import "../components/HomePageInfo.jsx";
+import { HomePageInfo } from "../components/HomePageInfo.jsx";
 
 export function Home() {
-    return(
-        <>
-            <h1>Welcome to APParent</h1>
-            <img src={logo}/>
-            <Link><button>Example</button></Link>
-        </>
-    )
+  return <HomePageInfo />;
 }
