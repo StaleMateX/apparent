@@ -32,12 +32,12 @@ export function ProfilePage() {
     <>
       <Stack direction="vertical">
         <UserProfileInfo
-          firstName={profileData.username}
-          lastName={profileData.uID}
+          firstName={profileData.first_name}
+          lastName={profileData.last_name}
         />
         <PostSection
-          firstName={profileData.username}
-          lastName={profileData.uID}
+          firstName={profileData.first_name}
+          lastName={profileData.last_name}
         />
       </Stack>
     </>
