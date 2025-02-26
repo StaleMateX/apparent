@@ -21,7 +21,13 @@ export function Register() {
     const response = await fetch("http://127.0.0.1:8000/register/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({first_name: firstName, last_name: lastName, email, username, password }),
+      body: JSON.stringify({
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        username,
+        password,
+      }),
     });
 
     const data = await response.json();
@@ -87,6 +93,7 @@ export function Register() {
         />
         <button onClick={handleSignup}>Create Account</button>
       </form>
+      <a href="/login">Back to login</a>
     </div>
   );
 }
