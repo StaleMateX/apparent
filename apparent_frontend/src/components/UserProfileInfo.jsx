@@ -72,6 +72,7 @@ export function UserProfileInfo({ firstName, lastName }) {
               /* className="profile-picture" */
               firstName={firstName}
               lastName={lastName}
+              path={profilePicture}
             />
           </Col>
           <Col className="d-flex flex-column">
@@ -84,15 +85,21 @@ export function UserProfileInfo({ firstName, lastName }) {
             </Row>
             <Row>
               <Col className="p-2 info-container">
-                <p className="info-text">{"College Name"}</p>
-                <p className="info-text">{"City, State"}</p>
+                <p className="info-text">{`Education: ${
+                  collegeName || "None"
+                }`}</p>
+                <p className="info-text">{`Hometown: ${city + ", " || ""} ${
+                  state || "None"
+                }`}</p>
                 <p className="info-text">
-                  Background Check: {"Status Unknown"}
+                  {`Background Check: ${backgroundCheck || "Unknown"}`}
                 </p>
               </Col>
               <Col className="p-2 info-container">
-                <p className="info-text">Hobbies: {"Not specified"}</p>
-                <p className="info-text">Children: {"Not specified"}</p>
+                <p className="info-text">{`Hobbies: ${
+                  formatHobbies(hobbies) || "Not Shared"
+                }`}</p>
+                <p className="info-text">Children: {"TBA"}</p>
               </Col>
             </Row>
           </Col>
