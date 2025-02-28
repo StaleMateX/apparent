@@ -3,32 +3,31 @@ import { useState } from "react";
 import Multiselect from "react-widgets/Multiselect";
 import "react-widgets/styles.css";
 
-export function EditProfileForm({ editPicture, path }) {
-  const [selectedPath, setSelectedPath] = useState("");
-  const [selectedHobbies, setSelectedHobbies] = useState([]);
+export function EditProfileForm({
+  profilePicture,
+  setProfilePicture,
+  city,
+  setCity,
+  state,
+  setState,
+  collegeName,
+  setCollegeName,
+  phoneNumber,
+  setPhoneNumber,
+  hobbies,
+  setHobbies,
+  aboutMe,
+  setAboutMe,
+}) {
+  const [localProfilePicture, setLocalProfilePicture] =
+    useState(profilePicture);
+  const [localCity, setLocalCity] = useState(city);
+  const [localState, setLocalState] = useState(state);
+  const [localCollegeName, setLocalCollegeName] = useState(collegeName);
+  const [localPhoneNumber, setLocalPhoneNumber] = useState(phoneNumber);
+  const [localHobbies, setLocalHobbies] = useState(hobbies);
+  const [localAboutMe, setLocalAboutMe] = useState(aboutMe);
 
-  const handleHobbiesChange = (selectedItems) => {
-    if (selectedItems.length <= 4) {
-      setSelectedHobbies(selectedItems);
-    } else {
-      alert("You can select up to 4 hobbies only.");
-    }
-  };
-
-  const handleSelectedPath = (event) => {
-    const file = event.target.files[0];
-    if (file) {
-      setSelectedPath(file);
-    }
-  };
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    editPicture(selectedPath);
-    // TODO: COMMUNICATE CHANGES IN ALL THE FIELDS
-  };
-
-  // TODO: PLACE ACTIONS IN THE DATABASE RATHER THAN HERE? DISCUSS.
   const hobbiesOptions = [
     "Active Outdoors: Hiking, camping, biking, mud-runners",
     "Chill Outdoors: Strolling, site-seeing, gardening, yoga",
@@ -40,35 +39,78 @@ export function EditProfileForm({ editPicture, path }) {
     "I'm keeping it a mystery",
   ];
 
+  const handleSelectedPath = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setLocalProfilePicture(file);
+    }
+  };
+
+  const handleHobbiesChange = (selectedItems) => {
+    if (selectedItems.length <= 4) {
+      setLocalHobbies(selectedItems);
+    } else {
+      alert("You can select up to 4 hobbies only.");
+    }
+  };
+
+  // TODO: PLACE HOBBIES IN THE DATABASE RATHER THAN HERE? DISCUSS.
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setProfilePicture(localProfilePicture);
+    setCity(localCity);
+    setState(localState);
+    setCollegeName(localCollegeName);
+    setPhoneNumber(localPhoneNumber);
+    setHobbies(localHobbies);
+    setAboutMe(localAboutMe);
+  };
+
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3" controlId="formFileSm">
-        <Form.Label>Change profile picture</Form.Label>
-        <Form.Control type="file" size="sm" onChange={handleSelectedPath} />
-      </Form.Group>
-
-      <Form.Group className="mb-3">
-        <Form.Control id="city" type="text" placeholder="City" />
-      </Form.Group>
-
-      <Form.Group className="mb-3">
-        <Form.Control id="state" type="text" placeholder="State" />
-      </Form.Group>
-
-      <Form.Group className="mb-3">
+        <Form.Label>Change Profile Picture</Form.Label>
         <Form.Control
-          id="college"
-          type="text"
-          placeholder="Higher Education Institution"
+          type="file"
+          size="sm"
+          onChange={handleSelectedPath}
         />
       </Form.Group>
 
       <Form.Group className="mb-3">
         <Form.Control
-          id="phone"
+          type="text"
+          placeholder="City"
+          value={localCity}
+          onChange={(e) => setLocalCity(e.target.value)}
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3">
+        <Form.Control
+          type="text"
+          placeholder="State"
+          value={localState}
+          onChange={(e) => setLocalState(e.target.value)}
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3">
+        <Form.Control
+          type="text"
+          placeholder="Higher Education Institution"
+          value={localCollegeName}
+          onChange={(e) => setLocalCollegeName(e.target.value)}
+        />
+      </Form.Group>
+
+      <Form.Group className="mb-3">
+        <Form.Control
           type="tel"
           pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
           placeholder="Phone Number"
+          value={localPhoneNumber}
+          onChange={(e) => setLocalPhoneNumber(e.target.value)}
         />
         <small className="form-text text-muted">Format: 555-555-5555</small>
       </Form.Group>
@@ -77,7 +119,8 @@ export function EditProfileForm({ editPicture, path }) {
         <Form.Label>Select up to 4 hobbies</Form.Label>
         <Multiselect
           data={hobbiesOptions}
-          value={selectedHobbies}
+          defaultValue={localHobbies}
+          value={localHobbies}
           onChange={handleHobbiesChange}
           placeholder="Select your hobbies"
         />
@@ -89,6 +132,8 @@ export function EditProfileForm({ editPicture, path }) {
           as="textarea"
           rows={3}
           placeholder="About your student parent experience"
+          value={localAboutMe}
+          onChange={(e) => setLocalAboutMe(e.target.value)}
         />
       </Form.Group>
 

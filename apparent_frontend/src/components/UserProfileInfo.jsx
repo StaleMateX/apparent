@@ -8,69 +8,30 @@ import Form from "react-bootstrap/Form";
 import { EditProfilePopup } from "./EditProfilePopup";
 import { ProfilePicture } from "../components/ProfilePicture";
 
-const UserInfoContext = createContext();
-
 export function UserProfileInfo({ firstName, lastName }) {
   const [show, setShow] = useState(false);
   const [profilePicture, setProfilePicture] = useState("../APParent_logo.png");
   const [collegeName, setCollegeName] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");
-  const [hobbies, setHobbies] = useState([]);
+  const [hobbies, setHobbies] = useState(["I'm keeping it a mystery"]);
   const [backgroundCheck, setBackgroundCheck] = useState("In Progress");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [aboutMe, setAboutMe] = useState("");
 
-  const userInfoState = useMemo(
-    () => ({
-      profilePicture,
-      setProfilePicture,
-      collegeName,
-      setCollegeName,
-      city,
-      setCity,
-      state,
-      setState,
-      hobbies,
-      setHobbies,
-      backgroundCheck,
-      setBackgroundCheck,
-      phoneNumber,
-      setPhoneNumber,
-      aboutMe,
-      setAboutMe,
-    }),
-    [
-      profilePicture,
-      collegeName,
-      city,
-      state,
-      hobbies,
-      backgroundCheck,
-      phoneNumber,
-      aboutMe,
-    ]
-  );
-
   const handleClose = () => setShow(false);
-  const handleShow = () => {
-    setShow(true);
-  };
+  const handleShow = () => setShow(true);
 
-  const formatHobbies = (hobbies) => {
-    return hobbies.length === 0 ? "" : hobbies.join(",\n");
-  };
+  const formatHobbies = (hobbies) =>
+    hobbies.length > 0 ? hobbies.join(", ") : "Not Shared";
 
   return (
     <>
       <Container>
         <Row className="align-items-center">
-          {/* <Stack direction="horizontal" gap={3}> */}
-          <Col /* className="picture-container mt-2" */>
+          <Col>
             <ProfilePicture
-              className="profile-picture"
-              /* className="profile-picture" */
-              firstName={firstName}
+              /* className="profile-picture" */ firstName={firstName}
               lastName={lastName}
               path={profilePicture}
             />
@@ -88,56 +49,64 @@ export function UserProfileInfo({ firstName, lastName }) {
                 <p className="info-text">{`Education: ${
                   collegeName || "None"
                 }`}</p>
-                <p className="info-text">{`Hometown: ${city + ", " || ""} ${
-                  state || "None"
+                <p className="info-text">{`Hometown: ${
+                  city ? `${city}, ` : ""
+                }${state || "None"}`}</p>
+                <p className="info-text">{`Background Check: ${
+                  backgroundCheck || "Unknown"
                 }`}</p>
-                <p className="info-text">
-                  {`Background Check: ${backgroundCheck || "Unknown"}`}
-                </p>
               </Col>
               <Col className="p-2 info-container">
-                <p className="info-text">{`Hobbies: ${
-                  formatHobbies(hobbies) || "Not Shared"
-                }`}</p>
-                <p className="info-text">Children: {"TBA"}</p>
+                <p className="info-text">{`Hobbies: ${formatHobbies(
+                  hobbies
+                )}`}</p>
+                <p className="info-text">Children: TBA</p>
               </Col>
             </Row>
           </Col>
-          {/* </Stack> */}
         </Row>
         <Row className="mt-3">
           <Form
-            className="text-center w-100" /* className="d-flex centered-label" */
+            /* className="d-flex centered-label" */ className="text-center w-100"
           >
             <Form.Group controlId="aboutMeTextarea">
-              <Form.Label /* className="centered-label pt-2" */>
-                About Me
-              </Form.Label>
+              <Form.Label>About Me</Form.Label>
               <Form.Control
                 as="textarea"
                 className="bg-color-light hide-scrollbar about-me-form mt-0 w-100"
                 rows={2}
-                readOnly={aboutMe}
-                placeholder={"What do you look for in parent friends?"}
+                readOnly
+                value={aboutMe}
+                placeholder="What do you look for in parent friends?"
               />
             </Form.Group>
           </Form>
         </Row>
       </Container>
-      <UserInfoContext.Provider value={userInfoState}>
-        <EditProfilePopup
-          popupTitle={"Edit Profile"}
-          show={show}
-          handleClose={handleClose}
-          /* path={profilePicture}
-          city={city}
-          state={state}
-          hobbies={hobbies}
-          phoneNumber={phoneNumber}
-          collegeName={collegeName}
-          aboutMe={aboutMe} */
-        />
-      </UserInfoContext.Provider>
+
+      <EditProfilePopup
+        popupTitle="Edit Profile"
+        show={show}
+        handleClose={handleClose}
+        props={{
+          profilePicture,
+          setProfilePicture,
+          collegeName,
+          setCollegeName,
+          city,
+          setCity,
+          state,
+          setState,
+          hobbies,
+          setHobbies,
+          backgroundCheck,
+          setBackgroundCheck,
+          phoneNumber,
+          setPhoneNumber,
+          aboutMe,
+          setAboutMe,
+        }}
+      />
     </>
   );
 }
