@@ -28,6 +28,7 @@ export function EditProfileForm({ editPicture, path }) {
     // TODO: COMMUNICATE CHANGES IN ALL THE FIELDS
   };
 
+  // TODO: PLACE ACTIONS IN THE DATABASE RATHER THAN HERE? DISCUSS.
   const hobbiesOptions = [
     "Active Outdoors: Hiking, camping, biking, mud-runners",
     "Chill Outdoors: Strolling, site-seeing, gardening, yoga",

@@ -1,5 +1,5 @@
 import "./UserProfileInfo.css";
-import { useState, useContext, createContext } from "react";
+import { useState, useContext, createContext, useMemo } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -21,33 +21,36 @@ export function UserProfileInfo({ firstName, lastName }) {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [aboutMe, setAboutMe] = useState("");
 
-  const userInfoState = useMemo(()=>({
-    profilePicture,
-    setProfilePicture,
-    collegeName,
-    setCollegeName,
-    city,
-    setCity,
-    state,
-    setState,
-    hobbies,
-    setHobbies,
-    backgroundCheck,
-    setBackgroundCheck,
-    phoneNumber,
-    setPhoneNumber,
-    aboutMe,
-    setAboutMe
-  }),
-  [profilePicture,
-    collegeName,
-    city,
-    state,
-    hobbies,
-    backgroundCheck,
-    phoneNumber,
-    aboutMe
-  ]);
+  const userInfoState = useMemo(
+    () => ({
+      profilePicture,
+      setProfilePicture,
+      collegeName,
+      setCollegeName,
+      city,
+      setCity,
+      state,
+      setState,
+      hobbies,
+      setHobbies,
+      backgroundCheck,
+      setBackgroundCheck,
+      phoneNumber,
+      setPhoneNumber,
+      aboutMe,
+      setAboutMe,
+    }),
+    [
+      profilePicture,
+      collegeName,
+      city,
+      state,
+      hobbies,
+      backgroundCheck,
+      phoneNumber,
+      aboutMe,
+    ]
+  );
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
@@ -55,7 +58,7 @@ export function UserProfileInfo({ firstName, lastName }) {
   };
 
   const formatHobbies = (hobbies) => {
-    hobbies.length===0?return "": return hobbies.join(',\n');
+    return hobbies.length === 0 ? "" : hobbies.join(",\n");
   };
 
   return (
@@ -65,16 +68,16 @@ export function UserProfileInfo({ firstName, lastName }) {
           {/* <Stack direction="horizontal" gap={3}> */}
           <Col /* className="picture-container mt-2" */>
             <ProfilePicture
+              className="profile-picture"
               /* className="profile-picture" */
               firstName={firstName}
               lastName={lastName}
-              path={profilePicture}
             />
           </Col>
           <Col className="d-flex flex-column">
             <Row>
               <Col className="d-flex justify-content-end">
-                <Button variant="outline-primary" onClick={handleShow}>
+                <Button onClick={handleShow} variant="outline-primary">
                   Edit Profile
                 </Button>
               </Col>
@@ -82,13 +85,13 @@ export function UserProfileInfo({ firstName, lastName }) {
             <Row>
               <Col className="p-2 info-container">
                 <p className="info-text">{"College Name"}</p>
-                <p className="info-text">{`${city}, `|"city,"}{state|"state"}</p>
+                <p className="info-text">{"City, State"}</p>
                 <p className="info-text">
-                  Background Check: {`${backgroundCheck}' | "None"}
+                  Background Check: {"Status Unknown"}
                 </p>
               </Col>
               <Col className="p-2 info-container">
-                <p className="info-text">Hobbies: {`${formatHobbies}' | "None"}</p>
+                <p className="info-text">Hobbies: {"Not specified"}</p>
                 <p className="info-text">Children: {"Not specified"}</p>
               </Col>
             </Row>
@@ -107,7 +110,7 @@ export function UserProfileInfo({ firstName, lastName }) {
                 as="textarea"
                 className="bg-color-light hide-scrollbar about-me-form mt-0 w-100"
                 rows={2}
-                /*value={""}  TODO: Probably put a handler here */
+                readOnly={aboutMe}
                 placeholder={"What do you look for in parent friends?"}
               />
             </Form.Group>
@@ -116,10 +119,10 @@ export function UserProfileInfo({ firstName, lastName }) {
       </Container>
       <UserInfoContext.Provider value={userInfoState}>
         <EditProfilePopup
-          /* popupTitle={"Edit Profile"}
+          popupTitle={"Edit Profile"}
           show={show}
           handleClose={handleClose}
-          path={profilePicture}
+          /* path={profilePicture}
           city={city}
           state={state}
           hobbies={hobbies}
