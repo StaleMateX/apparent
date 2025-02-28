@@ -1,20 +1,61 @@
 import "./UserProfileInfo.css";
-import { useState, useEffect } from "react";
+import { useState, useContext, createContext } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { PopupForm } from "./PopupForm";
+import { EditProfilePopup } from "./EditProfilePopup";
 import { ProfilePicture } from "../components/ProfilePicture";
+
+const UserInfoContext = createContext();
 
 export function UserProfileInfo({ firstName, lastName }) {
   const [show, setShow] = useState(false);
   const [profilePicture, setProfilePicture] = useState("../APParent_logo.png");
+  const [collegeName, setCollegeName] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [hobbies, setHobbies] = useState([]);
+  const [backgroundCheck, setBackgroundCheck] = useState("In Progress");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [aboutMe, setAboutMe] = useState("");
+
+  const userInfoState = useMemo(()=>({
+    profilePicture,
+    setProfilePicture,
+    collegeName,
+    setCollegeName,
+    city,
+    setCity,
+    state,
+    setState,
+    hobbies,
+    setHobbies,
+    backgroundCheck,
+    setBackgroundCheck,
+    phoneNumber,
+    setPhoneNumber,
+    aboutMe,
+    setAboutMe
+  }),
+  [profilePicture,
+    collegeName,
+    city,
+    state,
+    hobbies,
+    backgroundCheck,
+    phoneNumber,
+    aboutMe
+  ]);
 
   const handleClose = () => setShow(false);
   const handleShow = () => {
     setShow(true);
+  };
+
+  const formatHobbies = (hobbies) => {
+    hobbies.length===0?return "": return hobbies.join(',\n');
   };
 
   return (
@@ -41,13 +82,13 @@ export function UserProfileInfo({ firstName, lastName }) {
             <Row>
               <Col className="p-2 info-container">
                 <p className="info-text">{"College Name"}</p>
-                <p className="info-text">{"City, State"}</p>
+                <p className="info-text">{`${city}, `|"city,"}{state|"state"}</p>
                 <p className="info-text">
-                  Background Check: {"Status Unknown"}
+                  Background Check: {`${backgroundCheck}' | "None"}
                 </p>
               </Col>
               <Col className="p-2 info-container">
-                <p className="info-text">Hobbies: {"Not specified"}</p>
+                <p className="info-text">Hobbies: {`${formatHobbies}' | "None"}</p>
                 <p className="info-text">Children: {"Not specified"}</p>
               </Col>
             </Row>
@@ -73,14 +114,20 @@ export function UserProfileInfo({ firstName, lastName }) {
           </Form>
         </Row>
       </Container>
-
-      <PopupForm
-        popupTitle={"Edit Profile"}
-        show={show}
-        handleClose={handleClose}
-        path={profilePicture}
-        editPicture={setProfilePicture}
-      />
+      <UserInfoContext.Provider value={userInfoState}>
+        <EditProfilePopup
+          /* popupTitle={"Edit Profile"}
+          show={show}
+          handleClose={handleClose}
+          path={profilePicture}
+          city={city}
+          state={state}
+          hobbies={hobbies}
+          phoneNumber={phoneNumber}
+          collegeName={collegeName}
+          aboutMe={aboutMe} */
+        />
+      </UserInfoContext.Provider>
     </>
   );
 }

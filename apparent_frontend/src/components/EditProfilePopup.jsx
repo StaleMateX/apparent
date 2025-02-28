@@ -2,13 +2,22 @@ import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { EditProfileForm } from "./Forms/EditProfileForm";
 
-export function PopupForm({
+/* For context of this components parent, see parent. The child of this component updates it's grandparent's state variables. */
+export function EditProfilePopup({
   popupTitle,
   show,
   handleClose,
   path,
   editPicture,
 }) {
+  /* const [collegeName, setCollegeName] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [hobbies, setHobbies] = useState([]);
+  const [backgroundCheck, setBackgroundCheck] = useState("In Progress");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [aboutMe, setAboutMe] = useState("");
+ */
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -16,7 +25,7 @@ export function PopupForm({
           <Modal.Title>{popupTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body scrollable="true">
-          <EditProfileForm editPicture={editPicture} path={path} />
+          <EditProfileForm /*  editPicture={editPicture} path={path} */ />
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
