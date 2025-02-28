@@ -1,3 +1,3 @@
 from django.db import models
 
-# Create your models here.
+# Validation and serialization logic does not go here.

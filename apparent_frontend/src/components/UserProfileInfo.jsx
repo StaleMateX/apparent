@@ -1,80 +1,112 @@
 import "./UserProfileInfo.css";
-import { useState, useEffect } from "react";
-import Stack from "react-bootstrap/Stack";
+import { useState, useContext, createContext, useMemo } from "react";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { EditProfilePopup } from "./EditProfilePopup";
 import { ProfilePicture } from "../components/ProfilePicture";
 
-// The top portion of the profile page with user info. Write permissions for user/readonly permissions for friends' profile pages.
-export function UserProfileInfo() {
+export function UserProfileInfo({ firstName, lastName }) {
+  const [show, setShow] = useState(false);
+  const [profilePicture, setProfilePicture] = useState("../APParent_logo.png");
+  const [collegeName, setCollegeName] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [hobbies, setHobbies] = useState(["I'm keeping it a mystery"]);
+  const [backgroundCheck, setBackgroundCheck] = useState("In Progress");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [aboutMe, setAboutMe] = useState("");
 
-  const [errors, setErrors] = useState({});
-    const [isLoading, setIsLoading] = useState(true);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
-    useEffect(() => {
-        // Assuming you have an endpoint to get the current user's profile details
-        const fetchProfileData = async () => {
-            const response = await fetch('http://localhost:8000/api/profile/', {
-                method: 'GET',
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                console.log('Fetched profile data:', data);  // Log the response to see the structure
-
-                if (Array.isArray(data) && data.length > 0) {
-                    setFormData((prev) => ({
-                        ...prev,
-                        uID: data[0].uID || '',
-                        firstName: data[0].first_name || '',
-                        lastName: data[0].last_name || '',
-                        phoneNumber: data[0].phone_number || '',
-                        aboutMe: data[0].about_me || '',
-                    }));
-                }
-            }
-            setIsLoading(false); // Set loading to false after fetch is complete
-        };
-
-        fetchProfileData();
-    }, []);
-
-    // Handle input changes
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
-    };
-
-
+  const formatHobbies = (hobbies) =>
+    hobbies.length > 0 ? hobbies.join(", ") : "Not Shared";
 
   return (
     <>
-      <Stack direction="horizontal" gap={3}>
-        <div className="picture-container mt-2">
-          <ProfilePicture className="profile-picture" />
-        </div>
-        <div className="p-2 info-container">
-          <p className="info-text">CollegeName</p>
-          <p className="info-text">City, State</p>
-          <p className="info-text">Passed Backgroud: True/False/In progress</p>
-        </div>
-        <div className="p-2 info-container">
-          <p className="info-text">Hobbies: ...</p>
-          <p className="info-text">Children: 4 yrs, 1 yr, Baby on the way</p>
-        </div>
-      </Stack>
-      <Form className="d-flex centered-label">
-        <Form.Group controlId="exampleForm.ControlTextarea1">
-          <Form.Label className="centered-label pt-2">About Me</Form.Label>
-          <Form.Control
-            as="textarea"
-            className="bg-color-light hide-scrollbar about-me-form mt-0"
-            rows={2}
-          />
-        </Form.Group>
-      </Form>
+      <Container>
+        <Row className="align-items-center">
+          <Col>
+            <ProfilePicture
+              /* className="profile-picture" */ firstName={firstName}
+              lastName={lastName}
+              path={profilePicture}
+            />
+          </Col>
+          <Col className="d-flex flex-column">
+            <Row>
+              <Col className="d-flex justify-content-end">
+                <Button onClick={handleShow} variant="outline-primary">
+                  Edit Profile
+                </Button>
+              </Col>
+            </Row>
+            <Row>
+              <Col className="p-2 info-container">
+                <p className="info-text">{`Education: ${
+                  collegeName || "None"
+                }`}</p>
+                <p className="info-text">{`Hometown: ${
+                  city ? `${city}, ` : ""
+                }${state || "None"}`}</p>
+                <p className="info-text">{`Background Check: ${
+                  backgroundCheck || "Unknown"
+                }`}</p>
+              </Col>
+              <Col className="p-2 info-container">
+                <p className="info-text">{`Hobbies: ${formatHobbies(
+                  hobbies
+                )}`}</p>
+                <p className="info-text">Children: TBA</p>
+              </Col>
+            </Row>
+          </Col>
+        </Row>
+        <Row className="mt-3">
+          <Form
+            /* className="d-flex centered-label" */ className="text-center w-100"
+          >
+            <Form.Group controlId="aboutMeTextarea">
+              <Form.Label>About Me</Form.Label>
+              <Form.Control
+                as="textarea"
+                className="bg-color-light hide-scrollbar about-me-form mt-0 w-100"
+                rows={2}
+                readOnly
+                value={aboutMe}
+                placeholder="What do you look for in parent friends?"
+              />
+            </Form.Group>
+          </Form>
+        </Row>
+      </Container>
+
+      <EditProfilePopup
+        popupTitle="Edit Profile"
+        show={show}
+        handleClose={handleClose}
+        props={{
+          profilePicture,
+          setProfilePicture,
+          collegeName,
+          setCollegeName,
+          city,
+          setCity,
+          state,
+          setState,
+          hobbies,
+          setHobbies,
+          backgroundCheck,
+          setBackgroundCheck,
+          phoneNumber,
+          setPhoneNumber,
+          aboutMe,
+          setAboutMe,
+        }}
+      />
     </>
   );
 }

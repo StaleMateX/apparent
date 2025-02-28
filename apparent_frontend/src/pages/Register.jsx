@@ -3,12 +3,15 @@ import { useNavigate } from "react-router-dom";
 import "./Form.css";
 
 export function Register() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const navigate = useNavigate();
 
+  // Have not integrated Axios in this component
   const handleSignup = async () => {
     if (password !== confirmPassword) {
       alert("Passwords do not match");
@@ -18,7 +21,13 @@ export function Register() {
     const response = await fetch("http://127.0.0.1:8000/register/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, username, password }),
+      body: JSON.stringify({
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        username,
+        password,
+      }),
     });
 
     const data = await response.json();
@@ -34,6 +43,22 @@ export function Register() {
     <div className="form-container">
       <h1>Register</h1>
       <form onSubmit={(e) => e.preventDefault()}>
+        <label htmlFor="first-name">First Name </label>
+        <input
+          id="first-name"
+          type="first-name"
+          placeholder="First Name"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
+        <label htmlFor="last-name">Last Name </label>
+        <input
+          id="last-name"
+          type="last-name"
+          placeholder="Last Name"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
         <label htmlFor="email">Email</label>
         <input
           id="email"
@@ -68,6 +93,7 @@ export function Register() {
         />
         <button onClick={handleSignup}>Create Account</button>
       </form>
+      <a href="/login">Back to login</a>
     </div>
   );
 }
