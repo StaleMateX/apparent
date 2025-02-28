@@ -1,5 +1,6 @@
 import Form from "react-bootstrap/Form";
 import { useState } from "react";
+import Button from "react-bootstrap/Button";
 import Multiselect from "react-widgets/Multiselect";
 import "react-widgets/styles.css";
 
@@ -18,15 +19,15 @@ export function EditProfileForm({
   setHobbies,
   aboutMe,
   setAboutMe,
+  handleClose,
 }) {
-  const [localProfilePicture, setLocalProfilePicture] =
-    useState(profilePicture);
-  const [localCity, setLocalCity] = useState(city);
-  const [localState, setLocalState] = useState(state);
-  const [localCollegeName, setLocalCollegeName] = useState(collegeName);
-  const [localPhoneNumber, setLocalPhoneNumber] = useState(phoneNumber);
-  const [localHobbies, setLocalHobbies] = useState(hobbies);
-  const [localAboutMe, setLocalAboutMe] = useState(aboutMe);
+  const [newProfilePicture, setLocalProfilePicture] = useState(profilePicture);
+  const [newCity, setLocalCity] = useState(city);
+  const [newState, setLocalState] = useState(state);
+  const [newCollegeName, setLocalCollegeName] = useState(collegeName);
+  const [newPhoneNumber, setLocalPhoneNumber] = useState(phoneNumber);
+  const [newHobbies, setLocalHobbies] = useState(hobbies);
+  const [newAboutMe, setLocalAboutMe] = useState(aboutMe);
 
   const hobbiesOptions = [
     "Active Outdoors: Hiking, camping, biking, mud-runners",
@@ -57,31 +58,28 @@ export function EditProfileForm({
   // TODO: PLACE HOBBIES IN THE DATABASE RATHER THAN HERE? DISCUSS.
   const handleSubmit = (event) => {
     event.preventDefault();
-    setProfilePicture(localProfilePicture);
-    setCity(localCity);
-    setState(localState);
-    setCollegeName(localCollegeName);
-    setPhoneNumber(localPhoneNumber);
-    setHobbies(localHobbies);
-    setAboutMe(localAboutMe);
+    setProfilePicture(URL.createObjectURL(newProfilePicture));
+    setCity(newCity);
+    setState(newState);
+    setCollegeName(newCollegeName);
+    setPhoneNumber(newPhoneNumber);
+    setHobbies(newHobbies);
+    setAboutMe(newAboutMe);
+    handleClose();
   };
 
   return (
     <Form onSubmit={handleSubmit}>
       <Form.Group className="mb-3" controlId="formFileSm">
         <Form.Label>Change Profile Picture</Form.Label>
-        <Form.Control
-          type="file"
-          size="sm"
-          onChange={handleSelectedPath}
-        />
+        <Form.Control type="file" size="sm" onChange={handleSelectedPath} />
       </Form.Group>
 
       <Form.Group className="mb-3">
         <Form.Control
           type="text"
           placeholder="City"
-          value={localCity}
+          value={newCity}
           onChange={(e) => setLocalCity(e.target.value)}
         />
       </Form.Group>
@@ -90,7 +88,7 @@ export function EditProfileForm({
         <Form.Control
           type="text"
           placeholder="State"
-          value={localState}
+          value={newState}
           onChange={(e) => setLocalState(e.target.value)}
         />
       </Form.Group>
@@ -99,7 +97,7 @@ export function EditProfileForm({
         <Form.Control
           type="text"
           placeholder="Higher Education Institution"
-          value={localCollegeName}
+          value={newCollegeName}
           onChange={(e) => setLocalCollegeName(e.target.value)}
         />
       </Form.Group>
@@ -109,7 +107,7 @@ export function EditProfileForm({
           type="tel"
           pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
           placeholder="Phone Number"
-          value={localPhoneNumber}
+          value={newPhoneNumber}
           onChange={(e) => setLocalPhoneNumber(e.target.value)}
         />
         <small className="form-text text-muted">Format: 555-555-5555</small>
@@ -119,8 +117,8 @@ export function EditProfileForm({
         <Form.Label>Select up to 4 hobbies</Form.Label>
         <Multiselect
           data={hobbiesOptions}
-          defaultValue={localHobbies}
-          value={localHobbies}
+          defaultValue={newHobbies}
+          value={newHobbies}
           onChange={handleHobbiesChange}
           placeholder="Select your hobbies"
         />
@@ -132,7 +130,7 @@ export function EditProfileForm({
           as="textarea"
           rows={3}
           placeholder="About your student parent experience"
-          value={localAboutMe}
+          value={newAboutMe}
           onChange={(e) => setLocalAboutMe(e.target.value)}
         />
       </Form.Group>
@@ -140,6 +138,7 @@ export function EditProfileForm({
       <button type="submit" className="btn btn-primary">
         Save Profile
       </button>
+      <Button variant="secondary" onClick={handleClose}>Close</Button>
     </Form>
   );
 }

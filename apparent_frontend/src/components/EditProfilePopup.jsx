@@ -8,12 +8,8 @@ export function EditProfilePopup({
   handleClose,
   path,
   editPicture,
-  props
+  props,
 }) {
-  const handleSave = () => {
-    handleClose();
-  };
-
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -21,7 +17,7 @@ export function EditProfilePopup({
           <Modal.Title>{popupTitle}</Modal.Title>
         </Modal.Header>
         <Modal.Body scrollable="true">
-          <EditProfileForm {...props} />
+          <EditProfileForm handleClose={handleClose} {...props} />
         </Modal.Body>
         <Modal.Footer>
           {/* <Button variant="secondary" onClick={handleClose}>
