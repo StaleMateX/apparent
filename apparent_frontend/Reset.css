@@ -13,6 +13,7 @@
     --bg-color-primary-light: #854db2ff;
     --bg-color-secondary-light: #e4e2f3ff;
     --bg-color-primary-dark: #35281dff;
+    --color-primary-light: #854db2ff;
    }
 
 
@@ -26,4 +27,9 @@ h1, h2, h3 {
 
 .blue-pin {
      color: blue;
+}
+
+.card {
+    max-width: "800px";
+    width: 100%;
 }

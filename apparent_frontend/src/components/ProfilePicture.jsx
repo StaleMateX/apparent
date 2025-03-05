@@ -7,8 +7,8 @@ export function ProfilePicture({firstName, lastName, path}) {
   return (
     <Container className="profile-picture-container">
 
-        <h2>{firstName} {lastName}</h2>
-          <Image className="profile-picture" roundedCircle src={path}/>
+        <h2 className="profile-name mt-3">{firstName} {lastName}</h2>
+          <Image alt="Profile" className="profile-picture" roundedCircle src={path}/>
 
 
     </Container>

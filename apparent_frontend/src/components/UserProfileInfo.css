@@ -59,3 +59,12 @@
 .about-me-form{
   width: 150px;
 }
+
+.edit-button{
+  background: var(--bg-color-primary-light);
+  border-color: var(--color-primary-light);
+}
+
+strong {
+  color: var(--color-primary-light);
+}

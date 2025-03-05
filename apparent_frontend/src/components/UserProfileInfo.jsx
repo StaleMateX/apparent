@@ -5,6 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import Card from "react-bootstrap/Card";
 import { EditProfilePopup } from "./EditProfilePopup";
 import { ProfilePicture } from "../components/ProfilePicture";
 
@@ -27,9 +28,9 @@ export function UserProfileInfo({ firstName, lastName }) {
 
   return (
     <>
-      <Container>
+      <Card className="card shadow-sm p-4 mb-4">
         <Row className="align-items-center">
-          <Col>
+          <Col xs={12} md={4} className="text-center">
             <ProfilePicture
               /* className="profile-picture" */ firstName={firstName}
               lastName={lastName}
@@ -39,51 +40,57 @@ export function UserProfileInfo({ firstName, lastName }) {
           <Col className="d-flex flex-column">
             <Row>
               <Col className="d-flex justify-content-end">
-                <Button onClick={handleShow} variant="outline-primary">
+                <Button onClick={handleShow} className="edit-button">
                   Edit Profile
                 </Button>
               </Col>
             </Row>
             <Row>
               <Col className="p-2 info-container">
-                <p className="info-text">{`Education: ${
-                  collegeName || "None"
-                }`}</p>
-                <p className="info-text">{`Hometown: ${
-                  city ? `${city}, ` : ""
-                }${state || "None"}`}</p>
-                <p className="info-text">{`Background Check: ${
-                  backgroundCheck || "Unknown"
-                }`}</p>
+                <p className="info-text">
+                  <strong>Education: </strong>
+                  {`${collegeName || "None"}`}
+                </p>
+                <p className="info-text">
+                  <strong>Hometown: </strong>
+                  {`${city ? `${city}, ` : ""}${state || "None"}`}
+                </p>
+                <p className="info-text">
+                  <strong>Background Check: </strong>
+                  {`${backgroundCheck || "Unknown"}`}
+                </p>
               </Col>
               <Col className="p-2 info-container">
-                <p className="info-text">{`Hobbies: ${formatHobbies(
-                  hobbies
-                )}`}</p>
-                <p className="info-text">Children: TBA</p>
+                <p className="info-text">
+                  <strong>Hobbies: </strong>
+                  {`${formatHobbies(hobbies)}`}
+                </p>
+                <p className="info-text">
+                  <strong>Children: </strong> TBA
+                </p>
               </Col>
             </Row>
           </Col>
         </Row>
+      </Card>
+      <Card className="card shadow-sm p-4 mb-4">
         <Row className="mt-3">
-          <Form
+          <Col
             /* className="d-flex centered-label" */ className="text-center w-100"
           >
-            <Form.Group controlId="aboutMeTextarea">
-              <Form.Label>About Me</Form.Label>
-              <Form.Control
-                as="textarea"
-                className="bg-color-light hide-scrollbar about-me-form mt-0 w-100"
-                rows={2}
-                readOnly
-                value={aboutMe}
-                placeholder="What do you look for in parent friends?"
-              />
-            </Form.Group>
-          </Form>
+            <Col>
+              <strong>About Me</strong>
+            </Col>
+            <textarea
+              className="hide-scrollbar mt-0 w-100"
+              rows={2}
+              readOnly
+              value={aboutMe}
+              placeholder="What do you look for in parent friends?"
+            />
+          </Col>
         </Row>
-      </Container>
-
+      </Card>
       <EditProfilePopup
         popupTitle="Edit Profile"
         show={show}

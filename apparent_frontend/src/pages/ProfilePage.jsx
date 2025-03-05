@@ -4,6 +4,7 @@ import Stack from "react-bootstrap/Stack";
 import { UserProfileInfo } from "../components/UserProfileInfo";
 import { PostSection } from "../components/PostSection";
 import { UserProfilePage } from "./ProfilePages/userProfilePage";
+import Container from "react-bootstrap/Container";
 
 export function ProfilePage() {
   const [profileData, setProfileData] = useState(null);
@@ -44,7 +45,12 @@ export function ProfilePage() {
 
   return (
     <>
+    <Container
+        fluid
+        className="min-vh-100 d-flex flex-column align-items-center pt-4"
+      >
       <UserProfilePage firstName={firstName} lastName={lastName} />
+      </Container>
     </>
   );
 }
