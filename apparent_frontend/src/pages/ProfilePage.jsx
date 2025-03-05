@@ -10,6 +10,7 @@ export function ProfilePage() {
   const [profileData, setProfileData] = useState(null);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [profilePicture, setProfilePicture] = useState("../APParent_logo.png");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -45,11 +46,16 @@ export function ProfilePage() {
 
   return (
     <>
-    <Container
+      <Container
         fluid
         className="min-vh-100 d-flex flex-column align-items-center pt-4"
       >
-      <UserProfilePage firstName={firstName} lastName={lastName} />
+        <UserProfilePage
+          firstName={firstName}
+          lastName={lastName}
+          profilePicture={profilePicture}
+          setProfilePicture={setProfilePicture}
+        />
       </Container>
     </>
   );

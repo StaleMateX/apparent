@@ -9,9 +9,9 @@ import Card from "react-bootstrap/Card";
 import { EditProfilePopup } from "./EditProfilePopup";
 import { ProfilePicture } from "../components/ProfilePicture";
 
-export function UserProfileInfo({ firstName, lastName }) {
+export function UserProfileInfo({ firstName, lastName, profilePicture, setProfilePicture }) {
   const [show, setShow] = useState(false);
-  const [profilePicture, setProfilePicture] = useState("../APParent_logo.png");
+
   const [collegeName, setCollegeName] = useState("");
   const [city, setCity] = useState("");
   const [state, setState] = useState("");

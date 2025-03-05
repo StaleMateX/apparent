@@ -1,16 +1,25 @@
 import "./PostCard.css";
 import Card from "react-bootstrap/Card";
+import Image from "react-bootstrap/Image";
+import Col from "react-bootstrap/Col";
 
 function cardWithImage() {}
 function cardNoImage() {}
 
-export function PostCard({ firstName, lastName }) {
+export function PostCard({ firstName, lastName, profilePicture }) {
   return (
     <>
-      <Card className="text-center m-2">
-        <Card.Header>
-          <Card.Img variant="top" src="holder.js/100px180" /> {firstName}{" "}
-          {lastName} timeposted{" "}
+      <Card className="card text-center">
+        <Card.Header className="d-flex p-3">
+          <Col>
+            <Image
+              className="card-picture"
+              roundedCircle
+              src={profilePicture}
+            />{" "}
+            {firstName} {lastName}
+          </Col>
+          2h
         </Card.Header>
         <Card.Body>
           <Card.Title>Special title treatment</Card.Title>

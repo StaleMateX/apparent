@@ -8,7 +8,7 @@ import ToggleButton from "react-bootstrap/ToggleButton";
 import Stack from "react-bootstrap/Stack";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 
-export function PostSection({ firstName, lastName }) {
+export function PostSection({ firstName, lastName, profilePicture }) {
   const [checked, setChecked] = useState(false);
   const [radioValue, setRadioValue] = useState("1");
 
@@ -49,7 +49,7 @@ export function PostSection({ firstName, lastName }) {
           </ToggleButton>
         </ToggleButtonGroup>
       </ToggleButtonGroup>
-      <PostCard firstName={firstName} lastName={lastName} />
+      <PostCard firstName={firstName} lastName={lastName} profilePicture={profilePicture}/>
     </>
   );
 }
