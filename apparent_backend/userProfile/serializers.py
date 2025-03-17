@@ -1,21 +1,29 @@
 from rest_framework import serializers
-from .models import Profile
+from .models import Profile, Hobby
 
-class ProfileSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source="user.username", read_only=True)  # Get username from related User model
-    #username = serializers.StringRelatedField(read_only=True)
-    profile_image = serializers.SerializerMethodField()
+class HobbySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Hobby
+        fields = ["hobby_type"]
+
+class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+    username = serializers.CharField(source="user.username", read_only=True)
     first_name = serializers.CharField(source="user.first_name", read_only=True)
-    last_name = serializers.CharField    (source="user.last_name", read_only=True)
-
-    def get_profile_image(self, obj):
-        request = self.context.get('request')
-        if isinstance(obj, Profile):  # Ensure obj is a Profile instance
-            if obj.profile_image:
-                return request.build_absolute_uri(obj.profile_image.url)  # Returns full URL
-        return None
+    last_name = serializers.CharField(source="user.last_name", read_only=True)
+    profile_image = serializers.ImageField(required=False)
+    hobbies = HobbySerializer(many=True)
+    friends = serializers.SerializerMethodField()
 
     class Meta:
         model = Profile
-        fields = ['username', 'uID', 'first_name', 'last_name', 'profile_image']
-        read_only_fields = ['uID', 'username', 'first_name', 'last_name']  # uID, username is read-only
+        fields = [
+            "username", "first_name", "last_name", "profile_image",
+            "background_check", "phone_number", "city", "state",
+            "institution", "about_me", "hobbies", "class_standing", "friends"
+        ]
+        read_only_fields = ["username", "first_name", "last_name"]
+
+    def get_friends(self, obj):
+        return [ friend.user.get_full_name() or
+                friend.user.username for friend in
+                obj.friends.all()]
