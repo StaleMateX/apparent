@@ -26,7 +26,7 @@ import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Offcanvas from "react-bootstrap/Offcanvas";
 
-export function CustomNavbar({ onLogout }) {
+export function CustomNavbar({ onLogout, firstName, lastName }) {
   return (
     <>
       {/* false, 'sm', 'md', 'lg', 'xl', 'xxl' dynamically input one of these based on browser window size*/}
@@ -58,7 +58,8 @@ export function CustomNavbar({ onLogout }) {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav.Link href="#/Profile">
-                  <FontAwesomeIcon icon={faHouse} /> FName LName{" "}
+                  <FontAwesomeIcon icon={faHouse} />
+                  {` ${firstName} ${lastName}`}
                 </Nav.Link>
                 <Nav.Link href="#/CareMap">
                   <FontAwesomeIcon icon={faMapLocationDot} /> Shared Care{" "}

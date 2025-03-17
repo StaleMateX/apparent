@@ -14,10 +14,11 @@ import { useState } from "react";
 import { PrivateLayout } from "./components/Layouts/PrivateLayout";
 import { PublicLayout } from "./components/Layouts/PublicLayout";
 import { PrivateRoutes } from "./components/Routes/PrivateRoutes";
-import { Outlet } from "react-router-dom";
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
 
   const handleLogin = () => setIsLoggedIn(true);
   const handleLogout = () => {
@@ -36,7 +37,15 @@ function App() {
         </Route>
 
         {/* Private Routes */}
-        <Route element={<PrivateLayout onLogout={handleLogout} />}>
+        <Route
+          element={
+            <PrivateLayout
+              onLogout={handleLogout}
+              firstName={firstName}
+              lastName={lastName}
+            />
+          }
+        >
           <Route path="/home" element={<Home />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
@@ -46,7 +55,17 @@ function App() {
             }
           >
             {/*  */}
-            <Route path="/profile" element={<ProfilePage />} />
+            <Route
+              path="/profile"
+              element={
+                <ProfilePage
+                  firstName={firstName}
+                  lastName={lastName}
+                  setFirstName={setFirstName}
+                  setLastName={setLastName}
+                />
+              }
+            />
             <Route path="/caremap" element={<Map />} />
             <Route path="/forum" element={<Forum />} />
             <Route path="/matching" element={<Matching />} />

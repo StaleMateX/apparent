@@ -3,10 +3,13 @@ import apiClient from "../apiClient";
 import Container from "react-bootstrap/Container";
 import { UserProfilePage } from "./ProfilePages/UserProfilePage";
 
-export function ProfilePage() {
+export function ProfilePage({
+  firstName,
+  lastName,
+  setFirstName,
+  setLastName,
+}) {
   const [profileData, setProfileData] = useState(null);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
