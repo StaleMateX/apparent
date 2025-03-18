@@ -4,7 +4,7 @@ import axios from "axios";
 Axios calls this an axios instance
 See https://axios-http.com/docs/instance */
 const apiClient = axios.create({
-  baseURL: "/api/",
+  baseURL: "http://127.0.0.1:8000/api/",
   headers: {
     "Content-Type": "application/json",
   },

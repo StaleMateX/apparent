@@ -9,16 +9,24 @@ import Card from "react-bootstrap/Card";
 import { EditProfilePopup } from "./EditProfilePopup";
 import { ProfilePicture } from "../components/ProfilePicture";
 
-export function UserProfileInfo({ firstName, lastName, profilePicture, setProfilePicture }) {
+export function UserProfileInfo({
+  firstName,
+  lastName,
+  profilePicture,
+  setProfilePicture,
+  profileData,
+  setProfileData,
+}) {
   const [show, setShow] = useState(false);
-
-  const [collegeName, setCollegeName] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [hobbies, setHobbies] = useState(["I'm keeping it a mystery"]);
-  const [backgroundCheck, setBackgroundCheck] = useState("In Progress");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const [aboutMe, setAboutMe] = useState("");
+  const [collegeName, setCollegeName] = useState(profileData.institution);
+  const [city, setCity] = useState(profileData.city);
+  const [state, setState] = useState(profileData.state);
+  const [hobbies, setHobbies] = useState(profileData.hobbies);
+  const [backgroundCheck, setBackgroundCheck] = useState(
+    profileData.backgroundCheck
+  );
+  const [phoneNumber, setPhoneNumber] = useState(profileData.phone_number);
+  const [aboutMe, setAboutMe] = useState(profileData.about_me);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);

@@ -23,7 +23,7 @@ export function Forum({ onLogout }) {
         }
 
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/userProfile/", {
+            const response = await fetch("http://127.0.0.1:8000/api/profile/", {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`,

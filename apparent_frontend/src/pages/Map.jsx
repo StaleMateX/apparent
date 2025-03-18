@@ -12,7 +12,7 @@ export function Map() {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/userProfile/", {
+    fetch("http://127.0.0.1:8000/api/profile/", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
@@ -165,7 +165,6 @@ export function Map() {
         mapboxAccessToken={MAPBOX_TOKEN}
         mapStyle="mapbox://styles/mapbox/streets-v11"
         onContextMenu={handleRightClick} // Right-click to add pin
-        
       >
         {pins.map((pin) => (
           <Marker
