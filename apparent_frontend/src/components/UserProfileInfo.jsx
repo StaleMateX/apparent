@@ -32,7 +32,13 @@ export function UserProfileInfo({
   const handleShow = () => setShow(true);
 
   const formatHobbies = (hobbies) =>
-    hobbies.length > 0 ? hobbies.join(", ") : "Not Shared";
+    hobbies.length > 0
+      ? hobbies
+          .map((hobby_obj) => {
+            return hobby_obj.hobby_type;
+          })
+          .join(", ")
+      : "Not Shared";
 
   return (
     <>
