@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Profile
 from .serializers import ProfileSerializer
+from .models import Hobby
+from .serializers import HobbySerializer
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import get_object_or_404
 
@@ -59,3 +61,8 @@ class ProfileViewSet(ModelViewSet):
     #         if obj.profile_image:
     #             return request.build_absolute_uri(obj.profile_image.url) if request else obj.profile_image.url
     #         return None
+
+class HobbyViewSet(ModelViewSet):
+    queryset = Hobby.objects.all()
+    serializer_class = HobbySerializer
+    permission_classes = [IsAuthenticated]
