@@ -25,9 +25,12 @@ export function UserProfileInfo({
   const [state, setState] = useState(profileData.state || "Not Shared");
   const [hobbies, setHobbies] = useState(profileData.hobbies);
   const [backgroundCheck, setBackgroundCheck] = useState(
-    profileData.backgroundCheck || "No"
+    profileData.background_check_display || "No"
   );
   const [phoneNumber, setPhoneNumber] = useState(profileData.phone_number);
+  const [classStanding, setClassStanding] = useState(
+    profileData.class_standing_display
+  );
   const [aboutMe, setAboutMe] = useState(profileData.about_me);
 
   const handleClose = () => setShow(false);
@@ -102,16 +105,19 @@ export function UserProfileInfo({
             <Row>
               <Col className="p-2 info-container">
                 <p className="info-text">
-                  <strong>Education: </strong>
-                  {`${collegeName || "None"}`}
-                </p>
-                <p className="info-text">
                   <strong>Hometown: </strong>
                   {`${city ? `${city}, ` : ""}${state || "None"}`}
                 </p>
                 <p className="info-text">
+                  <strong>Education: </strong>
+                  {`${collegeName || "None"}`}
+                </p>
+                <p className="info-text">
+                  <strong>Class Standing: </strong> {`${classStanding}`}
+                </p>
+                <p className="info-text">
                   <strong>Background Check: </strong>
-                  {`${backgroundCheck || "Unknown"}`}
+                  {`${backgroundCheck}`}
                 </p>
               </Col>
               <Col className="p-2 info-container">
@@ -119,9 +125,6 @@ export function UserProfileInfo({
                   <strong>{"Hobbies: "}</strong>
                   <br />
                   {formatHobbies(hobbies)}
-                </p>
-                <p className="info-text">
-                  <strong>Children: </strong> TBA
                 </p>
               </Col>
             </Row>

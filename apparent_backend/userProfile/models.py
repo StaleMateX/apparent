@@ -31,7 +31,7 @@ class Profile(models.Model):
     """ The constants are from: https://docs.djangoproject.com/en/5.1/ref/models/fields/ """
 
     class YearInSchool(models.TextChoices):
-        NOT_SPECIFIED = "NS", "NOT SPECIFIED"
+        NOT_SPECIFIED = "NS", "Not specified"
         FRESHMAN = "FR", "Freshman"
         SOPHMORE = "SO", "Sophomore"
         JUNIOR = "JR", "Junior"
@@ -41,8 +41,8 @@ class Profile(models.Model):
 
     class BackgroundCheck(models.TextChoices):
         CLEARED = 'CL', "Cleared"
-        IN_PROGRESS = 'IP', "In Progress"
-        NONE = 'NO', "None"
+        IN_PROGRESS = 'IP', "In progress"
+        NONE = 'NO', "Not started"
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # Link to the User model
     profile_image = models.ImageField(
