@@ -2,9 +2,11 @@ from rest_framework import serializers
 from .models import Profile, Hobby
 
 class HobbySerializer(serializers.ModelSerializer):
+    hobby_type_display = serializers.CharField(source="get_hobby_type_display", read_only=True)
+
     class Meta:
         model = Hobby
-        fields = ["hobby_type"]
+        fields = ["hobby_type", "hobby_type_display"]
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.CharField(source="user.username", read_only=True)
