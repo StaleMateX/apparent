@@ -3,10 +3,15 @@ from .models import Profile, Hobby
 
 class HobbySerializer(serializers.ModelSerializer):
     hobby_type_display = serializers.CharField(source="get_hobby_type_display", read_only=True)
+    # This will call the get_hobby_options by convention of starting the function with get_var_name
+    hobby_options = serializers.SerializerMethodField()
 
     class Meta:
         model = Hobby
-        fields = ["hobby_type", "hobby_type_display"]
+        fields = ["hobby_type", "hobby_type_display", "hobby_options"]
+
+    def get_hobby_options(self, obj):
+        return [{"short_hand": choices.value, "description": choices.label} for choices in Hobby.Hobbies]
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.CharField(source="user.username", read_only=True)
