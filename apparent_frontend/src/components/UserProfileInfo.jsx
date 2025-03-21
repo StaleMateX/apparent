@@ -40,46 +40,8 @@ export function UserProfileInfo({
     if (!hobbies || hobbies.length === 0) {
       return "No hobbies to share.";
     }
-
     return hobbies.map((hobby_obj) => {
-      let hobbyDescription = "";
-
-      switch (hobby_obj.hobby_type) {
-        case "NS":
-          hobbyDescription = "Ask me to find out";
-          break;
-        case "OP":
-          hobbyDescription = "Everything from hiking to reading indoors";
-          break;
-        case "FL":
-          hobbyDescription =
-            "Family Life - parks, kid's places, museums, pools";
-          break;
-        case "SO":
-          hobbyDescription =
-            "Socials - dinners, brunches, parties, board games";
-          break;
-        case "CI":
-          hobbyDescription =
-            "Chill Indoors - reading, Netflix and chill, games, movies";
-          break;
-        case "AI":
-          hobbyDescription =
-            "Active Indoors - pilates, weight-lifting, dancing, martial arts";
-          break;
-        case "CO":
-          hobbyDescription =
-            "Chill Outdoors - strolling, site-seeing, gardening, yoga";
-          break;
-        case "AO":
-          hobbyDescription =
-            "Active Outdoors - hiking, camping, biking, mud-runners";
-          break;
-        default:
-          hobbyDescription = "Add a hobby";
-      }
-
-      return <p key={hobby_obj.hobby_type}>{hobbyDescription}</p>;
+      return <p key={hobby_obj.hobby_type}>{hobby_obj.hobby_type_display}</p>;
     });
   };
 
