@@ -13,13 +13,15 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     profile_image = serializers.ImageField(required=False)
     hobbies = HobbySerializer(many=True)
     friends = serializers.SerializerMethodField()
+    class_standing_display = serializers.CharField(source="get_class_standing_display", read_only=True) # We can still update the class standing using the actual model field.
+    background_check_display = serializers.CharField(source="get_background_check_display", read_only=True)
 
     class Meta:
         model = Profile
         fields = [
             "username", "first_name", "last_name", "profile_image",
-            "background_check", "phone_number", "city", "state",
-            "institution", "about_me", "hobbies", "class_standing", "friends"
+            "background_check_display", "phone_number", "city", "state",
+            "institution", "about_me", "hobbies", "class_standing","class_standing_display", "friends"
         ]
         read_only_fields = ["username", "first_name", "last_name"]
 
