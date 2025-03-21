@@ -41,4 +41,7 @@
 
   .dropdown-menu {
     min-width: auto;
+      position: absolute !important;
+      transform: translateY(10px) translateX(50px)!important;
+      z-index: 1050;
   }

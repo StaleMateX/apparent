@@ -121,18 +121,20 @@ export function CustomNavbar({ onLogout, firstName, lastName }) {
             </Nav.Link>
             <Nav className="me-5">
               <NavDropdown
-                className="me-5"
-                title={<FontAwesomeIcon className="icons" icon={faUser} />}
-                id={`offcanvasNavbarDropdown-expand-${expand}`}
-              >
-                <NavDropdown.Item href="#/Profile">Home</NavDropdown.Item>
-                <NavDropdown.Item href="#/About">About</NavDropdown.Item>
-                <NavDropdown.Item href="#/Contact">Contact Us</NavDropdown.Item>
-                <NavDropdown.Divider />
-                <NavDropdown.Item onClick={onLogout} href="#/login">
-                  Logout
-                </NavDropdown.Item>
-              </NavDropdown>
+                  className="me-5"
+                  title={<FontAwesomeIcon className="icons" icon={faUser} />}
+                  id={`offcanvasNavbarDropdown-expand-${expand}`}
+                  align="end"
+                  renderMenuOnMount={true}
+                >
+                  <NavDropdown.Item href="#/Profile">Home</NavDropdown.Item>
+                  <NavDropdown.Item href="#/About">About</NavDropdown.Item>
+                  <NavDropdown.Item href="#/Contact">Contact Us</NavDropdown.Item>
+                  <NavDropdown.Divider />
+                  <NavDropdown.Item onClick={onLogout} href="#/login">
+                    Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
             </Nav>
           </Container>
         </Navbar>

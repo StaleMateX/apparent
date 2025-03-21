@@ -193,7 +193,7 @@ export function Forum({ onLogout }) {
             </div>
             <h2>Posts</h2>
             <div>
-                {posts.map((post) => (
+                {posts.slice().reverse().map((post) => (
                     <div key={post.id} className="post-container">
                         <div className="post-header">
                             <strong>{post.title}</strong> <span className="post-user"> by {post.user} </span>
