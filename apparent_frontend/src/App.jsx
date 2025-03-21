@@ -6,8 +6,6 @@ import { Contact } from "./pages/Contact";
 import { Map } from "./pages/Map";
 import { ProfilePage } from "./pages/ProfilePage";
 import { Forum } from "./pages/Forum";
-import { Matching } from "./pages/Matching";
-import { Messages } from "./pages/Messages";
 import { LoginPage } from "./pages/LoginPage";
 import { Register } from "./pages/Register";
 import { useState } from "react";
@@ -68,8 +66,6 @@ function App() {
             />
             <Route path="/caremap" element={<Map />} />
             <Route path="/forum" element={<Forum />} />
-            <Route path="/matching" element={<Matching />} />
-            <Route path="/messages" element={<Messages />} />
           </Route>
         </Route>
       </Routes>
