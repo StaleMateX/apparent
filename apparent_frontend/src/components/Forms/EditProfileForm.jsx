@@ -20,6 +20,7 @@ export function EditProfileForm({
   aboutMe,
   setAboutMe,
   handleClose,
+  updateProfileData,
 }) {
   const [newProfilePicture, setLocalProfilePicture] = useState(profilePicture);
   const [newCity, setLocalCity] = useState(city);
@@ -40,16 +41,6 @@ export function EditProfileForm({
     hobbies.length > 0 && Array.isArray(hobbies[0].hobby_options)
       ? hobbies[0].hobby_options
       : [];
-  // const hobbiesOptions = [
-  //   "Active Outdoors: Hiking, camping, biking, mud-runners",
-  //   "Chill Outdoors: Strolling, site-seeing, gardening, yoga",
-  //   "Active Indoors: Pilates, weight-lifting, dancing, martial arts",
-  //   "Chill Indoors: Reading, Netflix and Chilling, games, movies",
-  //   "Socials: Dinners, brunches, parties, board games",
-  //   "Family Life: Parks, kid's places, museums, pools",
-  //   "I'm open to anything",
-  //   "I'm keeping it a mystery",
-  // ];
 
   const handleSelectedPath = (event) => {
     const file = event.target.files[0];
@@ -68,15 +59,24 @@ export function EditProfileForm({
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    if (profilePicture !== newProfilePicture) {
-      setProfilePicture(URL.createObjectURL(newProfilePicture));
-    }
+    // if (profilePicture !== newProfilePicture) {
+    //   setProfilePicture(URL.createObjectURL(newProfilePicture));
+    // }
     setCity(newCity);
     setState(newState);
     setCollegeName(newCollegeName);
     setPhoneNumber(newPhoneNumber);
-    setHobbies(newHobbies);
+    // setHobbies(newHobbies);
     setAboutMe(newAboutMe);
+    updateProfileData({
+      //profile_image: newProfilePicture,
+      city: newCity,
+      state: newState,
+      institution: newCollegeName,
+      phone_number: newPhoneNumber,
+      //hobbies: newHobbies.map((hobby) => hobby.hobby_type),
+      about_me: newAboutMe,
+    });
     handleClose();
   };
 

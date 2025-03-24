@@ -1,5 +1,5 @@
 import "./UserProfileInfo.css";
-import { useState, useContext, createContext, useMemo } from "react";
+import { useState, useContext, createContext, useMemo, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -8,6 +8,7 @@ import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import { EditProfilePopup } from "./EditProfilePopup";
 import { ProfilePicture } from "../components/ProfilePicture";
+import apiClient from "../apiClient";
 
 export function UserProfileInfo({
   firstName,
@@ -16,8 +17,11 @@ export function UserProfileInfo({
   setProfilePicture,
   profileData,
   setProfileData,
+  updatedProfile,
+  setUpdatedProfile,
 }) {
   const [show, setShow] = useState(false);
+  const [callAPI, setCallAPI] = useState(false);
   const [collegeName, setCollegeName] = useState(
     profileData.institution || "Not Shared"
   );
@@ -47,6 +51,19 @@ export function UserProfileInfo({
         </p>
       );
     });
+  };
+
+  const updateProfileData = async (updatedProfileData) => {
+    try {
+      const response = await apiClient.patch(
+        "/profile/update/",
+        updatedProfileData
+      );
+      //setUpdatedProfile(true);
+    } catch (error) {
+      console.error("Error updating profile data:", error);
+      alert("Error updating profile data");
+    }
   };
 
   return (
@@ -133,6 +150,7 @@ export function UserProfileInfo({
           setPhoneNumber,
           aboutMe,
           setAboutMe,
+          updateProfileData,
         }}
       />
     </>

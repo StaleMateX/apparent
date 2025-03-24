@@ -9,7 +9,7 @@ export function UserProfilePage({
   profilePicture,
   setProfilePicture,
   profileData,
-  setProfileData
+  setProfileData,
 }) {
   return (
     <>

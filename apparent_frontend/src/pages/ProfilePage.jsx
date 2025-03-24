@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import apiClient from "../apiClient";
 import Container from "react-bootstrap/Container";
 import { UserProfilePage } from "./ProfilePages/UserProfilePage";
+import { EditProfileForm } from "../components/Forms/EditProfileForm";
 
 export function ProfilePage({
   firstName,
@@ -10,6 +11,7 @@ export function ProfilePage({
   setLastName,
 }) {
   const [profileData, setProfileData] = useState(null);
+  const [updatedProfile, setUpdatedProfile] = useState(false);
   const [profilePicture, setProfilePicture] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -28,7 +30,7 @@ export function ProfilePage({
     };
 
     fetchProfileData();
-  }, []);
+  }, [updatedProfile]);
 
   useEffect(() => {
     if (profileData) {
