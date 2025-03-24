@@ -11,7 +11,7 @@ class HobbySerializer(serializers.ModelSerializer):
         fields = ["hobby_type", "hobby_type_display", "hobby_options"]
 
     def get_hobby_options(self, obj):
-        return [{"short_hand": choices.value, "description": choices.label} for choices in Hobby.Hobbies]
+        return [{"hobby_type": choices.value, "hobby_type_display": choices.label} for choices in Hobby.Hobbies]
 
 class ProfileSerializer(serializers.HyperlinkedModelSerializer):
     username = serializers.CharField(source="user.username", read_only=True)
