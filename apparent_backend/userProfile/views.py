@@ -21,6 +21,11 @@ class ProfileViewSet(ModelViewSet):
             return self.queryset
         return self.queryset.filter(user=user)
 
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = get_object_or_404(queryset, user=self.request.user)
+        self.check_object_permissions(self.request, obj)
+        return obj
 
     # def get_object(self):
     #     obj, created = Profile.objects.get_or_create(user=self.request.user)

@@ -7,4 +7,5 @@ router.register("", ProfileViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
+    path('update/', ProfileViewSet.as_view({'patch': 'partial_update'})),
 ]
