@@ -26,19 +26,33 @@ export function EditProfileForm({
   const [newState, setLocalState] = useState(state);
   const [newCollegeName, setLocalCollegeName] = useState(collegeName);
   const [newPhoneNumber, setLocalPhoneNumber] = useState(phoneNumber);
-  const [newHobbies, setLocalHobbies] = useState(hobbies);
+  const [newHobbies, setLocalHobbies] = useState(
+    hobbies.length > 0
+      ? hobbies.map((hobby) => ({
+          hobby_type: hobby.hobby_type,
+          hobby_type_display: hobby.hobby_type_display,
+        }))
+      : []
+  );
   const [newAboutMe, setLocalAboutMe] = useState(aboutMe);
 
-  const hobbiesOptions = [
-    "Active Outdoors: Hiking, camping, biking, mud-runners",
-    "Chill Outdoors: Strolling, site-seeing, gardening, yoga",
-    "Active Indoors: Pilates, weight-lifting, dancing, martial arts",
-    "Chill Indoors: Reading, Netflix and Chilling, games, movies",
-    "Socials: Dinners, brunches, parties, board games",
-    "Family Life: Parks, kid's places, museums, pools",
-    "I'm open to anything",
-    "I'm keeping it a mystery",
-  ];
+  const hobbyOptions =
+    hobbies.length > 0 && Array.isArray(hobbies[0].hobby_options)
+      ? hobbies[0].hobby_options.map((hobby) => ({
+          hobby_type: hobby.short_hand,
+          hobby_type_display: hobby.description,
+        }))
+      : [];
+  // const hobbiesOptions = [
+  //   "Active Outdoors: Hiking, camping, biking, mud-runners",
+  //   "Chill Outdoors: Strolling, site-seeing, gardening, yoga",
+  //   "Active Indoors: Pilates, weight-lifting, dancing, martial arts",
+  //   "Chill Indoors: Reading, Netflix and Chilling, games, movies",
+  //   "Socials: Dinners, brunches, parties, board games",
+  //   "Family Life: Parks, kid's places, museums, pools",
+  //   "I'm open to anything",
+  //   "I'm keeping it a mystery",
+  // ];
 
   const handleSelectedPath = (event) => {
     const file = event.target.files[0];
@@ -55,7 +69,6 @@ export function EditProfileForm({
     }
   };
 
-  // TODO: PLACE HOBBIES IN THE DATABASE RATHER THAN HERE? DISCUSS.
   const handleSubmit = (event) => {
     event.preventDefault();
     if (profilePicture !== newProfilePicture) {
@@ -118,8 +131,10 @@ export function EditProfileForm({
       <Form.Group className="mb-3" controlId="multiSelect">
         <Form.Label>Select up to 4 hobbies</Form.Label>
         <Multiselect
-          data={hobbiesOptions}
-          defaultValue={newHobbies}
+          dropUp
+          dataKey="hobby_type"
+          textField="hobby_type_display"
+          data={hobbyOptions}
           value={newHobbies}
           onChange={handleHobbiesChange}
           placeholder="Select your hobbies"

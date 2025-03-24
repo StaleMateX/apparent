@@ -19,14 +19,7 @@ export function EditProfilePopup({
         <Modal.Body scrollable="true">
           <EditProfileForm handleClose={handleClose} {...props} />
         </Modal.Body>
-        <Modal.Footer>
-          {/* <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleSave}>
-            Save Changes
-          </Button> */}
-        </Modal.Footer>
+        <Modal.Footer></Modal.Footer>
       </Modal>
     </>
   );

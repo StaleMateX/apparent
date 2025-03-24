@@ -41,7 +41,11 @@ export function UserProfileInfo({
       return "No hobbies to share.";
     }
     return hobbies.map((hobby_obj) => {
-      return <p key={hobby_obj.hobby_type}>{hobby_obj.hobby_type_display}</p>;
+      return (
+        <p className="info-text" key={hobby_obj.hobby_type}>
+          {hobby_obj.hobby_type_display}
+        </p>
+      );
     });
   };
 
@@ -83,11 +87,8 @@ export function UserProfileInfo({
                 </p>
               </Col>
               <Col className="p-2 info-container">
-                <p className="info-text">
-                  <strong>{"Hobbies: "}</strong>
-                  <br />
-                  {formatHobbies(hobbies)}
-                </p>
+                <strong>{"Hobbies: "}</strong>
+                {formatHobbies(hobbies)}
               </Col>
             </Row>
           </Col>
