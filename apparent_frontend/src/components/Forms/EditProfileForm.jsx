@@ -38,10 +38,7 @@ export function EditProfileForm({
 
   const hobbyOptions =
     hobbies.length > 0 && Array.isArray(hobbies[0].hobby_options)
-      ? hobbies[0].hobby_options.map((hobby) => ({
-          hobby_type: hobby.short_hand,
-          hobby_type_display: hobby.description,
-        }))
+      ? hobbies[0].hobby_options
       : [];
   // const hobbiesOptions = [
   //   "Active Outdoors: Hiking, camping, biking, mud-runners",
