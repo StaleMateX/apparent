@@ -55,11 +55,11 @@ export function UserProfileInfo({
 
   const updateProfileData = async (updatedProfileData) => {
     try {
-      const response = await apiClient.patch(
+      const response = await apiClient("multipart/form-data").patch(
         "/profile/update/",
         updatedProfileData
       );
-      //setUpdatedProfile(true);
+      setUpdatedProfile(true);
     } catch (error) {
       console.error("Error updating profile data:", error);
       alert("Error updating profile data");

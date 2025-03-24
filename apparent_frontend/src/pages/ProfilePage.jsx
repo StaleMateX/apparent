@@ -19,7 +19,7 @@ export function ProfilePage({
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const response = await apiClient.get(`/profile/`);
+        const response = await apiClient("application/json").get(`/profile/`);
         setProfileData(response.data[0]);
       } catch (err) {
         setError("Error fetching profile data");
@@ -54,6 +54,7 @@ export function ProfilePage({
         profilePicture={profilePicture}
         setProfilePicture={setProfilePicture}
         profileData={profileData}
+        setUpdatedProfile={setUpdatedProfile}
       />
     </Container>
   );

@@ -68,15 +68,16 @@ export function EditProfileForm({
     setPhoneNumber(newPhoneNumber);
     // setHobbies(newHobbies);
     setAboutMe(newAboutMe);
-    updateProfileData({
-      //profile_image: newProfilePicture,
-      city: newCity,
-      state: newState,
-      institution: newCollegeName,
-      phone_number: newPhoneNumber,
-      //hobbies: newHobbies.map((hobby) => hobby.hobby_type),
-      about_me: newAboutMe,
-    });
+    const formData = new FormData();
+    if (newProfilePicture) {
+      formData.append("profile_image", newProfilePicture);
+    }
+    formData.append("city", newCity);
+    formData.append("state", newState);
+    formData.append("institution", newCollegeName);
+    formData.append("phone_number", newPhoneNumber);
+    formData.append("about_me", newAboutMe);
+    updateProfileData(formData);
     handleClose();
   };
 
