@@ -3,6 +3,10 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+# Helper function for media path naming.
+def user_directory_path(instance, filename):
+    return f'profile_pictures/{instance.user.username}/{filename}'
+
 class Hobby(models.Model):
 
     class Hobbies(models.TextChoices):
@@ -23,12 +27,7 @@ class Hobby(models.Model):
     def __str__(self):
         return self.get_hobby_type_display()
 
-def user_directory_path(instance, filename):
-    """Uploads image to a user's profile folder inside MEDIA_ROOT/profile_pictures/"""
-    return f'profile_pictures/{instance.user.username}/{filename}'
-
 class Profile(models.Model):
-    """ The constants are from: https://docs.djangoproject.com/en/5.1/ref/models/fields/ """
 
     class YearInSchool(models.TextChoices):
         NOT_SPECIFIED = "NS", "Not specified"
