@@ -121,6 +121,7 @@ export function Forum({ onLogout }) {
             });
             if (response.ok) {
                 fetchPosts();
+                setSelectedPost(null); // Close the modal after successful deletion
             } else {
                 console.error('Error deleting post:', await response.json());
             }
