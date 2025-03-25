@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import './Forum.css';
 import { useNavigate } from 'react-router-dom';
+import Modal from 'react-modal';
 
 export function Forum({ onLogout }) {
     const [posts, setPosts] = useState([]);
@@ -9,6 +10,10 @@ export function Forum({ onLogout }) {
     const [newCommentContent, setNewCommentContent] = useState('');
     const navigate = useNavigate();
     const [currentUser, setCurrentUser] = useState(null);
+    const [selectedPost, setSelectedPost] = useState(null);
+
+    // close modal when clicking outside or pressing Escape
+    const closeModal = () => setSelectedPost(null);
 
     useEffect(() => {
         fetchPosts();
@@ -175,7 +180,7 @@ export function Forum({ onLogout }) {
 
 
     return (
-            <div className="forum-container">
+        <div className="forum-container">
             <h1>Forum</h1>
             <div className="submit-section">
                 <input
@@ -191,45 +196,66 @@ export function Forum({ onLogout }) {
                 />
                 <button onClick={handlePostSubmit}>Submit</button>
             </div>
+
             <h2>Posts</h2>
             <div>
                 {posts.slice().reverse().map((post) => (
-                    <div key={post.id} className="post-container">
+                    <div key={post.id} className="post-container" onClick={() => setSelectedPost(post)}>
                         <div className="post-header">
                             <strong>{post.title}</strong> <span className="post-user"> by {post.user} </span>
                             {currentUser?.username === post.user && (
-                                <button onClick={() => handleDeletePost(post.id)}>
+                                <button onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeletePost(post.id);
+                                }}>
                                     Delete Post
                                 </button>
                             )}
                         </div>
                         <p className="post-content">{post.content}</p>
-                        <h3>Comments</h3>
-                        <div className="comment-container">
-                            {post.comments.map((comment) => (
-                                <div key={comment.id} className="comment">
-                                    <strong>{comment.user}:</strong> <span className="comment-content">{comment.content}</span>
-                                    {currentUser?.username === comment.user && (
-                                        <button
-                                            onClick={() => handleDeleteComment(comment.id)}
-                                        >
-                                            Delete
-                                        </button>
-                                    )}
-                                </div>
-                            ))}
-                            <div className="comment-form">
-                                <textarea
-                                    value={newCommentContent}
-                                    onChange={(e) => setNewCommentContent(e.target.value)}
-                                    placeholder="Write a comment..."
-                                />
-                                <button onClick={() => handleCommentSubmit(post.id)}>Add Comment</button>
-                            </div>
-                        </div>
                     </div>
                 ))}
             </div>
+
+            {/* Modal for Viewing Post */}
+            <Modal
+                isOpen={!!selectedPost}
+                onRequestClose={closeModal}
+                className="modal-container"
+                overlayClassName="modal-overlay"
+            >
+                {selectedPost && (
+                    <div className="modal-content">
+                        <button className="close-button" onClick={closeModal}>×</button>
+                        <h2>{selectedPost.title}</h2>
+                        <p>{selectedPost.content}</p>
+
+                        <h3>Comments</h3>
+                        {selectedPost.comments.map((comment) => (
+                            <div key={comment.id} className="comment">
+                                <strong>{comment.user}:</strong> {comment.content}
+                                {currentUser?.username === comment.user && (
+                                    <button onClick={() => handleDeleteComment(comment.id)}>Delete</button>
+                                )}
+                            </div>
+                        ))}
+
+                        {/* Add Comment */}
+                        <textarea
+                            value={newCommentContent}
+                            onChange={(e) => setNewCommentContent(e.target.value)}
+                            placeholder="Write a comment..."
+                        />
+                        <button onClick={() => handleCommentSubmit(selectedPost.id)}>Add Comment</button>
+
+                        {currentUser?.username === selectedPost.user && (
+                            <button className="delete-post-button" onClick={() => handleDeletePost(selectedPost.id)}>
+                                Delete Post
+                            </button>
+                        )}
+                    </div>
+                )}
+            </Modal>
         </div>
     );
 }

@@ -123,3 +123,44 @@ textarea {
     color: #2c3e50; 
     font-style: italic;
 }
+
+.modal-overlay {
+    background: rgba(0, 0, 0, 0.5);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.modal-container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 650px;
+    width: 90%;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+}
+
+.close-button {
+    position: absolute;
+    top: 8px;
+    right: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    border: none;
+    background: red;
+}
+
+.delete-post-button {
+    background: red;
+    color: white;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
