@@ -3,11 +3,35 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
+class Hobby(models.Model):
+
+    class Hobbies(models.TextChoices):
+        NOT_SPECIFIED = "NS", "Ask me to find out"
+        OPEN = "OP", "I'm open to anything"
+        FAMILY_LIFE = "FL", "Family Life: Parks, kid's places, museums, pools"
+        SOCIALS = "SO", "Socials: Dinners, brunches, parties, board games"
+        CHILL_INDOORS = "CI", "Chill Indoors: Reading, Netflix and chill, games, movies"
+        ACTIVE_INDOORS = "AI", "Active Indoors: Pilates, weight-lifting, dancing, martial arts"
+        CHILL_OUTDOORS = "CO", "Chill Outdoors: Strolling, site-seeing, gardening, yoga"
+        ACTIVE_OUTDOORS = "AO", "Active Outdoors: Hiking, camping, biking, mud-runners"
+
+
+    hobby_type = models.CharField(max_length=2,
+                                  choices=Hobbies.choices,
+                                  default=Hobbies.NOT_SPECIFIED)
+
+    def __str__(self):
+        return self.get_hobby_type_display()
+
+def user_directory_path(instance, filename):
+    """Uploads image to a user's profile folder inside MEDIA_ROOT/profile_pictures/"""
+    return f'profile_pictures/{instance.user.username}/{filename}'
+
 class Profile(models.Model):
     """ The constants are from: https://docs.djangoproject.com/en/5.1/ref/models/fields/ """
 
     class YearInSchool(models.TextChoices):
-        NOT_SPECIFIED = "", "NOT SPECIFIED"
+        NOT_SPECIFIED = "NS", "Not specified"
         FRESHMAN = "FR", "Freshman"
         SOPHMORE = "SO", "Sophomore"
         JUNIOR = "JR", "Junior"
@@ -17,12 +41,15 @@ class Profile(models.Model):
 
     class BackgroundCheck(models.TextChoices):
         CLEARED = 'CL', "Cleared"
-        IN_PROGRESS = 'IP', "In Progress"
-        NONE = 'NO', "None"
+        IN_PROGRESS = 'IP', "In progress"
+        NONE = 'NO', "Not started"
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # Link to the User model
-    uID = models.CharField(max_length=8, unique=True)  # Ensure unique IDs like "u1234567"
-    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True) # Provided by https://www.youtube.com/watch?v=xSUm6iMtREA at 46 minutes.
+    profile_image = models.ImageField(
+        upload_to=user_directory_path,  # Custom upload function
+        default="profile_pictures/jolly_rancher.jpg",  # Default profile picture
+        blank=True
+    ) # Provided by https://www.youtube.com/watch?v=xSUm6iMtREA at 46 minutes.
     background_check = models.CharField(max_length=2,
                                         choices=BackgroundCheck.choices,
                                         default=BackgroundCheck.NONE)
@@ -31,25 +58,12 @@ class Profile(models.Model):
     state = models.CharField(max_length=100, blank=True)
     institution = models.CharField(max_length=100, blank=True)
     about_me = models.TextField(max_length=175, blank=True) # max length is 150 for conciseness
-    hobbies = models.TextField(blank=True) #Todo: turn this to textchoice?
+    hobbies = models.ManyToManyField(Hobby, related_name="participants") # TODO: read from JSON hobbies list, adding user to each hobby group at a time.
     class_standing = models.CharField(max_length=2,
                                       choices=YearInSchool.choices,
-                                      blank=True,
-                                      default='',
+                                      default=YearInSchool.NOT_SPECIFIED,
                                       )
+    friends = models.ManyToManyField("self", symmetrical=True, blank=True)
 
     def __str__(self):
         return f"{self.user.get_full_name() or self.user.username} - Profile"
-
-@receiver(post_save, sender=User)
-def create_or_update(sender, instance, created, **kwargs):
-    if created:
-        last_profile = Profile.objects.order_by('-uID').first()
-        if last_profile and last_profile.uID.startswith('u'):
-            last_uID = int(last_profile.uID[1:])
-            new_uID = f"u{last_uID + 1:07d}"
-        else:
-            new_uID = "u0000001"
-        profile = Profile.objects.create(user=instance, uID=new_uID)
-    else:
-        instance.profile.save()

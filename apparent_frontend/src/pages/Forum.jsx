@@ -23,7 +23,7 @@ export function Forum({ onLogout }) {
         }
 
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/userProfile/", {
+            const response = await fetch("http://127.0.0.1:8000/api/profile/", {
                 method: "GET",
                 headers: {
                     Authorization: `Bearer ${token}`,
@@ -193,7 +193,7 @@ export function Forum({ onLogout }) {
             </div>
             <h2>Posts</h2>
             <div>
-                {posts.map((post) => (
+                {posts.slice().reverse().map((post) => (
                     <div key={post.id} className="post-container">
                         <div className="post-header">
                             <strong>{post.title}</strong> <span className="post-user"> by {post.user} </span>

@@ -1,22 +1,21 @@
-/* This Root code is in UserProfileInfo.css fails DRY */
-
-:root {
-    --bg-color-primary-light: #854db2ff;
-    --bg-color-secondary-light: #e4e2f3ff;
-    --bg-color-primary-dark: #35281dff;
-   }
-
 .custom-button-toolbar{
-    background-color: gainsboro;
-    flex-shrink:calc()
+    flex-shrink:calc();
 }
 
 .custom-button-group {
     flex-grow: 1;
 }
 
-  .custom-button{
-    background-color: var(--bg-color-primary-light);
-    border: none;
-    border-radius: 0;
-  }
+.custom-button{
+  background-color: var(--bg-color-primary-light);
+  border: none;
+  border-radius: 0;
+}
+
+.first{
+  border-radius: 5vb 0 0 5vb;
+}
+
+.last{
+  border-radius: 0 5vb 5vb 0;
+}

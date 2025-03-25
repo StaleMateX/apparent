@@ -12,16 +12,35 @@ export function Map() {
   const [currentUser, setCurrentUser] = useState(null);
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/userProfile/", {
+    fetch("http://127.0.0.1:8000/api/profile/", {
       headers: {
         Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     })
       .then((res) => res.json())
       .then((data) => {
-        setCurrentUser(data); // Save user data
+          console.log("User Profile Data:", data);
+          setCurrentUser(data[0]); // Save user data
       })
       .catch((error) => console.error("Error fetching user profile:", error));
+
+      fetch("http://127.0.0.1:8000/api/pins/", {
+          headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+      })
+          .then((response) => response.json())
+          .then((data) =>
+              setPins(
+                  data.map((pin) => ({
+                      ...pin,
+                      specificLocation: pin.specific_location,
+                      availableTime: pin.available_time,
+                      contactInfo: pin.contact_info,
+                  }))
+              )
+          )
+          .catch((error) => console.error("Error fetching pins:", error));
   }, []);
 
   const [viewport, setViewport] = useState({
@@ -29,6 +48,36 @@ export function Map() {
     longitude: -111.838,
     zoom: 14.5,
   });
+
+    const handleSidebarClick = (pin) => {
+        setSelectedPin(pin);
+        setViewport({
+            latitude: pin.latitude,
+            longitude: pin.longitude,
+            zoom: 16,
+        });
+    };
+
+    const [userLocation, setUserLocation] = useState(null); // Store user location
+
+    useEffect(() => {
+        // Get current location
+        navigator.geolocation.getCurrentPosition(
+            (position) => {
+                const { latitude, longitude } = position.coords;
+                setUserLocation({ latitude, longitude });
+
+                // Optionally, center map on user location
+                setViewport((prev) => ({
+                    ...prev,
+                    latitude,
+                    longitude,
+                }));
+            },
+            (error) => console.error("Error getting location:", error),
+            { enableHighAccuracy: true }
+        );
+    }, []);
 
   const [pins, setPins] = useState([]); // Local state for pins
   const [newPin, setNewPin] = useState(null); // Temporarily store coordinates of a new pin
@@ -158,321 +207,346 @@ export function Map() {
   };
 
   return (
-    <div className="map-container">
-      <ReactMapGL
-        {...viewport}
-        onMove={(event) => setViewport(event.viewState)} // Enable panning and zooming
-        mapboxAccessToken={MAPBOX_TOKEN}
-        mapStyle="mapbox://styles/mapbox/streets-v11"
-        onContextMenu={handleRightClick} // Right-click to add pin
-        
-      >
-        {pins.map((pin) => (
-          <Marker
-            key={pin.id}
-            longitude={pin.longitude}
-            latitude={pin.latitude}
-          >
-            <div
-              onClick={() => {
-                setSelectedPin(pin);
-                setIsEditing(false); // Ensure we're not in edit mode
-              }}
-              style={{
-                cursor: "pointer",
-                fontSize: "24px", // Larger pin
-                color: "red",
-              }}
-            >
-              📍
-            </div>
-          </Marker>
-        ))}
+      <div className="map-container">
+          <div className="sidebar">
+              <h2>Pin Information</h2>
+              <ul>
+                  {pins.map((pin) => (
+                      <li
+                          key={pin.id}
+                          onClick={() => handleSidebarClick(pin)}
+                          style={{cursor: "pointer", padding: "5px", borderBottom: "1px solid #ccc"}}
+                      >
+                          <h4>{pin.title}</h4>
+                          <p>{pin.about}</p>
+                          <p><strong>Location:</strong> {pin.specificLocation}</p>
+                          <p><strong>Time:</strong> {pin.availableTime}</p>
+                      </li>
+                  ))}
+              </ul>
+          </div>
 
-        {newPin && (
-          <Popup
-            longitude={newPin.longitude}
-            latitude={newPin.latitude}
-            anchor="top"
-            closeOnClick={false}
-            onClose={() => setNewPin(null)}
+          <ReactMapGL
+              {...viewport}
+              onMove={(event) => setViewport(event.viewState)} // Enable panning and zooming
+              mapboxAccessToken={MAPBOX_TOKEN}
+              mapStyle="mapbox://styles/mapbox/streets-v11"
+              onContextMenu={handleRightClick} // Right-click to add pin
           >
-            <div
-              style={{
-                background: "#333",
-                color: "#fff",
-                padding: "10px",
-                borderRadius: "5px",
-              }}
-            >
-              <input
-                type="text"
-                placeholder="What is this for?"
-                value={formData.title || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, title: e.target.value })
-                }
-                style={{
-                  width: "100%",
-                  marginBottom: "5px",
-                  padding: "5px",
-                  borderRadius: "3px",
-                  border: "1px solid #ccc",
-                }}
-              />
-              <textarea
-                placeholder="About"
-                value={formData.about || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, about: e.target.value })
-                }
-                style={{
-                  width: "100%",
-                  marginBottom: "5px",
-                  padding: "5px",
-                  borderRadius: "3px",
-                  border: "1px solid #ccc",
-                }}
-              />
-              <textarea
-                placeholder="Specific Location"
-                value={formData.specificLocation || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, specificLocation: e.target.value })
-                }
-                style={{
-                  width: "100%",
-                  marginBottom: "5px",
-                  padding: "5px",
-                  borderRadius: "3px",
-                  border: "1px solid #ccc",
-                }}
-              />
-              <textarea
-                placeholder="Available Time"
-                value={formData.availableTime || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, availableTime: e.target.value })
-                }
-                style={{
-                  width: "100%",
-                  marginBottom: "5px",
-                  padding: "5px",
-                  borderRadius: "3px",
-                  border: "1px solid #ccc",
-                }}
-              />
-              <textarea
-                placeholder="Contact Information"
-                value={formData.contactInfo || ""}
-                onChange={(e) =>
-                  setFormData({ ...formData, contactInfo: e.target.value })
-                }
-                style={{
-                  width: "100%",
-                  marginBottom: "5px",
-                  padding: "5px",
-                  borderRadius: "3px",
-                  border: "1px solid #ccc",
-                }}
-              />
-              <button
-                onClick={handleSavePin}
-                style={{
-                  background: "#555",
-                  color: "#fff",
-                  padding: "5px 10px",
-                  border: "none",
-                  borderRadius: "3px",
-                  cursor: "pointer",
-                }}
-              >
-                Save Pin
-              </button>
-            </div>
-          </Popup>
-        )}
-
-        {selectedPin && (
-          <Popup
-            longitude={selectedPin.longitude}
-            latitude={selectedPin.latitude}
-            anchor="top"
-            closeOnClick={false}
-            onClose={() => setSelectedPin(null)}
-          >
-            <div
-              style={{
-                background: "#333",
-                color: "#fff",
-                padding: "15px",
-                borderRadius: "5px",
-                fontSize: "16px",
-              }}
-            >
-              {isEditing ? (
-                <>
-                  <input
-                    type="text"
-                    placeholder="What is this for?"
-                    value={formData.title}
-                    onChange={(e) =>
-                      setFormData({ ...formData, title: e.target.value })
-                    }
-                    style={{
-                      width: "100%",
-                      marginBottom: "5px",
-                      padding: "5px",
-                      borderRadius: "3px",
-                      border: "1px solid #ccc",
-                    }}
-                  />
-                  <textarea
-                    placeholder="About"
-                    value={formData.about}
-                    onChange={(e) =>
-                      setFormData({ ...formData, about: e.target.value })
-                    }
-                    style={{
-                      width: "100%",
-                      marginBottom: "5px",
-                      padding: "5px",
-                      borderRadius: "3px",
-                      border: "1px solid #ccc",
-                    }}
-                  />
-                  <textarea
-                    placeholder="Specific Location"
-                    value={formData.specificLocation}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        specificLocation: e.target.value,
-                      })
-                    }
-                    style={{
-                      width: "100%",
-                      marginBottom: "5px",
-                      padding: "5px",
-                      borderRadius: "3px",
-                      border: "1px solid #ccc",
-                    }}
-                  />
-                  <textarea
-                    placeholder="Available Time"
-                    value={formData.availableTime}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        availableTime: e.target.value,
-                      })
-                    }
-                    style={{
-                      width: "100%",
-                      marginBottom: "5px",
-                      padding: "5px",
-                      borderRadius: "3px",
-                      border: "1px solid #ccc",
-                    }}
-                  />
-                  <textarea
-                    placeholder="Contact Information"
-                    value={formData.contactInfo}
-                    onChange={(e) =>
-                      setFormData({ ...formData, contactInfo: e.target.value })
-                    }
-                    style={{
-                      width: "100%",
-                      marginBottom: "5px",
-                      padding: "5px",
-                      borderRadius: "3px",
-                      border: "1px solid #ccc",
-                    }}
-                  />
-                  <button
-                    onClick={handleSaveEdit}
-                    style={{
-                      background: "#555",
-                      color: "#fff",
-                      padding: "5px 10px",
-                      border: "none",
-                      borderRadius: "3px",
-                      cursor: "pointer",
-                      marginTop: "10px",
-                    }}
+              {pins.map((pin) => (
+                  <Marker
+                      key={pin.id}
+                      longitude={pin.longitude}
+                      latitude={pin.latitude}
                   >
-                    Save Changes
-                  </button>
-                </>
-              ) : (
-                <>
-                  <h3 style={{ marginBottom: "10px", fontSize: "20px" }}>
-                    {selectedPin.title}
-                  </h3>
-                  <p>
-                    <strong>About:</strong> {selectedPin.about}
-                  </p>
-                  <p>
-                    <strong>Specific Location:</strong>{" "}
-                    {selectedPin.specificLocation}
-                  </p>
-                  <p>
-                    <strong>Available Time:</strong> {selectedPin.availableTime}
-                  </p>
-                  <p>
-                    <strong>Contact Information:</strong>{" "}
-                    {selectedPin.contactInfo}
-                  </p>
-
-                  {currentUser &&
-                    selectedPin.user.username === currentUser.username && (
-                      <>
-                        <button
+                      <div
                           onClick={() => {
-                            setIsEditing(true);
-                            setFormData({
-                              title: selectedPin.title,
-                              about: selectedPin.about,
-                              specificLocation: selectedPin.specificLocation,
-                              availableTime: selectedPin.availableTime,
-                              contactInfo: selectedPin.contactInfo,
-                            });
+                              setSelectedPin(pin);
+                              //console.log("Selected Pin User:", pin.username);
+                              //console.log("Current User:", currentUser?.username);
+                              setIsEditing(false); // Ensure we're not in edit mode
                           }}
                           style={{
-                            background: "#555",
-                            color: "#fff",
-                            padding: "5px 10px",
-                            border: "none",
-                            borderRadius: "3px",
-                            cursor: "pointer",
-                            marginTop: "10px",
+                              cursor: "pointer",
+                              fontSize: "24px", // Larger pin
+                              filter: pin.username === currentUser?.username ? "hue-rotate(240deg)" : "none", // Adjust hue to get blue for your pins
                           }}
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDeletePin(selectedPin.id)}
+                      >
+                          📍
+                      </div>
+                  </Marker>
+              ))}
+
+              {newPin && (
+                  <Popup
+                      longitude={newPin.longitude}
+                      latitude={newPin.latitude}
+                      anchor="top"
+                      closeOnClick={false}
+                      onClose={() => setNewPin(null)}
+                  >
+                      <div
                           style={{
-                            background: "#ff4d4d",
-                            color: "#fff",
-                            padding: "5px 10px",
-                            border: "none",
-                            borderRadius: "3px",
-                            cursor: "pointer",
-                            marginTop: "10px",
-                            marginLeft: "5px",
+                              background: "#333",
+                              color: "#fff",
+                              padding: "10px",
+                              borderRadius: "5px",
                           }}
-                        >
-                          Delete
-                        </button>
-                      </>
-                    )}
-                </>
+                      >
+                          <input
+                              type="text"
+                              placeholder="What is this for?"
+                              value={formData.title || ""}
+                              onChange={(e) =>
+                                  setFormData({...formData, title: e.target.value})
+                              }
+                              style={{
+                                  width: "100%",
+                                  marginBottom: "5px",
+                                  padding: "5px",
+                                  borderRadius: "3px",
+                                  border: "1px solid #ccc",
+                              }}
+                          />
+                          <textarea
+                              placeholder="About"
+                              value={formData.about || ""}
+                              onChange={(e) =>
+                                  setFormData({...formData, about: e.target.value})
+                              }
+                              style={{
+                                  width: "100%",
+                                  marginBottom: "5px",
+                                  padding: "5px",
+                                  borderRadius: "3px",
+                                  border: "1px solid #ccc",
+                              }}
+                          />
+                          <textarea
+                              placeholder="Specific Location"
+                              value={formData.specificLocation || ""}
+                              onChange={(e) =>
+                                  setFormData({...formData, specificLocation: e.target.value})
+                              }
+                              style={{
+                                  width: "100%",
+                                  marginBottom: "5px",
+                                  padding: "5px",
+                                  borderRadius: "3px",
+                                  border: "1px solid #ccc",
+                              }}
+                          />
+                          <textarea
+                              placeholder="Available Time"
+                              value={formData.availableTime || ""}
+                              onChange={(e) =>
+                                  setFormData({...formData, availableTime: e.target.value})
+                              }
+                              style={{
+                                  width: "100%",
+                                  marginBottom: "5px",
+                                  padding: "5px",
+                                  borderRadius: "3px",
+                                  border: "1px solid #ccc",
+                              }}
+                          />
+                          <textarea
+                              placeholder="Contact Information"
+                              value={formData.contactInfo || ""}
+                              onChange={(e) =>
+                                  setFormData({...formData, contactInfo: e.target.value})
+                              }
+                              style={{
+                                  width: "100%",
+                                  marginBottom: "5px",
+                                  padding: "5px",
+                                  borderRadius: "3px",
+                                  border: "1px solid #ccc",
+                              }}
+                          />
+                          <button
+                              onClick={handleSavePin}
+                              style={{
+                                  background: "#555",
+                                  color: "#fff",
+                                  padding: "5px 10px",
+                                  border: "none",
+                                  borderRadius: "3px",
+                                  cursor: "pointer",
+                              }}
+                          >
+                              Save Pin
+                          </button>
+                      </div>
+                  </Popup>
               )}
-            </div>
-          </Popup>
-        )}
-      </ReactMapGL>
-    </div>
+
+              {selectedPin && (
+                  <Popup
+                      longitude={selectedPin.longitude}
+                      latitude={selectedPin.latitude}
+                      anchor="top"
+                      closeOnClick={false}
+                      onClose={() => setSelectedPin(null)}
+                  >
+                      <div
+                          style={{
+                              background: "#333",
+                              color: "#fff",
+                              padding: "15px",
+                              borderRadius: "5px",
+                              fontSize: "16px",
+                          }}
+                      >
+                          {isEditing ? (
+                              <>
+                                  <input
+                                      type="text"
+                                      placeholder="What is this for?"
+                                      value={formData.title}
+                                      onChange={(e) =>
+                                          setFormData({...formData, title: e.target.value})
+                                      }
+                                      style={{
+                                          width: "100%",
+                                          marginBottom: "5px",
+                                          padding: "5px",
+                                          borderRadius: "3px",
+                                          border: "1px solid #ccc",
+                                      }}
+                                  />
+                                  <textarea
+                                      placeholder="About"
+                                      value={formData.about}
+                                      onChange={(e) =>
+                                          setFormData({...formData, about: e.target.value})
+                                      }
+                                      style={{
+                                          width: "100%",
+                                          marginBottom: "5px",
+                                          padding: "5px",
+                                          borderRadius: "3px",
+                                          border: "1px solid #ccc",
+                                      }}
+                                  />
+                                  <textarea
+                                      placeholder="Specific Location"
+                                      value={formData.specificLocation}
+                                      onChange={(e) =>
+                                          setFormData({
+                                              ...formData,
+                                              specificLocation: e.target.value,
+                                          })
+                                      }
+                                      style={{
+                                          width: "100%",
+                                          marginBottom: "5px",
+                                          padding: "5px",
+                                          borderRadius: "3px",
+                                          border: "1px solid #ccc",
+                                      }}
+                                  />
+                                  <textarea
+                                      placeholder="Available Time"
+                                      value={formData.availableTime}
+                                      onChange={(e) =>
+                                          setFormData({
+                                              ...formData,
+                                              availableTime: e.target.value,
+                                          })
+                                      }
+                                      style={{
+                                          width: "100%",
+                                          marginBottom: "5px",
+                                          padding: "5px",
+                                          borderRadius: "3px",
+                                          border: "1px solid #ccc",
+                                      }}
+                                  />
+                                  <textarea
+                                      placeholder="Contact Information"
+                                      value={formData.contactInfo}
+                                      onChange={(e) =>
+                                          setFormData({...formData, contactInfo: e.target.value})
+                                      }
+                                      style={{
+                                          width: "100%",
+                                          marginBottom: "5px",
+                                          padding: "5px",
+                                          borderRadius: "3px",
+                                          border: "1px solid #ccc",
+                                      }}
+                                  />
+                                  <button
+                                      onClick={handleSaveEdit}
+                                      style={{
+                                          background: "#555",
+                                          color: "#fff",
+                                          padding: "5px 10px",
+                                          border: "none",
+                                          borderRadius: "3px",
+                                          cursor: "pointer",
+                                          marginTop: "10px",
+                                      }}
+                                  >
+                                      Save Changes
+                                  </button>
+                              </>
+                          ) : (
+                              <>
+                                  <h3 style={{marginBottom: "10px", fontSize: "20px"}}>
+                                      {selectedPin.title}
+                                  </h3>
+                                  <p>
+                                      <strong>About:</strong> {selectedPin.about}
+                                  </p>
+                                  <p>
+                                      <strong>Specific Location:</strong>{" "}
+                                      {selectedPin.specificLocation}
+                                  </p>
+                                  <p>
+                                      <strong>Available Time:</strong> {selectedPin.availableTime}
+                                  </p>
+                                  <p>
+                                      <strong>Contact Information:</strong>{" "}
+                                      {selectedPin.contactInfo}
+                                  </p>
+
+                                  {currentUser &&
+                                      selectedPin.username === currentUser.username && (
+                                          <>
+                                              <button
+                                                  onClick={() => {
+                                                      setIsEditing(true);
+                                                      setFormData({
+                                                          title: selectedPin.title,
+                                                          about: selectedPin.about,
+                                                          specificLocation: selectedPin.specificLocation,
+                                                          availableTime: selectedPin.availableTime,
+                                                          contactInfo: selectedPin.contactInfo,
+                                                      });
+                                                  }}
+                                                  style={{
+                                                      background: "#555",
+                                                      color: "#fff",
+                                                      padding: "5px 10px",
+                                                      border: "none",
+                                                      borderRadius: "3px",
+                                                      cursor: "pointer",
+                                                      marginTop: "10px",
+                                                  }}
+                                              >
+                                                  Edit
+                                              </button>
+                                              <button
+                                                  onClick={() => handleDeletePin(selectedPin.id)}
+                                                  style={{
+                                                      background: "#ff4d4d",
+                                                      color: "#fff",
+                                                      padding: "5px 10px",
+                                                      border: "none",
+                                                      borderRadius: "3px",
+                                                      cursor: "pointer",
+                                                      marginTop: "10px",
+                                                      marginLeft: "5px",
+                                                  }}
+                                              >
+                                                  Delete
+                                              </button>
+                                          </>
+                                      )}
+                              </>
+                          )}
+                      </div>
+                  </Popup>
+              )}
+              {userLocation && (
+                  <Marker longitude={userLocation.longitude} latitude={userLocation.latitude}>
+                      <div style={{color: "blue", fontSize: "18px"}}>🔵</div>
+                  </Marker>
+              )}
+          </ReactMapGL>
+      </div>
+
   );
 }

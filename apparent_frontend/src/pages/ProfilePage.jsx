@@ -1,21 +1,23 @@
 import React, { useState, useEffect } from "react";
 import apiClient from "../apiClient";
-import Stack from "react-bootstrap/Stack";
-import { UserProfileInfo } from "../components/UserProfileInfo";
-import { PostSection } from "../components/PostSection";
-import { UserProfilePage } from "./ProfilePages/userProfilePage";
+import Container from "react-bootstrap/Container";
+import { UserProfilePage } from "./ProfilePages/UserProfilePage";
 
-export function ProfilePage() {
+export function ProfilePage({
+  firstName,
+  lastName,
+  setFirstName,
+  setLastName,
+}) {
   const [profileData, setProfileData] = useState(null);
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
+  const [profilePicture, setProfilePicture] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const response = await apiClient.get("profile/");
+        const response = await apiClient.get(`/profile/`);
         setProfileData(response.data[0]);
       } catch (err) {
         setError("Error fetching profile data");
@@ -29,13 +31,10 @@ export function ProfilePage() {
   }, []);
 
   useEffect(() => {
-    try {
-      if (profileData) {
-        setFirstName(profileData.first_name);
-        setLastName(profileData.last_name);
-      }
-    } catch (err) {
-      setError("Full name is not provided");
+    if (profileData) {
+      setFirstName(profileData.first_name || "");
+      setLastName(profileData.last_name || "");
+      setProfilePicture(profileData.profile_image || "../APParent_logo.png");
     }
   }, [profileData]);
 
@@ -43,8 +42,17 @@ export function ProfilePage() {
   if (error) return <p>{error}</p>;
 
   return (
-    <>
-      <UserProfilePage firstName={firstName} lastName={lastName} />
-    </>
+    <Container
+      fluid
+      className="min-vh-100 d-flex flex-column align-items-center pt-4"
+    >
+      <UserProfilePage
+        firstName={firstName}
+        lastName={lastName}
+        profilePicture={profilePicture}
+        setProfilePicture={setProfilePicture}
+        profileData={profileData}
+      />
+    </Container>
   );
 }

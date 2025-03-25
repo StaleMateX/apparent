@@ -12,3 +12,7 @@
     width: 10rem;
     border:  2px solid white;
 }
+
+.profile-name{
+    color: var(--color-primary-light);
+}

@@ -58,7 +58,9 @@ export function EditProfileForm({
   // TODO: PLACE HOBBIES IN THE DATABASE RATHER THAN HERE? DISCUSS.
   const handleSubmit = (event) => {
     event.preventDefault();
-    setProfilePicture(URL.createObjectURL(newProfilePicture));
+    if (profilePicture !== newProfilePicture) {
+      setProfilePicture(URL.createObjectURL(newProfilePicture));
+    }
     setCity(newCity);
     setState(newState);
     setCollegeName(newCollegeName);
@@ -138,7 +140,9 @@ export function EditProfileForm({
       <button type="submit" className="btn btn-primary">
         Save Profile
       </button>
-      <Button variant="secondary" onClick={handleClose}>Close</Button>
+      <Button variant="secondary" onClick={handleClose}>
+        Close
+      </Button>
     </Form>
   );
 }

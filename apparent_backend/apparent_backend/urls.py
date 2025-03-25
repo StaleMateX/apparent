@@ -24,10 +24,9 @@ from django.conf.urls.static import static
 from userProfile.views import ProfileViewSet
 
 router = DefaultRouter()
-#router.register(r'forum', PostViewSet)
 router.register(r'forum', PostViewSet, basename='forum')  # Posts API
 router.register(r'comments', CommentViewSet, basename='comments')  # Comments API
-router.register(r'userProfile', ProfileViewSet, basename='userProfile')
+# router.register(r'userProfile', ProfileViewSet, basename='profile')
 
 urlpatterns = [
     # Admin routes
@@ -35,7 +34,6 @@ urlpatterns = [
 
     # API routes
     path('api/', include(router.urls)),  # Includes routes for PostViewSet and CommentViewSet
-    path('api/profile/', include('userProfile.urls')),
 
     # User management routes
     path('register/', include('register.urls')),  # Custom registration API
@@ -48,13 +46,12 @@ urlpatterns = [
     # Map Pins routes
     path('api/pins/', include('pins.urls')),
 
-    # # User Profiles routes
-    # path('api/', include('userProfile.urls')),
+    # User Profiles routes
+    path('api/profile/', include('userProfile.urls')),
 ]
 
 # Serve media files during development
 if settings.DEBUG:
-      urlpatterns += [
-          path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-          #static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-      ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += [
+        path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

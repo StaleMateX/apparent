@@ -1,16 +1,20 @@
 import "./ProfilePicture.css";
 import React, { useState } from "react";
-import { Container, Image} from 'react-bootstrap';
+import Container from "react-bootstrap/Container";
+import Image from "react-bootstrap/Image";
 
-
-export function ProfilePicture({firstName, lastName, path}) {
+export function ProfilePicture({ firstName, lastName, path }) {
   return (
     <Container className="profile-picture-container">
-
-        <h2>{firstName} {lastName}</h2>
-          <Image className="profile-picture" roundedCircle src={path}/>
-
-
+      <h2 className="profile-name mt-3">
+        {firstName} {lastName}
+      </h2>
+      <Image
+        alt="Profile"
+        className="profile-picture"
+        roundedCircle
+        src={path}
+      />
     </Container>
   );
 }
