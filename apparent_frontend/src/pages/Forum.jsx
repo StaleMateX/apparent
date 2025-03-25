@@ -226,34 +226,39 @@ export function Forum({ onLogout }) {
                 overlayClassName="modal-overlay"
             >
                 {selectedPost && (
-                    <div className="modal-content">
-                        <button className="close-button" onClick={closeModal}>×</button>
-                        <h2>{selectedPost.title}</h2>
-                        <p>{selectedPost.content}</p>
+                    <div>
+                        <div className="modal-header">
+                            <h2>{selectedPost.title}</h2>
+                            <button className="close-button" onClick={closeModal}>×</button>
+                        </div>
 
-                        <h3>Comments</h3>
-                        {selectedPost.comments.map((comment) => (
-                            <div key={comment.id} className="comment">
-                                <strong>{comment.user}:</strong> {comment.content}
-                                {currentUser?.username === comment.user && (
-                                    <button onClick={() => handleDeleteComment(comment.id)}>Delete</button>
-                                )}
-                            </div>
-                        ))}
+                        <div className="modal-content">
+                            <p>{selectedPost.content}</p>
 
-                        {/* Add Comment */}
-                        <textarea
-                            value={newCommentContent}
-                            onChange={(e) => setNewCommentContent(e.target.value)}
-                            placeholder="Write a comment..."
-                        />
-                        <button onClick={() => handleCommentSubmit(selectedPost.id)}>Add Comment</button>
+                            <h3>Comments</h3>
+                            {selectedPost.comments.map((comment) => (
+                                <div key={comment.id} className="comment">
+                                    <strong>{comment.user}:</strong> {comment.content}
+                                    {currentUser?.username === comment.user && (
+                                        <button onClick={() => handleDeleteComment(comment.id)}>Delete</button>
+                                    )}
+                                </div>
+                            ))}
 
-                        {currentUser?.username === selectedPost.user && (
-                            <button className="delete-post-button" onClick={() => handleDeletePost(selectedPost.id)}>
-                                Delete Post
-                            </button>
-                        )}
+                            {/* Add Comment */}
+                            <textarea
+                                value={newCommentContent}
+                                onChange={(e) => setNewCommentContent(e.target.value)}
+                                placeholder="Write a comment..."
+                            />
+                            <button onClick={() => handleCommentSubmit(selectedPost.id)}>Add Comment</button>
+
+                            {currentUser?.username === selectedPost.user && (
+                                <button className="delete-post-button" onClick={() => handleDeletePost(selectedPost.id)}>
+                                    Delete Post
+                                </button>
+                            )}
+                        </div>
                     </div>
                 )}
             </Modal>

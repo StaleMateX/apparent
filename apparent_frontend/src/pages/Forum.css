@@ -1,3 +1,4 @@
+/* General Styles */
 .forum-container {
     margin: 50px auto;
     max-width: 800px;
@@ -8,12 +9,15 @@
 h1, h2 {
     text-align: center;
     color: #4684c2;
+    margin-bottom: 20px;
 }
 
 h3 {
     color: #c8783e;
+    margin-top: 20px;
 }
 
+/* Input and Button Styles */
 input, textarea {
     width: 100%;
     padding: 10px;
@@ -38,6 +42,7 @@ button:hover {
     background-color: #45a049;
 }
 
+/* Post Styles */
 .post-container {
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -54,15 +59,18 @@ button:hover {
     margin-bottom: 10px;
 }
 
-.post-header strong {
-    font-size: 18px;
-    color: #2c3e50;
+.post-container .post-header strong {
+    font-size: 24px;
+    color: #4684c2;
+    margin: 0;
 }
 
 .post-header button {
     font-size: 12px;
     padding: 5px 10px;
     background-color: #e74c3c;
+    color: white;
+    border-radius: 4px;
 }
 
 .post-header button:hover {
@@ -75,12 +83,12 @@ button:hover {
     margin-bottom: 15px;
 }
 
-.comment-container {
-    margin: 15px 0;
-    padding: 10px;
-    border-top: 1px solid #ddd;
+.post-user {
+    font-weight: bold;
+    color: #3498db;
 }
 
+/* Comment Styles */
 .comment {
     margin: 10px 0;
     padding: 10px;
@@ -98,32 +106,16 @@ button:hover {
     background-color: #e74c3c;
     padding: 5px;
     font-size: 12px;
-    float: right;
     margin-left: 10px;
+    border-radius: 4px;
+    cursor: pointer;
 }
 
 .comment button:hover {
     background-color: #c0392b;
 }
 
-.comment-form {
-    margin-top: 10px;
-}
-
-textarea {
-    resize: none;
-}
-
-.post-user {
-    font-weight: bold;
-    color: #3498db; 
-}
-
-.comment-content {
-    color: #2c3e50; 
-    font-style: italic;
-}
-
+/* Modal Styles */
 .modal-overlay {
     background: rgba(0, 0, 0, 0.5);
     position: fixed;
@@ -144,16 +136,43 @@ textarea {
     width: 90%;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     position: relative;
+    display: flex;
+    flex-direction: column;
 }
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.modal-header h2 {
+    font-size: 24px;
+    color: #4684c2;
+    margin: 0;
+}
+
 
 .close-button {
     position: absolute;
-    top: 8px;
+    top: 5px;
     right: 5px;
-    font-size: 18px;
+    width: 20px;
+    height: 20px;
+    font-size: 15px;
     cursor: pointer;
     border: none;
-    background: red;
+    background: grey;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+}
+
+textarea {
+    resize: none;
 }
 
 .delete-post-button {
