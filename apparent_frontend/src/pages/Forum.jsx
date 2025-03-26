@@ -250,7 +250,10 @@ export function Forum({ onLogout }) {
                 {posts.slice().reverse().map((post) => (
                     <div key={post.id} className="post-container" onClick={() => setSelectedPost(post)}>
                         <div className="post-header">
-                            <strong>{post.title}</strong> <span className="post-user"> by {post.user} </span>
+                            <strong>{post.title}</strong>
+                            <span className={`post-user ${currentUser?.username === post.user ? 'current-user' : ''}`}>
+                                by {post.user}
+                            </span>
                             {/*{currentUser?.username === post.user && (*/}
                             {/*    // <button onClick={(e) => {*/}
                             {/*    //     e.stopPropagation();*/}
@@ -289,7 +292,10 @@ export function Forum({ onLogout }) {
                             <h3>Comments</h3>
                             {selectedPost.comments.map((comment) => (
                                 <div key={comment.id} className="comment">
-                                    <strong>{comment.user}:</strong> {comment.content}
+                                    <strong className={currentUser?.username === comment.user ? 'current-user' : ''}>
+                                        {comment.user}:
+                                    </strong>
+                                    {comment.content}
                                     {currentUser?.username === comment.user && (
                                         // <button onClick={() => handleDeleteComment(comment.id)}>Delete</button>
                                         <button onClick={() => openConfirmDelete('comment', comment.id)}>Delete</button>
