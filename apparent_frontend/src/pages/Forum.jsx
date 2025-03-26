@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import './Forum.css';
 import { useNavigate } from 'react-router-dom';
 import Modal from 'react-modal';
+import { useRef } from "react";
 
 export function Forum({ onLogout }) {
     const [posts, setPosts] = useState([]);
@@ -11,9 +12,12 @@ export function Forum({ onLogout }) {
     const navigate = useNavigate();
     const [currentUser, setCurrentUser] = useState(null);
     const [selectedPost, setSelectedPost] = useState(null);
-
     const [confirmDelete, setConfirmDelete] = useState(null);
     const [deleteType, setDeleteType] = useState(null);
+    const [postTitles, setPostTitles] = useState([]); // Store existing post titles
+    const [suggestions, setSuggestions] = useState([]); // Store matched suggestions
+    const suggestionBoxRef = useRef(null);
+
     // When user clicks delete, show confirmation modal
     const openConfirmDelete = (type, id) => {
         setDeleteType(type);
@@ -104,9 +108,58 @@ export function Forum({ onLogout }) {
 
             const data = await response.json();
             setPosts(data);
+            setPostTitles(data.map(post => ({ id: post.id, title: post.title })));
         } catch (error) {
             console.error('Error fetching posts:', error);
         }
+    };
+
+    const stopWords = new Set(["for", "with", "on", "the", "to", "and", "of", "in", "at", "is", "a", "an"]); // Common words to ignore
+
+    const findSuggestions = (input) => {
+        if (!input.trim()) {
+            setSuggestions([]);
+            return;
+        }
+
+        const inputWords = input
+            .toLowerCase()
+            .split(/\s+/)
+            .filter(word => word.length > 3 && !stopWords.has(word)); // Ignore short/common words
+
+        if (inputWords.length === 0) {
+            setSuggestions([]);
+            return;
+        }
+
+        const matchedTitles = postTitles.filter(post =>
+            inputWords.some(word => post.title.toLowerCase().includes(word))
+        );
+
+        setSuggestions(matchedTitles);
+    };
+    // Function to handle clicks outside of the suggestions dropdown
+    const handleClickOutside = (event) => {
+        if (suggestionBoxRef.current && !suggestionBoxRef.current.contains(event.target)) {
+            setSuggestions([]); // Hide suggestions if clicking outside
+        }
+    };
+
+    // Add event listener to detect clicks outside
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    // When selecting a suggestion, hide the dropdown and set the post
+    const handleSuggestionClick = (post) => {
+        const fullPost = posts.find(p => p.id === post.id); // Find the full post object
+        if (fullPost) {
+            setSelectedPost(fullPost);
+        }
+        setSuggestions([]); // Hide suggestions
     };
 
     const handlePostSubmit = async () => {
@@ -125,24 +178,6 @@ export function Forum({ onLogout }) {
             setNewPostContent('');
         }
     };
-
-    // const handleDeletePost = async (postId) => {
-    //     const token = localStorage.getItem('token');
-    //     try {
-    //         const response = await fetch(`http://127.0.0.1:8000/api/forum/${postId}/`, {
-    //             method: 'DELETE',
-    //             headers: { 'Authorization': `Bearer ${token}` },
-    //         });
-    //         if (response.ok) {
-    //             fetchPosts();
-    //             setSelectedPost(null); // Close the modal after successful deletion
-    //         } else {
-    //             console.error('Error deleting post:', await response.json());
-    //         }
-    //     } catch (error) {
-    //         console.error('Error deleting post:', error);
-    //     }
-    // };
 
     const handleCommentSubmit = async (postId) => {
         const token = localStorage.getItem('token');
@@ -169,26 +204,6 @@ export function Forum({ onLogout }) {
             console.error('Error submitting comment:', error);
         }
     };
-
-    // const handleDeleteComment = async (commentId) => {
-    //     const token = localStorage.getItem('token');
-    //     try {
-    //         const response = await fetch(`http://127.0.0.1:8000/api/comments/${commentId}/`, {
-    //             method: 'DELETE',
-    //             headers: { 'Authorization': `Bearer ${token}` },
-    //         });
-    //         if (response.ok) {
-    //             setSelectedPost((prevPost) => ({
-    //                 ...prevPost,
-    //                 comments: prevPost.comments.filter((comment) => comment.id !== commentId),
-    //             }));
-    //         } else {
-    //             console.error('Error deleting comment:', await response.json());
-    //         }
-    //     } catch (error) {
-    //         console.error('Error deleting comment:', error);
-    //     }
-    // };
 
     const handleConfirmDelete = async () => {
         if (!confirmDelete || !deleteType) return;
@@ -225,8 +240,6 @@ export function Forum({ onLogout }) {
         closeConfirmDelete();
     };
 
-
-
     return (
         <div className="forum-container">
             <h1>Forum</h1>
@@ -234,9 +247,25 @@ export function Forum({ onLogout }) {
                 <input
                     type="text"
                     value={newPostTitle}
-                    onChange={(e) => setNewPostTitle(e.target.value)}
+                    onChange={(e) => {
+                        setNewPostTitle(e.target.value);
+                        findSuggestions(e.target.value);
+                    }}
+                    onFocus={(e) => {
+                        findSuggestions(e.target.value); // Recalculate suggestions on focus
+                    }}
                     placeholder="Post Title"
                 />
+                {/* Suggestions Dropdown */}
+                {suggestions.length > 0 && (
+                    <div className="suggestions-dropdown" ref={suggestionBoxRef}>
+                        {suggestions.map((post) => (
+                            <div key={post.id} className="suggestion-item" onClick={() => handleSuggestionClick(post)}>
+                                {post.title}
+                            </div>
+                        ))}
+                    </div>
+                )}
                 <textarea
                     value={newPostContent}
                     onChange={(e) => setNewPostContent(e.target.value)}
@@ -250,7 +279,10 @@ export function Forum({ onLogout }) {
                 {posts.slice().reverse().map((post) => (
                     <div key={post.id} className="post-container" onClick={() => setSelectedPost(post)}>
                         <div className="post-header">
-                            <strong>{post.title}</strong> <span className="post-user"> by {post.user} </span>
+                            <strong>{post.title}</strong>
+                            <span className={`post-user ${currentUser?.username === post.user ? 'current-user' : ''}`}>
+                                by {post.user}
+                            </span>
                             {/*{currentUser?.username === post.user && (*/}
                             {/*    // <button onClick={(e) => {*/}
                             {/*    //     e.stopPropagation();*/}
@@ -289,9 +321,11 @@ export function Forum({ onLogout }) {
                             <h3>Comments</h3>
                             {selectedPost.comments.map((comment) => (
                                 <div key={comment.id} className="comment">
-                                    <strong>{comment.user}:</strong> {comment.content}
+                                    <strong className={currentUser?.username === comment.user ? 'current-user' : 'comment-user'}>
+                                        {comment.user}:
+                                    </strong>
+                                    {comment.content}
                                     {currentUser?.username === comment.user && (
-                                        // <button onClick={() => handleDeleteComment(comment.id)}>Delete</button>
                                         <button onClick={() => openConfirmDelete('comment', comment.id)}>Delete</button>
                                     )}
                                 </div>
@@ -333,7 +367,6 @@ export function Forum({ onLogout }) {
                     </div>
                 </div>
             </Modal>
-
         </div>
     );
 }
