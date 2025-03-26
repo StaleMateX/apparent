@@ -126,6 +126,10 @@ button:hover {
     color: blue;
     font-weight: bold;
 }
+.comment .comment-user{
+    color: lightseagreen;
+    font-weight: bold;
+}
 
 /* Modal Styles */
 .modal-overlay {
@@ -213,5 +217,27 @@ textarea {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+}
+
+.suggestions-dropdown {
+    position: absolute;
+    background: lightgray;
+    border: 1px solid #ccc;
+    width: 85%;
+    max-height: 150px;
+    overflow-y: auto;
+    border-radius: 4px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.suggestion-item {
+    padding: 8px;
+    cursor: pointer;
+    border-bottom: 1px solid #eee;
+}
+
+.suggestion-item:hover {
+    background-color: #f1f1f1;
 }
 
