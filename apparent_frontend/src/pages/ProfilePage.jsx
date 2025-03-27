@@ -21,6 +21,7 @@ export function ProfilePage({
       try {
         const response = await apiClient("application/json").get(`/profile/`);
         setProfileData(response.data[0]);
+        setUpdatedProfile(false);
       } catch (err) {
         setError("Error fetching profile data");
         console.error("Error fetching profile data:", err);
