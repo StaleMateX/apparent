@@ -47,6 +47,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
         if isinstance(hobby_types, list):
             hobby_objs = Hobby.objects.filter(hobby_type__in=hobby_types)
+            print(f"Hobby objects {hobby_objs}")
             instance.hobbies.set(hobby_objs)
 
         for attr, value in validated_data.items():

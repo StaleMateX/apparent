@@ -22,7 +22,7 @@ export function EditProfileForm({
   handleClose,
   updateProfileData,
 }) {
-  const [newProfilePicture, setNewProfilePicture] = useState("");
+  const [newProfilePicture, setNewProfilePicture] = useState(false);
   const [newCity, setNewCity] = useState(city);
   const [newState, setNewState] = useState(state);
   const [newCollegeName, setNewCollegeName] = useState(collegeName);
@@ -35,6 +35,7 @@ export function EditProfileForm({
         }))
       : []
   );
+  const [updatedHobbies, setUpdatedHobbies] = useState(""); // Will be array if updated
   const [newAboutMe, setNewAboutMe] = useState(aboutMe);
 
   const hobbyOptions =
@@ -51,7 +52,8 @@ export function EditProfileForm({
 
   const handleHobbiesChange = (selectedItems) => {
     if (selectedItems.length <= 4) {
-      setNewHobbies(selectedItems.map((item) => item.hobby_type));
+      setNewHobbies(selectedItems);
+      setUpdatedHobbies(selectedItems.map((item) => item.hobby_type));
     } else {
       alert("You can select up to 4 hobbies only.");
     }
@@ -77,7 +79,11 @@ export function EditProfileForm({
     formData.append("institution", newCollegeName);
     formData.append("phone_number", newPhoneNumber);
     formData.append("about_me", newAboutMe);
-    formData.append("hobbies", newHobbies);
+    if (Array.isArray(updatedHobbies)) {
+      updatedHobbies.forEach((hobby) => {
+        formData.append("hobbies", hobby);
+      });
+    }
     updateProfileData(formData);
     handleClose();
   };
