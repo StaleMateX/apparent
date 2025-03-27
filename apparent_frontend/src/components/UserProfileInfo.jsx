@@ -27,15 +27,17 @@ export function UserProfileInfo({
   );
   const [city, setCity] = useState(profileData.city || "");
   const [state, setState] = useState(profileData.state || "Not Shared");
-  const [hobbies, setHobbies] = useState(profileData.hobbies);
+  const [hobbies, setHobbies] = useState(profileData.hobbies_ro || []);
   const [backgroundCheck, setBackgroundCheck] = useState(
     profileData.background_check_display || "No"
   );
-  const [phoneNumber, setPhoneNumber] = useState(profileData.phone_number);
-  const [classStanding, setClassStanding] = useState(
-    profileData.class_standing_display
+  const [phoneNumber, setPhoneNumber] = useState(
+    profileData.phone_number || "None"
   );
-  const [aboutMe, setAboutMe] = useState(profileData.about_me);
+  const [classStanding, setClassStanding] = useState(
+    profileData.class_standing_display || "Unknown"
+  );
+  const [aboutMe, setAboutMe] = useState(profileData.about_me || "");
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
