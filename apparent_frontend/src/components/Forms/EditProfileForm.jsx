@@ -22,12 +22,12 @@ export function EditProfileForm({
   handleClose,
   updateProfileData,
 }) {
-  const [newProfilePicture, setLocalProfilePicture] = useState(profilePicture);
-  const [newCity, setLocalCity] = useState(city);
-  const [newState, setLocalState] = useState(state);
-  const [newCollegeName, setLocalCollegeName] = useState(collegeName);
-  const [newPhoneNumber, setLocalPhoneNumber] = useState(phoneNumber);
-  const [newHobbies, setLocalHobbies] = useState(
+  const [newProfilePicture, setNewProfilePicture] = useState("");
+  const [newCity, setNewCity] = useState(city);
+  const [newState, setNewState] = useState(state);
+  const [newCollegeName, setNewCollegeName] = useState(collegeName);
+  const [newPhoneNumber, setNewPhoneNumber] = useState(phoneNumber);
+  const [newHobbies, setNewHobbies] = useState(
     hobbies.length > 0
       ? hobbies.map((hobby) => ({
           hobby_type: hobby.hobby_type,
@@ -35,7 +35,7 @@ export function EditProfileForm({
         }))
       : []
   );
-  const [newAboutMe, setLocalAboutMe] = useState(aboutMe);
+  const [newAboutMe, setNewAboutMe] = useState(aboutMe);
 
   const hobbyOptions =
     hobbies.length > 0 && Array.isArray(hobbies[0].hobby_options)
@@ -45,13 +45,13 @@ export function EditProfileForm({
   const handleSelectedPath = (event) => {
     const file = event.target.files[0];
     if (file) {
-      setLocalProfilePicture(file);
+      setNewProfilePicture(file);
     }
   };
 
   const handleHobbiesChange = (selectedItems) => {
     if (selectedItems.length <= 4) {
-      setLocalHobbies(selectedItems);
+      setNewHobbies(selectedItems.map((item) => item.hobby_type));
     } else {
       alert("You can select up to 4 hobbies only.");
     }
@@ -62,12 +62,12 @@ export function EditProfileForm({
     // if (profilePicture !== newProfilePicture) {
     //   setProfilePicture(URL.createObjectURL(newProfilePicture));
     // }
-    setCity(newCity);
-    setState(newState);
-    setCollegeName(newCollegeName);
-    setPhoneNumber(newPhoneNumber);
+    // setCity(newCity);
+    // setState(newState);
+    // setCollegeName(newCollegeName);
+    // setPhoneNumber(newPhoneNumber);
     // setHobbies(newHobbies);
-    setAboutMe(newAboutMe);
+    // setAboutMe(newAboutMe);
     const formData = new FormData();
     if (newProfilePicture) {
       formData.append("profile_image", newProfilePicture);
@@ -77,6 +77,7 @@ export function EditProfileForm({
     formData.append("institution", newCollegeName);
     formData.append("phone_number", newPhoneNumber);
     formData.append("about_me", newAboutMe);
+    formData.append("hobbies", newHobbies);
     updateProfileData(formData);
     handleClose();
   };
@@ -93,7 +94,7 @@ export function EditProfileForm({
           type="text"
           placeholder="City"
           value={newCity}
-          onChange={(e) => setLocalCity(e.target.value)}
+          onChange={(e) => setNewCity(e.target.value)}
         />
       </Form.Group>
 
@@ -102,7 +103,7 @@ export function EditProfileForm({
           type="text"
           placeholder="State"
           value={newState}
-          onChange={(e) => setLocalState(e.target.value)}
+          onChange={(e) => setNewState(e.target.value)}
         />
       </Form.Group>
 
@@ -111,7 +112,7 @@ export function EditProfileForm({
           type="text"
           placeholder="Higher Education Institution"
           value={newCollegeName}
-          onChange={(e) => setLocalCollegeName(e.target.value)}
+          onChange={(e) => setNewCollegeName(e.target.value)}
         />
       </Form.Group>
 
@@ -121,7 +122,7 @@ export function EditProfileForm({
           pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
           placeholder="Phone Number"
           value={newPhoneNumber}
-          onChange={(e) => setLocalPhoneNumber(e.target.value)}
+          onChange={(e) => setNewPhoneNumber(e.target.value)}
         />
         <small className="form-text text-muted">Format: 555-555-5555</small>
       </Form.Group>
@@ -146,7 +147,7 @@ export function EditProfileForm({
           rows={3}
           placeholder="About your student parent experience"
           value={newAboutMe}
-          onChange={(e) => setLocalAboutMe(e.target.value)}
+          onChange={(e) => setNewAboutMe(e.target.value)}
         />
       </Form.Group>
 
