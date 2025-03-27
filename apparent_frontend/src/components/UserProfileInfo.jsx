@@ -68,6 +68,19 @@ export function UserProfileInfo({
     }
   };
 
+  useEffect(() => {
+    if (profileData) {
+      setCollegeName(profileData.institution || "Not Shared");
+      setCity(profileData.city || "");
+      setState(profileData.state || "Not Shared");
+      setHobbies(profileData.hobbies_ro || []);
+      setBackgroundCheck(profileData.background_check_display || "No");
+      setPhoneNumber(profileData.phone_number || "None");
+      setClassStanding(profileData.class_standing_display || "Unknown");
+      setAboutMe(profileData.about_me || "");
+    }
+  }, [profileData]);
+
   return (
     <>
       <Card className="card shadow-sm p-4 mb-4">
