@@ -9,7 +9,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ['id', 'user', 'post', 'content', 'created_at']
-
+        
 class PostSerializer(serializers.ModelSerializer):
     user = serializers.StringRelatedField()  # Shows the username instead of ID
     comments = CommentSerializer(many=True, read_only=True)

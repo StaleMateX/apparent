@@ -1,16 +1,37 @@
 import "./PostSection.css";
 import { useState, useEffect } from "react";
 import { PostCard } from "./PostCard";
-import Button from "react-bootstrap/Button";
-import ButtonGroup from "react-bootstrap/ButtonGroup";
-import ButtonToolbar from "react-bootstrap/ButtonToolbar";
 import ToggleButton from "react-bootstrap/ToggleButton";
-import Stack from "react-bootstrap/Stack";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
+import apiClient from "../apiClient";
 
 export function PostSection({ firstName, lastName, profilePicture }) {
   const [checked, setChecked] = useState(false);
   const [radioValue, setRadioValue] = useState("1");
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [posts, setPosts] = useState("");
+  const [updatedPosts, setUpdatedPosts] = useState(false);
+
+  useEffect(() => {
+    const fetchProfileFeed = async () => {
+      try {
+        const response = await apiClient("application/json").get(
+          `/posts/profile_feed/`
+        );
+        setPosts(response.data[0]);
+        console.log(response.data);
+        setUpdatedPosts(false);
+      } catch (err) {
+        setError("Error fetching profile feed");
+        console.error("Error fetching profile feed:", err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProfileFeed();
+  }, [updatedPosts]);
 
   return (
     <>
@@ -49,7 +70,11 @@ export function PostSection({ firstName, lastName, profilePicture }) {
           </ToggleButton>
         </ToggleButtonGroup>
       </ToggleButtonGroup>
-      <PostCard firstName={firstName} lastName={lastName} profilePicture={profilePicture}/>
+      <PostCard
+        firstName={firstName}
+        lastName={lastName}
+        profilePicture={profilePicture}
+      />
     </>
   );
 }

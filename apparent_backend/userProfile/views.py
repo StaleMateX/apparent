@@ -2,11 +2,11 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.parsers import MultiPartParser, FormParser
+from .models import Hobby
 from .models import Profile
 from .serializers import ProfileSerializer
-from .models import Hobby
 from .serializers import HobbySerializer
-from rest_framework.parsers import MultiPartParser, FormParser
 from django.shortcuts import get_object_or_404
 
 class ProfileViewSet(ModelViewSet):
