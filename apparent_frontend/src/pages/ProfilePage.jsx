@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import apiClient from "../apiClient";
 import Container from "react-bootstrap/Container";
 import { UserProfilePage } from "./ProfilePages/UserProfilePage";
-import { EditProfileForm } from "../components/Forms/EditProfileForm";
 
 export function ProfilePage({
   firstName,
