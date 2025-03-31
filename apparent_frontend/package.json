@@ -25,6 +25,7 @@
     "react-bootstrap-multiselect": "^2.4.1",
     "react-dom": "^18.3.1",
     "react-map-gl": "^7.1.8",
+    "react-modal": "^3.16.3",
     "react-router-dom": "^6.28.0",
     "react-widgets": "^5.8.6"
   },
