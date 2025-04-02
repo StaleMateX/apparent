@@ -70,7 +70,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             return []
 
         user = request.user
-        queryset = FriendRequest.objects.filter(Q(to_user=user) | Q(from_user=user))
+        queryset = queryset = FriendRequest.objects.for_user(user)
         return FriendRequestSerializer(queryset, many=True).data
 
 

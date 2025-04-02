@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from django.db.models import Q
 from django.dispatch import receiver
 
 # Helper function for media path naming.
@@ -67,6 +68,9 @@ class Profile(models.Model):
     def __str__(self):
         return f"{self.user.get_full_name() or self.user.username} - Profile"
 
+class FriendRequestManager(models.Manager):
+    def for_user(self, user):
+        return self.get_queryset().filter(Q(to_user=user) | Q(from_user=user))
 
 class FriendRequest(models.Model):
     class RequestOptions(models.TextChoices):
@@ -82,3 +86,4 @@ class FriendRequest(models.Model):
     status = models.CharField(max_length=2,
                                 choices=RequestOptions,
                                 default=RequestOptions.PENDING)
+    objects = FriendRequestManager()

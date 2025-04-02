@@ -41,11 +41,11 @@ class IsSenderOrReceiver(BasePermission):
 
 class IsReceiverOnly(BasePermission):
     def has_object_permission(self, request, view, obj):
-        return obj.to_user == self.request and obj.from_user != request.user
+        return obj.to_user == request.user and obj.from_user != request.user
 
 class IsSenderOnly(BasePermission):
     def has_object_permission(self, request, view, obj):
-        return obj.from_user == self.request and obj.to_user != request.user
+        return obj.from_user == request.user and obj.to_user != request.user
 
 class FriendRequestSet(ModelViewSet):
     queryset = FriendRequest.objects.all()
@@ -55,7 +55,7 @@ class FriendRequestSet(ModelViewSet):
     def get_permissions(self):
         """ Ensures only the sender of the friend request can delete the request directly. """
         if self.action == "destroy":
-            return [IsAuthenticated, IsSenderOnly]
+            return [IsAuthenticated(), IsSenderOnly()]
         return super().get_permissions()
 
     def get_queryset(self):
@@ -73,7 +73,7 @@ class FriendRequestSet(ModelViewSet):
     @action(detail=True, method=["post"], permission_classes=[IsAuthenticated, IsSenderOnly])
     def send_request(self, request):
         serializer = self.serializer_class(data=request.data)
-        serializer = self.is_valid(raise_exception=True)
+        serializer = serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(data=serializer.data, status=HTTP_201_CREATED)
 
@@ -82,7 +82,7 @@ class FriendRequestSet(ModelViewSet):
     def update_status(self, request, pk=None):
         friend_request = self.get_object()
         serializer = self.serializer_class(friend_request, data=request.data, partial=True)
-        serializer = self.is_valid(raise_exception=True)
+        serializer = serializer.is_valid(raise_exception=True)
         serializer.save()
 
         return Response(serializer.data, status=HTTP_200_OK)
