@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from .models import Profile, Hobby
+from .models import Profile, Hobby, FriendRequest, User
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'first_name', 'last_name']
 
 class HobbySerializer(serializers.ModelSerializer):
     hobby_type_display = serializers.CharField(source="get_hobby_type_display", read_only=True)
@@ -23,7 +28,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     hobbies = serializers.ListField(child = serializers.ChoiceField(choices=Hobby.Hobbies.choices),
                                     write_only=True,
                                     required=False)
-    friends = serializers.SerializerMethodField()
+    friends = friends = serializers.SerializerMethodField()
+    requests = serializers.SerializerMethodField()
     class_standing_display = serializers.CharField(source="get_class_standing_display", read_only=True) # We can still update the class standing using the actual model field.
     background_check_display = serializers.CharField(source="get_background_check_display", read_only=True)
 
@@ -34,12 +40,6 @@ class ProfileSerializer(serializers.ModelSerializer):
             "background_check_display", "phone_number", "city", "state",
             "institution", "about_me", "hobbies", "hobbies_ro", "class_standing","class_standing_display", "friends"
         ]
-        read_only_fields = ["username", "first_name", "last_name"]
-
-    def get_friends(self, obj):
-        return [ friend.user.get_full_name() or
-                friend.user.username for friend in
-                obj.friends.all()]
 
     # Overriding the update function for the hobbies field specifically.
     def update(self, instance, validated_data):
@@ -54,4 +54,67 @@ class ProfileSerializer(serializers.ModelSerializer):
             setattr(instance, attr, value)
 
         instance.save()
+        return instance
+
+    def get_friends(self, obj):
+        friends_profiles = obj.friends.all()
+        users = [friend.user for friend in friends_profiles]
+        return UserSerializer(users, many=True).data
+
+class FriendRequestSerializer(serializers.ModelSerializer):
+    from_user = UserSerializer(read_only=True)
+    to_user = UserSerializer(read_only=True)
+    to_user_id = serializers.PrimaryKeyRelatedField(queryset = User.objects.all(),
+                                                    source = 'to_user',
+                                                    write_only = True)
+    status_display = serializers.CharField(source='get_status_display', read_only=True)
+
+    class Meta:
+        model = FriendRequest
+        fields = ['to_user_id', 'to_user', 'from_user', 'status', 'status_display', 'created_at']
+        read_only_fields = ['from_user', 'to_user', 'created_at']
+
+    def create(self, validated_data):
+        from_user = self.context['request'].user
+        to_user = validated_data.get('to_user')
+
+        if to_user == from_user:
+            raise serializers.ValidationError("Can't friend yourself.")
+
+        if FriendRequest.objects.filter(to_user=to_user, from_user=from_user).exists():
+            raise serializers.ValidationError("Friend request already exists.")
+
+        return FriendRequest.objects.create(to_user=to_user, from_user=from_user)
+
+
+    def update(self, instance, validated_data):
+        """
+        Updates a friend request status to Accepted, Ignored, Blocked, or Declined.
+
+        Declined deletes the friend request.
+
+        Args:
+            validated_data: The data containing the new status for the friend request.
+
+        Returns:
+            The validated instance of the updated friend request.
+        """
+        updated_status = validated_data.get('status')
+
+        if updated_status not in FriendRequest.RequestOptions.values:
+            raise serializers.ValidationError(f"Invalid request status value {updated_status}")
+
+        if updated_status == FriendRequest.RequestOptions.DECLINED:
+            instance.delete()
+            return None
+        elif updated_status == FriendRequest.RequestOptions.ACCEPTED:
+            from_profile = Profile.objects.filter(user=instance.from_user)
+            to_profile = Profile.objects.filter(user=instance.to_user)
+            to_profile.friends.add(from_profile)
+            instance.delete()
+            return None
+        else:
+            instance.status = updated_status
+            instance.save()
+
         return instance

@@ -66,3 +66,19 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.get_full_name() or self.user.username} - Profile"
+
+
+class FriendRequest(models.Model):
+    class RequestOptions(models.TextChoices):
+        ACCEPTED = 'AC', "accepted"
+        DECLINED = 'RE', "declined"
+        IGNORED = 'IG', "ignored"
+        BLOCKED = 'BL', "blocked"
+        PENDING = 'Pe', "pending"
+
+    from_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    to_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=2,
+                                choices=RequestOptions,
+                                default=RequestOptions.PENDING)
