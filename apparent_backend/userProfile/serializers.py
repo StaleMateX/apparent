@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.db.models import Q
 from .models import Profile, Hobby, FriendRequest, User
 
 class UserSerializer(serializers.ModelSerializer):
@@ -28,7 +29,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     hobbies = serializers.ListField(child = serializers.ChoiceField(choices=Hobby.Hobbies.choices),
                                     write_only=True,
                                     required=False)
-    friends = friends = serializers.SerializerMethodField()
+    friends = serializers.SerializerMethodField()
     requests = serializers.SerializerMethodField()
     class_standing_display = serializers.CharField(source="get_class_standing_display", read_only=True) # We can still update the class standing using the actual model field.
     background_check_display = serializers.CharField(source="get_background_check_display", read_only=True)
@@ -36,10 +37,12 @@ class ProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = Profile
         fields = [
-            "username", "first_name", "last_name", "profile_image",
-            "background_check_display", "phone_number", "city", "state",
-            "institution", "about_me", "hobbies", "hobbies_ro", "class_standing","class_standing_display", "friends"
+        "username", "first_name", "last_name", "profile_image",
+        "background_check_display", "phone_number", "city", "state",
+        "institution", "about_me", "hobbies", "hobbies_ro",
+        "class_standing", "class_standing_display", "friends", "requests"
         ]
+
 
     # Overriding the update function for the hobbies field specifically.
     def update(self, instance, validated_data):
@@ -60,6 +63,16 @@ class ProfileSerializer(serializers.ModelSerializer):
         friends_profiles = obj.friends.all()
         users = [friend.user for friend in friends_profiles]
         return UserSerializer(users, many=True).data
+
+    def get_requests(self, obj):
+        request = self.context.get("request")
+        if not request or not request.user.is_authenticated:
+            return []
+
+        user = request.user
+        queryset = FriendRequest.objects.filter(Q(to_user=user) | Q(from_user=user))
+        return FriendRequestSerializer(queryset, many=True).data
+
 
 class FriendRequestSerializer(serializers.ModelSerializer):
     from_user = UserSerializer(read_only=True)
@@ -108,8 +121,8 @@ class FriendRequestSerializer(serializers.ModelSerializer):
             instance.delete()
             return None
         elif updated_status == FriendRequest.RequestOptions.ACCEPTED:
-            from_profile = Profile.objects.filter(user=instance.from_user)
-            to_profile = Profile.objects.filter(user=instance.to_user)
+            from_profile = Profile.objects.get(user=instance.from_user)
+            to_profile = Profile.objects.get(user=instance.to_user)
             to_profile.friends.add(from_profile)
             instance.delete()
             return None
