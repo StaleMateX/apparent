@@ -2,15 +2,17 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import action
+from rest_framework.parsers import MultiPartParser, FormParser
+from .models import Hobby
 from .models import Profile
 from .serializers import ProfileSerializer
-from rest_framework.parsers import MultiPartParser, FormParser
+from .serializers import HobbySerializer
 from django.shortcuts import get_object_or_404
 
 class ProfileViewSet(ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
-    # parser_classes = [MultiPartParser, FormParser]
+    parser_classes = [MultiPartParser, FormParser]
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
@@ -19,6 +21,11 @@ class ProfileViewSet(ModelViewSet):
             return self.queryset
         return self.queryset.filter(user=user)
 
+    def get_object(self):
+        queryset = self.get_queryset()
+        obj = get_object_or_404(queryset, user=self.request.user)
+        self.check_object_permissions(self.request, obj)
+        return obj
 
     # def get_object(self):
     #     obj, created = Profile.objects.get_or_create(user=self.request.user)
@@ -59,3 +66,8 @@ class ProfileViewSet(ModelViewSet):
     #         if obj.profile_image:
     #             return request.build_absolute_uri(obj.profile_image.url) if request else obj.profile_image.url
     #         return None
+
+class HobbyViewSet(ModelViewSet):
+    queryset = Hobby.objects.all()
+    serializer_class = HobbySerializer
+    permission_classes = [IsAuthenticated]
