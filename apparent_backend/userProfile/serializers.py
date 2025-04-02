@@ -3,17 +3,26 @@ from .models import Profile, Hobby
 
 class HobbySerializer(serializers.ModelSerializer):
     hobby_type_display = serializers.CharField(source="get_hobby_type_display", read_only=True)
+    # This will call the get_hobby_options by convention of naming the function with get_var_name
+    hobby_options = serializers.SerializerMethodField()
 
     class Meta:
         model = Hobby
-        fields = ["hobby_type", "hobby_type_display"]
+        fields = ["hobby_type", "hobby_type_display", "hobby_options"]
 
-class ProfileSerializer(serializers.HyperlinkedModelSerializer):
+    def get_hobby_options(self, obj):
+        return [{"hobby_type": choices.value, "hobby_type_display": choices.label} for choices in Hobby.Hobbies]
+
+class ProfileSerializer(serializers.ModelSerializer):
     username = serializers.CharField(source="user.username", read_only=True)
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
     profile_image = serializers.ImageField(required=False)
-    hobbies = HobbySerializer(many=True)
+    hobbies_ro = HobbySerializer(many=True, source="hobbies", read_only=True)
+
+    hobbies = serializers.ListField(child = serializers.ChoiceField(choices=Hobby.Hobbies.choices),
+                                    write_only=True,
+                                    required=False)
     friends = serializers.SerializerMethodField()
     class_standing_display = serializers.CharField(source="get_class_standing_display", read_only=True) # We can still update the class standing using the actual model field.
     background_check_display = serializers.CharField(source="get_background_check_display", read_only=True)
@@ -23,7 +32,7 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         fields = [
             "username", "first_name", "last_name", "profile_image",
             "background_check_display", "phone_number", "city", "state",
-            "institution", "about_me", "hobbies", "class_standing","class_standing_display", "friends"
+            "institution", "about_me", "hobbies", "hobbies_ro", "class_standing","class_standing_display", "friends"
         ]
         read_only_fields = ["username", "first_name", "last_name"]
 
@@ -31,3 +40,18 @@ class ProfileSerializer(serializers.HyperlinkedModelSerializer):
         return [ friend.user.get_full_name() or
                 friend.user.username for friend in
                 obj.friends.all()]
+
+    # Overriding the update function for the hobbies field specifically.
+    def update(self, instance, validated_data):
+        hobby_types = validated_data.pop("hobbies", None)
+
+        if isinstance(hobby_types, list):
+            hobby_objs = Hobby.objects.filter(hobby_type__in=hobby_types)
+            print(f"Hobby objects {hobby_objs}")
+            instance.hobbies.set(hobby_objs)
+
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+
+        instance.save()
+        return instance

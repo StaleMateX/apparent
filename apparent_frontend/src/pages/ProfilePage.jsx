@@ -10,6 +10,7 @@ export function ProfilePage({
   setLastName,
 }) {
   const [profileData, setProfileData] = useState(null);
+  const [updatedProfile, setUpdatedProfile] = useState(false);
   const [profilePicture, setProfilePicture] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,8 +18,9 @@ export function ProfilePage({
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const response = await apiClient.get(`/profile/`);
+        const response = await apiClient("application/json").get(`/profile/`);
         setProfileData(response.data[0]);
+        setUpdatedProfile(false);
       } catch (err) {
         setError("Error fetching profile data");
         console.error("Error fetching profile data:", err);
@@ -28,7 +30,7 @@ export function ProfilePage({
     };
 
     fetchProfileData();
-  }, []);
+  }, [updatedProfile]);
 
   useEffect(() => {
     if (profileData) {
@@ -52,6 +54,7 @@ export function ProfilePage({
         profilePicture={profilePicture}
         setProfilePicture={setProfilePicture}
         profileData={profileData}
+        setUpdatedProfile={setUpdatedProfile}
       />
     </Container>
   );

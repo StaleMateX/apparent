@@ -9,7 +9,8 @@ export function UserProfilePage({
   profilePicture,
   setProfilePicture,
   profileData,
-  setProfileData
+  setProfileData,
+  setUpdatedProfile,
 }) {
   return (
     <>
@@ -21,6 +22,7 @@ export function UserProfilePage({
           setProfilePicture={setProfilePicture}
           profileData={profileData}
           setProfileData={setProfileData}
+          setUpdatedProfile={setUpdatedProfile}
         />
         <PostSection
           firstName={firstName}

@@ -23,17 +23,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 from userProfile.views import ProfileViewSet
 
-router = DefaultRouter()
-router.register(r'forum', PostViewSet, basename='forum')  # Posts API
-router.register(r'comments', CommentViewSet, basename='comments')  # Comments API
-# router.register(r'userProfile', ProfileViewSet, basename='profile')
-
 urlpatterns = [
     # Admin routes
     path('admin/', admin.site.urls),
-
-    # API routes
-    path('api/', include(router.urls)),  # Includes routes for PostViewSet and CommentViewSet
 
     # User management routes
     path('register/', include('register.urls')),  # Custom registration API
@@ -48,6 +40,9 @@ urlpatterns = [
 
     # User Profiles routes
     path('api/profile/', include('userProfile.urls')),
+
+    # Forum routes
+    path('api/', include('forum.urls')),
 ]
 
 # Serve media files during development

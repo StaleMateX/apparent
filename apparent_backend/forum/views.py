@@ -1,13 +1,29 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated
-from .models import Post, Comment
-from .serializers import PostSerializer, CommentSerializer
+from rest_framework.permissions import IsAuthenticated, BasePermission
 from rest_framework.exceptions import PermissionDenied
 from rest_framework import serializers
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from .models import Post, Comment
+from .serializers import PostSerializer, CommentSerializer
 
+class IsOwnerOrFriend(BasePermission):
+    message = "Profiles can be viewed by friends only."
+    print("Inside the custom permission")
+    # This will override the global permissions for users.
+    def has_permission(self, request, view):
+        print(f"user is authenticated ? {request.user.is_authenticated}")
+        return request.user.is_authenticated
+
+    # This will apply object-level permissions.
+    def has_object_permission(self, request, view, obj):
+        # Allow access if the user is the owner or a friend of the owner
+        print(f"object user equals request user? {obj.user == request.user}")
+        return obj.user == request.user
+    """ or request.user in obj.user.friends.all() """
 
 class PostViewSet(ModelViewSet):
-    queryset = Post.objects.all()
+    queryset = Post.objects.prefetch_related('comments')
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
 
@@ -19,6 +35,17 @@ class PostViewSet(ModelViewSet):
         if post.user != request.user:
             raise PermissionDenied("You are not allowed to delete this post.")
         return super().destroy(request, *args, **kwargs)
+
+    @action(detail=False, methods=["get"], permission_classes=[IsOwnerOrFriend], url_name="profile-feed")
+    def profile_feed(self, request):
+        print("Inside profile_feed")
+        print("Request user:", request.user)
+
+        posts = Post.objects.filter(user=request.user).prefetch_related('comments')
+        print("Posts:", posts)
+
+        serializer = self.get_serializer(posts, many=True)
+        return Response(serializer.data)
 
 class CommentViewSet(ModelViewSet):
     queryset = Comment.objects.all()
