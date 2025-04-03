@@ -1,10 +1,8 @@
 import "./UserProfileInfo.css";
-import { useState, useContext, createContext, useMemo, useEffect } from "react";
-import Container from "react-bootstrap/Container";
+import { useState, useEffect } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import { EditProfilePopup } from "./EditProfilePopup";
 import { ProfilePicture } from "../components/ProfilePicture";

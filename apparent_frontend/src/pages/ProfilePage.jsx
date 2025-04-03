@@ -8,6 +8,8 @@ export function ProfilePage({
   lastName,
   setFirstName,
   setLastName,
+  userId,
+  setUserId,
 }) {
   const [profileData, setProfileData] = useState(null);
   const [updatedProfile, setUpdatedProfile] = useState(false);
@@ -36,6 +38,7 @@ export function ProfilePage({
     if (profileData) {
       setFirstName(profileData.first_name || "");
       setLastName(profileData.last_name || "");
+      setUserId(profileData.id || "");
       setProfilePicture(profileData.profile_image || "../APParent_logo.png");
     }
   }, [profileData]);
@@ -56,6 +59,50 @@ export function ProfilePage({
         profileData={profileData}
         setUpdatedProfile={setUpdatedProfile}
       />
+      <button
+        onClick={() => {
+          apiClient("application/json")
+            .post("/friend-requests/send_request/", { to_user_id: 18 })
+            .then((res) => console.log("Success", res.data))
+            .catch((err) => console.error("Error", err.response?.data || err));
+        }}
+      >
+        Send Friend Request
+      </button>
+      <button
+        onClick={() => {
+          apiClient("application/json")
+            .get("/friend-requests/")
+            .then((res) => console.log("My Friend Requests:", res.data))
+            .catch((err) =>
+              console.error(
+                "Error getting requests:",
+                err.response?.data || err
+              )
+            );
+        }}
+      >
+        Get My Friend Requests
+      </button>
+      <button
+        onClick={() => {
+          const requestId = 5; // Replace this with a real FriendRequest ID
+          apiClient("application/json")
+            .put(`/friend-requests/${requestId}/`, {
+              status: "AC", // AC = accepted
+              to_user_id: 18,
+            })
+            .then((res) => console.log("Friend request accepted!", res.data))
+            .catch((err) =>
+              console.error(
+                "Error accepting request:",
+                err.response?.data || err
+              )
+            );
+        }}
+      >
+        Accept Friend Request
+      </button>
     </Container>
   );
 }

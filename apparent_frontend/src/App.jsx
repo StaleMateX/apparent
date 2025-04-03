@@ -19,6 +19,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [userId, setUserId] = useState("");
 
   const handleLogin = () => setIsLoggedIn(true);
   const handleLogout = () => {
@@ -43,6 +44,7 @@ function App() {
               onLogout={handleLogout}
               firstName={firstName}
               lastName={lastName}
+              userId={userId}
             />
           }
         >
@@ -63,6 +65,8 @@ function App() {
                   lastName={lastName}
                   setFirstName={setFirstName}
                   setLastName={setLastName}
+                  userId={userId}
+                  setUserId={setUserId}
                 />
               }
             />

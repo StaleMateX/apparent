@@ -2,6 +2,7 @@ import React from "react";
 import Stack from "react-bootstrap/Stack";
 import { UserProfileInfo } from "../../components/UserProfileInfo";
 import { PostSection } from "../../components/PostSection";
+import { FriendsListOverlay } from "../../components/Extras/FriendsListOverlay";
 
 export function UserProfilePage({
   firstName,
@@ -29,6 +30,7 @@ export function UserProfilePage({
           lastName={lastName}
           profilePicture={profilePicture}
         />
+        <FriendsListOverlay />
       </Stack>
     </>
   );
