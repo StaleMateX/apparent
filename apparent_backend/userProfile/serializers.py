@@ -20,6 +20,7 @@ class HobbySerializer(serializers.ModelSerializer):
         return [{"hobby_type": choices.value, "hobby_type_display": choices.label} for choices in Hobby.Hobbies]
 
 class ProfileSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
     username = serializers.CharField(source="user.username", read_only=True)
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
@@ -30,17 +31,17 @@ class ProfileSerializer(serializers.ModelSerializer):
                                     write_only=True,
                                     required=False)
     friends = serializers.SerializerMethodField()
-    requests = serializers.SerializerMethodField()
     class_standing_display = serializers.CharField(source="get_class_standing_display", read_only=True) # We can still update the class standing using the actual model field.
     background_check_display = serializers.CharField(source="get_background_check_display", read_only=True)
 
     class Meta:
         model = Profile
         fields = [
+        "id",
         "username", "first_name", "last_name", "profile_image",
         "background_check_display", "phone_number", "city", "state",
         "institution", "about_me", "hobbies", "hobbies_ro",
-        "class_standing", "class_standing_display", "friends", "requests"
+        "class_standing", "class_standing_display", "friends"
         ]
 
 
@@ -75,6 +76,7 @@ class ProfileSerializer(serializers.ModelSerializer):
 
 
 class FriendRequestSerializer(serializers.ModelSerializer):
+    id = serializers.IntegerField(read_only=True)
     from_user = UserSerializer(read_only=True)
     to_user = UserSerializer(read_only=True)
     to_user_id = serializers.PrimaryKeyRelatedField(queryset = User.objects.all(),
@@ -84,11 +86,11 @@ class FriendRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FriendRequest
-        fields = ['to_user_id', 'to_user', 'from_user', 'status', 'status_display', 'created_at']
+        fields = ['id', 'to_user_id', 'to_user', 'from_user', 'status', 'status_display', 'created_at']
         read_only_fields = ['from_user', 'to_user', 'created_at']
 
     def create(self, validated_data):
-        from_user = self.context['request'].user
+        from_user = self.context["request"].user
         to_user = validated_data.get('to_user')
 
         if to_user == from_user:
@@ -119,13 +121,13 @@ class FriendRequestSerializer(serializers.ModelSerializer):
 
         if updated_status == FriendRequest.RequestOptions.DECLINED:
             instance.delete()
-            return None
+            return instance
         elif updated_status == FriendRequest.RequestOptions.ACCEPTED:
             from_profile = Profile.objects.get(user=instance.from_user)
             to_profile = Profile.objects.get(user=instance.to_user)
             to_profile.friends.add(from_profile)
             instance.delete()
-            return None
+            return instance
         else:
             instance.status = updated_status
             instance.save()

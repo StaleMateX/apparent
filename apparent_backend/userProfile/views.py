@@ -47,7 +47,7 @@ class IsSenderOnly(BasePermission):
     def has_object_permission(self, request, view, obj):
         return obj.from_user == request.user and obj.to_user != request.user
 
-class FriendRequestSet(ModelViewSet):
+class FriendRequestViewSet(ModelViewSet):
     queryset = FriendRequest.objects.all()
     serializer_class = FriendRequestSerializer
     permission_classes = [IsAuthenticated, IsSenderOrReceiver]
@@ -70,10 +70,10 @@ class FriendRequestSet(ModelViewSet):
         self.check_object_permissions(self.request, user_request)
         return user_request
 
-    @action(detail=True, method=["post"], permission_classes=[IsAuthenticated, IsSenderOnly])
+    @action(detail=False, methods=["post"], permission_classes=[IsAuthenticated, IsSenderOnly])
     def send_request(self, request):
-        serializer = self.serializer_class(data=request.data)
-        serializer = serializer.is_valid(raise_exception=True)
+        serializer = self.get_serializer(data=request.data) # Important: call get_serializer to automatically get the context
+        serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(data=serializer.data, status=HTTP_201_CREATED)
 
@@ -81,8 +81,8 @@ class FriendRequestSet(ModelViewSet):
     @action(detail=True, methods=["put"], permission_classes=[IsAuthenticated, IsReceiverOnly])
     def update_status(self, request, pk=None):
         friend_request = self.get_object()
-        serializer = self.serializer_class(friend_request, data=request.data, partial=True)
-        serializer = serializer.is_valid(raise_exception=True)
+        serializer = self.get_serializer(friend_request, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
         serializer.save()
 
         return Response(serializer.data, status=HTTP_200_OK)

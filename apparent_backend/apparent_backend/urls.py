@@ -39,7 +39,7 @@ urlpatterns = [
     path('api/pins/', include('pins.urls')),
 
     # User Profiles routes
-    path('api/profile/', include('userProfile.urls')),
+    path('api/', include('userProfile.urls')),
 
     # Forum routes
     path('api/', include('forum.urls')),
