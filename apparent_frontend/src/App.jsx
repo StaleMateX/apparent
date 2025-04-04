@@ -17,6 +17,7 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [friends, setFriends] = useState([]);
 
   const handleLogin = () => setIsLoggedIn(true);
   const handleLogout = () => {
@@ -41,6 +42,8 @@ function App() {
               onLogout={handleLogout}
               firstName={firstName}
               lastName={lastName}
+              friends={friends}
+              setFriends={setFriends}
             />
           }
         >
@@ -52,15 +55,31 @@ function App() {
               <PrivateRoutes onLogin={setIsLoggedIn} isLoggedIn={isLoggedIn} />
             }
           >
-            {/*  */}
+            {/* Route to user profile page */}
             <Route
               path="/profile"
               element={
                 <ProfilePage
                   firstName={firstName}
                   lastName={lastName}
+                  friends={friends}
                   setFirstName={setFirstName}
                   setLastName={setLastName}
+                  setFriends={setFriends}
+                />
+              }
+            />
+            {/* Route to a friend's profile page */}
+            <Route
+              path="profile/:username"
+              element={
+                <ProfilePage
+                  firstName={firstName}
+                  lastName={lastName}
+                  friends={friends}
+                  setFirstName={setFirstName}
+                  setLastName={setLastName}
+                  setFriends={setFriends}
                 />
               }
             />
