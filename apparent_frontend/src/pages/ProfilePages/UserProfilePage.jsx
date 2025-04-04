@@ -13,6 +13,7 @@ export function UserProfilePage({
   setProfileData,
   setUpdatedProfile,
   friends,
+  setFriendsProfile,
 }) {
   return (
     <>
@@ -26,7 +27,7 @@ export function UserProfilePage({
           setProfileData={setProfileData}
           setUpdatedProfile={setUpdatedProfile}
         />
-        <FriendsListOverlay friends={friends} />
+        <FriendsListOverlay friends={friends} setFriendsProfile={setFriendsProfile} />
         <PostSection
           firstName={firstName}
           lastName={lastName}
