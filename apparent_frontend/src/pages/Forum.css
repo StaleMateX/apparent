@@ -1,4 +1,3 @@
-/* General Styles */
 .forum-container {
     margin: 50px auto;
     max-width: 800px;
@@ -9,15 +8,12 @@
 h1, h2 {
     text-align: center;
     color: #4684c2;
-    margin-bottom: 20px;
 }
 
 h3 {
     color: #c8783e;
-    margin-top: 20px;
 }
 
-/* Input and Button Styles */
 input, textarea {
     width: 100%;
     padding: 10px;
@@ -42,7 +38,6 @@ button:hover {
     background-color: #45a049;
 }
 
-/* Post Styles */
 .post-container {
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -59,18 +54,15 @@ button:hover {
     margin-bottom: 10px;
 }
 
-.post-container .post-header strong {
-    font-size: 24px;
-    color: #4684c2;
-    margin: 0;
+.post-header strong {
+    font-size: 18px;
+    color: #2c3e50;
 }
 
 .post-header button {
     font-size: 12px;
     padding: 5px 10px;
     background-color: #e74c3c;
-    color: white;
-    border-radius: 4px;
 }
 
 .post-header button:hover {
@@ -83,12 +75,12 @@ button:hover {
     margin-bottom: 15px;
 }
 
-.post-user {
-    font-weight: bold;
-    color: #3498db;
+.comment-container {
+    margin: 15px 0;
+    padding: 10px;
+    border-top: 1px solid #ddd;
 }
 
-/* Comment Styles */
 .comment {
     margin: 10px 0;
     padding: 10px;
@@ -106,138 +98,28 @@ button:hover {
     background-color: #e74c3c;
     padding: 5px;
     font-size: 12px;
+    float: right;
     margin-left: 10px;
-    border-radius: 4px;
-    cursor: pointer;
 }
 
 .comment button:hover {
     background-color: #c0392b;
 }
 
-/* Highlight the current user's name in posts */
-.post-user.current-user {
-    color: orange;
-    font-weight: bold;
-}
-
-/* Highlight the current user's name in comments */
-.comment .current-user {
-    color: blue;
-    font-weight: bold;
-}
-.comment .comment-user{
-    color: lightseagreen;
-    font-weight: bold;
-}
-
-/* Modal Styles */
-.modal-overlay {
-    background: rgba(0, 0, 0, 0.5);
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.modal-container {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    max-width: 650px;
-    width: 90%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    position: relative;
-    display: flex;
-    flex-direction: column;
-}
-
-.modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 10px;
-}
-
-.modal-header h2 {
-    font-size: 24px;
-    color: #4684c2;
-    margin: 0;
-}
-
-
-.close-button {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    width: 20px;
-    height: 20px;
-    font-size: 15px;
-    cursor: pointer;
-    border: none;
-    background: grey;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
+.comment-form {
+    margin-top: 10px;
 }
 
 textarea {
     resize: none;
 }
 
-.delete-post-button {
-    background: red;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
+.post-user {
+    font-weight: bold;
+    color: #3498db; 
 }
 
-.confirm-button {
-    background: red;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-right: 10px;
+.comment-content {
+    color: #2c3e50; 
+    font-style: italic;
 }
-
-.cancel-button {
-    background: gray;
-    color: white;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.suggestions-dropdown {
-    position: absolute;
-    background: lightgray;
-    border: 1px solid #ccc;
-    width: 85%;
-    max-height: 150px;
-    overflow-y: auto;
-    border-radius: 4px;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
-    z-index: 10;
-}
-
-.suggestion-item {
-    padding: 8px;
-    cursor: pointer;
-    border-bottom: 1px solid #eee;
-}
-
-.suggestion-item:hover {
-    background-color: #f1f1f1;
-}
-

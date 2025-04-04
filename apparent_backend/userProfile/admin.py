@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Profile
+from .models import Profile, FriendRequest
 
 @admin.register(Profile)
 class ProfileAdmin(admin.ModelAdmin):
@@ -22,3 +22,12 @@ class ProfileAdmin(admin.ModelAdmin):
     def display_friends(self, obj):
         return ", ".join([friend.user.get_full_name() or friend.user.username for friend in obj.friends.all()])
     display_friends.short_description = "Friends"
+
+@admin.register(FriendRequest)
+class FriendRequestAdmin(admin.ModelAdmin):
+    list_display=[
+        "from_user",
+        "to_user",
+        "created_at",
+        "status",
+    ]

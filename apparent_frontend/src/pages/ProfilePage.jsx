@@ -6,10 +6,13 @@ import { UserProfilePage } from "./ProfilePages/UserProfilePage";
 export function ProfilePage({
   firstName,
   lastName,
+  friends,
   setFirstName,
   setLastName,
+  setFriends,
 }) {
   const [profileData, setProfileData] = useState(null);
+  const [updatedProfile, setUpdatedProfile] = useState(false);
   const [profilePicture, setProfilePicture] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -17,8 +20,9 @@ export function ProfilePage({
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const response = await apiClient.get(`/profile/`);
+        const response = await apiClient("application/json").get(`/profile/`);
         setProfileData(response.data[0]);
+        setUpdatedProfile(false);
       } catch (err) {
         setError("Error fetching profile data");
         console.error("Error fetching profile data:", err);
@@ -28,12 +32,13 @@ export function ProfilePage({
     };
 
     fetchProfileData();
-  }, []);
+  }, [updatedProfile]);
 
   useEffect(() => {
     if (profileData) {
       setFirstName(profileData.first_name || "");
       setLastName(profileData.last_name || "");
+      setFriends(profileData.friends || []);
       setProfilePicture(profileData.profile_image || "../APParent_logo.png");
     }
   }, [profileData]);
@@ -52,7 +57,53 @@ export function ProfilePage({
         profilePicture={profilePicture}
         setProfilePicture={setProfilePicture}
         profileData={profileData}
+        setUpdatedProfile={setUpdatedProfile}
+        friends={friends}
       />
+      <button
+        onClick={() => {
+          apiClient("application/json")
+            .post("/friend-requests/send_request/", { to_user_id: 18 })
+            .then((res) => console.log("Success", res.data))
+            .catch((err) => console.error("Error", err.response?.data || err));
+        }}
+      >
+        Send Friend Request
+      </button>
+      <button
+        onClick={() => {
+          apiClient("application/json")
+            .get("/friend-requests/")
+            .then((res) => console.log("My Friend Requests:", res.data))
+            .catch((err) =>
+              console.error(
+                "Error getting requests:",
+                err.response?.data || err
+              )
+            );
+        }}
+      >
+        Get My Friend Requests
+      </button>
+      <button
+        onClick={() => {
+          const requestId = 5; // Replace this with a real FriendRequest ID
+          apiClient("application/json")
+            .put(`/friend-requests/${requestId}/`, {
+              status: "AC", // AC = accepted
+              to_user_id: 18,
+            })
+            .then((res) => console.log("Friend request accepted!", res.data))
+            .catch((err) =>
+              console.error(
+                "Error accepting request:",
+                err.response?.data || err
+              )
+            );
+        }}
+      >
+        Accept Friend Request
+      </button>
     </Container>
   );
 }

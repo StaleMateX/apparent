@@ -1,13 +1,12 @@
 import "./UserProfileInfo.css";
-import { useState, useContext, createContext, useMemo } from "react";
-import Container from "react-bootstrap/Container";
+import { useState, useEffect } from "react";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
 import Card from "react-bootstrap/Card";
 import { EditProfilePopup } from "./EditProfilePopup";
 import { ProfilePicture } from "../components/ProfilePicture";
+import apiClient from "../apiClient";
 
 export function UserProfileInfo({
   firstName,
@@ -16,22 +15,27 @@ export function UserProfileInfo({
   setProfilePicture,
   profileData,
   setProfileData,
+  updatedProfile,
+  setUpdatedProfile,
 }) {
   const [show, setShow] = useState(false);
+  const [callAPI, setCallAPI] = useState(false);
   const [collegeName, setCollegeName] = useState(
     profileData.institution || "Not Shared"
   );
   const [city, setCity] = useState(profileData.city || "");
   const [state, setState] = useState(profileData.state || "Not Shared");
-  const [hobbies, setHobbies] = useState(profileData.hobbies);
+  const [hobbies, setHobbies] = useState(profileData.hobbies_ro || []);
   const [backgroundCheck, setBackgroundCheck] = useState(
     profileData.background_check_display || "No"
   );
-  const [phoneNumber, setPhoneNumber] = useState(profileData.phone_number);
-  const [classStanding, setClassStanding] = useState(
-    profileData.class_standing_display
+  const [phoneNumber, setPhoneNumber] = useState(
+    profileData.phone_number || "None"
   );
-  const [aboutMe, setAboutMe] = useState(profileData.about_me);
+  const [classStanding, setClassStanding] = useState(
+    profileData.class_standing_display || "Unknown"
+  );
+  const [aboutMe, setAboutMe] = useState(profileData.about_me || "");
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -41,9 +45,39 @@ export function UserProfileInfo({
       return "No hobbies to share.";
     }
     return hobbies.map((hobby_obj) => {
-      return <p key={hobby_obj.hobby_type}>{hobby_obj.hobby_type_display}</p>;
+      return (
+        <p className="info-text" key={hobby_obj.hobby_type}>
+          {hobby_obj.hobby_type_display}
+        </p>
+      );
     });
   };
+
+  const updateProfileData = async (updatedProfileData) => {
+    try {
+      const response = await apiClient("multipart/form-data").patch(
+        "/profile/update/",
+        updatedProfileData
+      );
+      setUpdatedProfile(true);
+    } catch (error) {
+      console.error("Error updating profile data:", error);
+      alert("Error updating profile data");
+    }
+  };
+
+  useEffect(() => {
+    if (profileData) {
+      setCollegeName(profileData.institution || "Not Shared");
+      setCity(profileData.city || "");
+      setState(profileData.state || "Not Shared");
+      setHobbies(profileData.hobbies_ro || []);
+      setBackgroundCheck(profileData.background_check_display || "No");
+      setPhoneNumber(profileData.phone_number || "None");
+      setClassStanding(profileData.class_standing_display || "Unknown");
+      setAboutMe(profileData.about_me || "");
+    }
+  }, [profileData]);
 
   return (
     <>
@@ -83,11 +117,8 @@ export function UserProfileInfo({
                 </p>
               </Col>
               <Col className="p-2 info-container">
-                <p className="info-text">
-                  <strong>{"Hobbies: "}</strong>
-                  <br />
-                  {formatHobbies(hobbies)}
-                </p>
+                <strong>{"Hobbies: "}</strong>
+                {formatHobbies(hobbies)}
               </Col>
             </Row>
           </Col>
@@ -132,6 +163,7 @@ export function UserProfileInfo({
           setPhoneNumber,
           aboutMe,
           setAboutMe,
+          updateProfileData,
         }}
       />
     </>

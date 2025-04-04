@@ -1,7 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
+from django.db.models import Q
 from django.dispatch import receiver
+
+# Helper function for media path naming.
+def user_directory_path(instance, filename):
+    return f'profile_pictures/{instance.user.username}/{filename}'
 
 class Hobby(models.Model):
 
@@ -23,12 +28,7 @@ class Hobby(models.Model):
     def __str__(self):
         return self.get_hobby_type_display()
 
-def user_directory_path(instance, filename):
-    """Uploads image to a user's profile folder inside MEDIA_ROOT/profile_pictures/"""
-    return f'profile_pictures/{instance.user.username}/{filename}'
-
 class Profile(models.Model):
-    """ The constants are from: https://docs.djangoproject.com/en/5.1/ref/models/fields/ """
 
     class YearInSchool(models.TextChoices):
         NOT_SPECIFIED = "NS", "Not specified"
@@ -44,7 +44,7 @@ class Profile(models.Model):
         IN_PROGRESS = 'IP', "In progress"
         NONE = 'NO', "Not started"
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)  # Link to the User model
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")  # Link to the User model
     profile_image = models.ImageField(
         upload_to=user_directory_path,  # Custom upload function
         default="profile_pictures/jolly_rancher.jpg",  # Default profile picture
@@ -67,3 +67,23 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.get_full_name() or self.user.username} - Profile"
+
+class FriendRequestManager(models.Manager):
+    def for_user(self, user):
+        return self.get_queryset().filter(Q(to_user=user) | Q(from_user=user))
+
+class FriendRequest(models.Model):
+    class RequestOptions(models.TextChoices):
+        ACCEPTED = 'AC', "accepted"
+        DECLINED = 'RE', "declined"
+        IGNORED = 'IG', "ignored"
+        BLOCKED = 'BL', "blocked"
+        PENDING = 'Pe', "pending"
+
+    from_user = models.ForeignKey(User, related_name="from_user", on_delete=models.CASCADE)
+    to_user = models.ForeignKey(User, related_name="to_user", on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    status = models.CharField(max_length=2,
+                                choices=RequestOptions,
+                                default=RequestOptions.PENDING)
+    objects = FriendRequestManager()
