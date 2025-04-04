@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
+import { Fragment } from "react";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
 import Image from "react-bootstrap/Image";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import Nav from "react-bootstrap/Nav";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import "../PostCard.css";
+import { useNavigate } from "react-router-dom";
 
-export function FriendsListOverlay({ friends }) {
+export function FriendsListOverlay({ friends, setFriendsProfile }) {
   const [show, setShow] = useState(false);
 
+  const navigate = useNavigate();
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -20,10 +22,16 @@ export function FriendsListOverlay({ friends }) {
       return "No friends to show";
     }
 
+    const navigateToFriendsProfile = (friend) => {
+      setFriendsProfile({ id: friend.id, username: friend.username });
+      navigate(`/Profile/${friend.username}`);
+      handleClose();
+    };
+
     return friends.map((friend) => {
       return (
-        <>
-          <Nav.Link key={friend.id} href={`#/Profile/`}>
+        <Fragment key={friend.id}>
+          <Nav.Link onClick={() => navigateToFriendsProfile(friend)}>
             <Col>
               <Image
                 className="card-picture"
@@ -34,7 +42,7 @@ export function FriendsListOverlay({ friends }) {
             </Col>
           </Nav.Link>
           <br />
-        </>
+        </Fragment>
       );
     });
   };

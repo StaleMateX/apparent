@@ -10,6 +10,8 @@ export function ProfilePage({
   setFirstName,
   setLastName,
   setFriends,
+  friendsProfile,
+  setFriendsProfile,
 }) {
   const [profileData, setProfileData] = useState(null);
   const [updatedProfile, setUpdatedProfile] = useState(false);
@@ -20,8 +22,11 @@ export function ProfilePage({
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const response = await apiClient("application/json").get(`/profile/`);
-        setProfileData(response.data[0]);
+        const endpoint = friendsProfile
+          ? `/profile/${friendsProfile.username}/`
+          : "/profile/my_profile/";
+        const response = await apiClient("application/json").get(endpoint);
+        setProfileData(response.data);
         setUpdatedProfile(false);
       } catch (err) {
         setError("Error fetching profile data");
@@ -32,7 +37,7 @@ export function ProfilePage({
     };
 
     fetchProfileData();
-  }, [updatedProfile]);
+  }, [updatedProfile, friendsProfile]);
 
   useEffect(() => {
     if (profileData) {
@@ -59,6 +64,7 @@ export function ProfilePage({
         profileData={profileData}
         setUpdatedProfile={setUpdatedProfile}
         friends={friends}
+        setFriendsProfile={setFriendsProfile}
       />
       <button
         onClick={() => {

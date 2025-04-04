@@ -18,6 +18,10 @@ function App() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [friends, setFriends] = useState([]);
+  const [friendsProfile, setFriendsProfile] = useState({
+    id: "",
+    username: "",
+  });
 
   const handleLogin = () => setIsLoggedIn(true);
   const handleLogout = () => {
@@ -43,7 +47,8 @@ function App() {
               firstName={firstName}
               lastName={lastName}
               friends={friends}
-              setFriends={setFriends}
+              setFriends={setFriendsProfile}
+              setFriendsProfile={setFriendsProfile}
             />
           }
         >
@@ -55,20 +60,6 @@ function App() {
               <PrivateRoutes onLogin={setIsLoggedIn} isLoggedIn={isLoggedIn} />
             }
           >
-            {/* Route to user profile page */}
-            <Route
-              path="/profile"
-              element={
-                <ProfilePage
-                  firstName={firstName}
-                  lastName={lastName}
-                  friends={friends}
-                  setFirstName={setFirstName}
-                  setLastName={setLastName}
-                  setFriends={setFriends}
-                />
-              }
-            />
             {/* Route to a friend's profile page */}
             <Route
               path="profile/:username"
@@ -80,6 +71,23 @@ function App() {
                   setFirstName={setFirstName}
                   setLastName={setLastName}
                   setFriends={setFriends}
+                  friendsProfile={friendsProfile}
+                  setFriendsProfile={setFriendsProfile}
+                />
+              }
+            />
+            {/* Route to user profile page */}
+            <Route
+              path="/profile"
+              element={
+                <ProfilePage
+                  firstName={firstName}
+                  lastName={lastName}
+                  friends={friends}
+                  setFirstName={setFirstName}
+                  setLastName={setLastName}
+                  setFriends={setFriends}
+                  setFriendsProfile={setFriendsProfile}
                 />
               }
             />

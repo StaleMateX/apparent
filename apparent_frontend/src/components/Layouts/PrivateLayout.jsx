@@ -7,7 +7,7 @@ export function PrivateLayout({
   firstName,
   lastName,
   friends,
-  setFriends,
+  setFriendsProfile,
 }) {
   return (
     <>
@@ -18,6 +18,7 @@ Outlet acts as a dynamic componenet that will render a bunch of child routes. */
         firstName={firstName}
         lastName={lastName}
         friends={friends}
+        setFriendsProfile={setFriendsProfile}
       />
       <main className="private-layout">
         <Outlet />
