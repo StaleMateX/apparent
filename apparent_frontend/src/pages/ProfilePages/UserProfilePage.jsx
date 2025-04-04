@@ -2,6 +2,7 @@ import React from "react";
 import Stack from "react-bootstrap/Stack";
 import { UserProfileInfo } from "../../components/UserProfileInfo";
 import { PostSection } from "../../components/PostSection";
+import { FriendsListOverlay } from "../../components/Extras/FriendsListOverlay";
 
 export function UserProfilePage({
   firstName,
@@ -11,6 +12,7 @@ export function UserProfilePage({
   profileData,
   setProfileData,
   setUpdatedProfile,
+  friends,
 }) {
   return (
     <>
@@ -24,6 +26,7 @@ export function UserProfilePage({
           setProfileData={setProfileData}
           setUpdatedProfile={setUpdatedProfile}
         />
+        <FriendsListOverlay friends={friends} />
         <PostSection
           firstName={firstName}
           lastName={lastName}

@@ -25,8 +25,16 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Offcanvas from "react-bootstrap/Offcanvas";
+import { FriendsListOverlay } from "./Extras/FriendsListOverlay";
 
-export function CustomNavbar({ onLogout, firstName, lastName }) {
+export function CustomNavbar({
+  onLogout,
+  firstName,
+  lastName,
+  friends,
+  friendsId,
+  setFriendsId,
+}) {
   return (
     <>
       {/* false, 'sm', 'md', 'lg', 'xl', 'xxl' dynamically input one of these based on browser window size*/}
@@ -69,14 +77,15 @@ export function CustomNavbar({ onLogout, firstName, lastName }) {
                 </Nav.Link>
                 <hr className="offcanvas-divider" role="separator"></hr>
                 <p className="offcanvas-section-header">Your Content</p>
+                {/* <Nav.Link href={`#/Profile/`}>
+                  <FontAwesomeIcon icon={faUsers} /> Friends{" "}
+                </Nav.Link> */}
+                <FriendsListOverlay friends={friends} />
                 <Nav.Link href="#/Profile">
                   <FontAwesomeIcon icon={faMessage} /> Messages{" "}
                 </Nav.Link>
                 <Nav.Link href="#/Profile">
                   <FontAwesomeIcon icon={faStar} /> Forum Contributions{" "}
-                </Nav.Link>
-                <Nav.Link href="#/Profile">
-                  <FontAwesomeIcon icon={faUsers} /> Matched Friends{" "}
                 </Nav.Link>
                 <Nav.Link href="#/Profile">
                   <FontAwesomeIcon icon={faCalendarDays} /> Scheduled Care{" "}
