@@ -13,7 +13,7 @@ export function ProfilePage({
   friendsProfile,
   setFriendsProfile,
 }) {
-  const [profileData, setProfileData] = useState(null);
+  const [profileData, setProfileData] = useState(null || "");
   const [updatedProfile, setUpdatedProfile] = useState(false);
   const [profilePicture, setProfilePicture] = useState("");
   const [isLoading, setIsLoading] = useState(true);

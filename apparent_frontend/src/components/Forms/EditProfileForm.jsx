@@ -61,15 +61,6 @@ export function EditProfileForm({
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // if (profilePicture !== newProfilePicture) {
-    //   setProfilePicture(URL.createObjectURL(newProfilePicture));
-    // }
-    // setCity(newCity);
-    // setState(newState);
-    // setCollegeName(newCollegeName);
-    // setPhoneNumber(newPhoneNumber);
-    // setHobbies(newHobbies);
-    // setAboutMe(newAboutMe);
     const formData = new FormData();
     if (newProfilePicture) {
       formData.append("profile_image", newProfilePicture);

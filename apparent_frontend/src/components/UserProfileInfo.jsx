@@ -56,7 +56,7 @@ export function UserProfileInfo({
   const updateProfileData = async (updatedProfileData) => {
     try {
       const response = await apiClient("multipart/form-data").patch(
-        "/profile/update/",
+        `/profile/${profileData.username}/`,
         updatedProfileData
       );
       setUpdatedProfile(true);
