@@ -8,5 +8,4 @@ router.register(r"friend-requests", FriendRequestViewSet)
 
 urlpatterns = [
     path("", include(router.urls)),
-    path('update/', ProfileViewSet.as_view({'patch': 'partial_update'})),
 ]
