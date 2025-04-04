@@ -27,7 +27,14 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { FriendsListOverlay } from "./Extras/FriendsListOverlay";
 
-export function CustomNavbar({ onLogout, firstName, lastName, userId }) {
+export function CustomNavbar({
+  onLogout,
+  firstName,
+  lastName,
+  friends,
+  friendsId,
+  setFriendsId,
+}) {
   return (
     <>
       {/* false, 'sm', 'md', 'lg', 'xl', 'xxl' dynamically input one of these based on browser window size*/}
@@ -73,7 +80,7 @@ export function CustomNavbar({ onLogout, firstName, lastName, userId }) {
                 {/* <Nav.Link href={`#/Profile/`}>
                   <FontAwesomeIcon icon={faUsers} /> Friends{" "}
                 </Nav.Link> */}
-                <FriendsListOverlay />
+                <FriendsListOverlay friends={friends} />
                 <Nav.Link href="#/Profile">
                   <FontAwesomeIcon icon={faMessage} /> Messages{" "}
                 </Nav.Link>

@@ -12,6 +12,7 @@ export function UserProfilePage({
   profileData,
   setProfileData,
   setUpdatedProfile,
+  friends,
 }) {
   return (
     <>
@@ -25,12 +26,12 @@ export function UserProfilePage({
           setProfileData={setProfileData}
           setUpdatedProfile={setUpdatedProfile}
         />
+        <FriendsListOverlay friends={friends} />
         <PostSection
           firstName={firstName}
           lastName={lastName}
           profilePicture={profilePicture}
         />
-        <FriendsListOverlay />
       </Stack>
     </>
   );

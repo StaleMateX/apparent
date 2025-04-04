@@ -3,9 +3,11 @@ from django.db.models import Q
 from .models import Profile, Hobby, FriendRequest, User
 
 class UserSerializer(serializers.ModelSerializer):
+    profile_image = serializers.ImageField(source='profile.profile_image', use_url=True, read_only=True) # This is where related_name becomes useful
+
     class Meta:
         model = User
-        fields = ['id', 'username', 'first_name', 'last_name']
+        fields = ['id', 'username', 'first_name', 'last_name', 'profile_image']
 
 class HobbySerializer(serializers.ModelSerializer):
     hobby_type_display = serializers.CharField(source="get_hobby_type_display", read_only=True)
@@ -63,7 +65,7 @@ class ProfileSerializer(serializers.ModelSerializer):
     def get_friends(self, obj):
         friends_profiles = obj.friends.all()
         users = [friend.user for friend in friends_profiles]
-        return UserSerializer(users, many=True).data
+        return UserSerializer(users, many=True, context=self.context).data  # Must manually include context when returning lists in serializers
 
     def get_requests(self, obj):
         request = self.context.get("request")

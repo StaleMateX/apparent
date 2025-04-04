@@ -6,10 +6,10 @@ import { UserProfilePage } from "./ProfilePages/UserProfilePage";
 export function ProfilePage({
   firstName,
   lastName,
+  friends,
   setFirstName,
   setLastName,
-  userId,
-  setUserId,
+  setFriends,
 }) {
   const [profileData, setProfileData] = useState(null);
   const [updatedProfile, setUpdatedProfile] = useState(false);
@@ -38,7 +38,7 @@ export function ProfilePage({
     if (profileData) {
       setFirstName(profileData.first_name || "");
       setLastName(profileData.last_name || "");
-      setUserId(profileData.id || "");
+      setFriends(profileData.friends || []);
       setProfilePicture(profileData.profile_image || "../APParent_logo.png");
     }
   }, [profileData]);
@@ -58,6 +58,7 @@ export function ProfilePage({
         setProfilePicture={setProfilePicture}
         profileData={profileData}
         setUpdatedProfile={setUpdatedProfile}
+        friends={friends}
       />
       <button
         onClick={() => {

@@ -44,7 +44,7 @@ class Profile(models.Model):
         IN_PROGRESS = 'IP', "In progress"
         NONE = 'NO', "Not started"
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)  # Link to the User model
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")  # Link to the User model
     profile_image = models.ImageField(
         upload_to=user_directory_path,  # Custom upload function
         default="profile_pictures/jolly_rancher.jpg",  # Default profile picture
