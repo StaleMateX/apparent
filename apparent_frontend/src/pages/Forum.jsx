@@ -46,20 +46,23 @@ export function Forum({ onLogout }) {
     }
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/profile/", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/profile/my_profile/",
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       //console.log("Response Status:", response.status); // Log response status
       const userData = await response.json();
       //console.log("Fetched User Data:", userData); // Log the fetched data
 
-      if (response.ok && Array.isArray(userData) && userData.length > 0) {
-        const user = userData[0]; // Extract the first object
+      if (response.ok) {
+        const user = userData; // Extract the first object
 
         //console.log("Extracted User:", user); // Debugging log
 

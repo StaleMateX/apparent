@@ -15,7 +15,8 @@ export function ProfilePage({
 }) {
   const [profileData, setProfileData] = useState(null || "");
   const [updatedProfile, setUpdatedProfile] = useState(false);
-  const [updatedPosts, setUpdatedPosts] = useState(false);
+  const [updatedPosts, setUpdatedPosts] = useState("");
+  const [posts, setPosts] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -30,21 +31,45 @@ export function ProfilePage({
         let endpoint = "/profile/my_profile/";
         if (friendsProfile) {
           endpoint = `/profile/${friendsProfile}/`;
-          setUpdatedPosts(true);
         }
         const response = await apiClient("application/json").get(endpoint);
         setProfileData(response.data);
-        setUpdatedProfile(false);
+        setUpdatedPosts(true);
       } catch (err) {
         setError("Error fetching profile data");
         console.error("Error fetching profile data:", err);
       } finally {
         setIsLoading(false);
+        setUpdatedProfile(false);
       }
     };
 
     fetchProfileData();
   }, [updatedProfile, friendsProfile]);
+
+  useEffect(() => {
+    const fetchProfileFeed = async () => {
+      try {
+        let username = localStorage.username;
+        if (friendsProfile) {
+          username = friendsProfile;
+        }
+        const response = await apiClient("application/json").get(
+          `/posts/?username=${username}&ordering=-created_at`
+        );
+        setPosts(response.data);
+        console.log(response.data);
+      } catch (err) {
+        setError("Error fetching profile feed");
+        console.error("Error fetching profile feed:", err);
+      } finally {
+        setIsLoading(false);
+        setUpdatedPosts(false);
+      }
+    };
+
+    fetchProfileFeed();
+  }, [updatedPosts]);
 
   useEffect(() => {
     if (profileData) {
@@ -74,6 +99,7 @@ export function ProfilePage({
         setFriendsProfile={setFriendsProfile}
         setUpdatedPosts={setUpdatedPosts}
         updatedPosts={updatedPosts}
+        posts={posts}
       />
       <button
         onClick={() => {

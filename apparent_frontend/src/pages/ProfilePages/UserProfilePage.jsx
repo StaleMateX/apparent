@@ -16,6 +16,7 @@ export function UserProfilePage({
   setFriendsProfile,
   setUpdatedPosts,
   updatedPosts,
+  posts,
 }) {
   return (
     <>
@@ -41,6 +42,7 @@ export function UserProfilePage({
           profilePicture={profilePicture}
           setUpdatedPosts={setUpdatedPosts}
           updatedPosts={updatedPosts}
+          posts={posts}
         />
       </Stack>
     </>

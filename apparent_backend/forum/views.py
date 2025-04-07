@@ -4,6 +4,7 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.response import Response
+from rest_framework.filters import OrderingFilter
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 
@@ -26,6 +27,15 @@ class PostViewSet(ModelViewSet):
     queryset = Post.objects.prefetch_related('comments')
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
+    filter_backends = [OrderingFilter]
+    ordering = ['created_at']
+
+    def get_queryset(self):
+        queryset = self.queryset
+        username = self.request.query_params.get('username')
+        if username is not None:
+            queryset = queryset.filter(user__username=username)
+        return queryset
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -36,7 +46,7 @@ class PostViewSet(ModelViewSet):
             raise PermissionDenied("You are not allowed to delete this post.")
         return super().destroy(request, *args, **kwargs)
 
-    @action(detail=False, methods=["get"], permission_classes=[IsOwnerOrFriend], url_path="profile-feed")
+    @action(detail=True, methods=["get"], permission_classes=[IsOwnerOrFriend], url_path="profile-feed")
     def profile_feed(self, request):
         print("Inside profile_feed")
         print("Request user:", request.user)

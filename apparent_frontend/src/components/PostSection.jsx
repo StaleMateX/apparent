@@ -12,32 +12,12 @@ export function PostSection({
   profilePicture,
   setUpdatedPosts,
   updatedPosts,
+  posts,
 }) {
   const [checked, setChecked] = useState(false);
-  const [radioValue, setRadioValue] = useState("1");
+  const [radioValue, setRadioValue] = useState("2");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [posts, setPosts] = useState("");
-
-  useEffect(() => {
-    const fetchProfileFeed = async () => {
-      try {
-        const response = await apiClient("application/json").get(
-          `/posts/profile-feed`
-        );
-        setPosts(response.data);
-        console.log(response.data);
-        setUpdatedPosts(false);
-      } catch (err) {
-        setError("Error fetching profile feed");
-        console.error("Error fetching profile feed:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProfileFeed();
-  }, [updatedPosts]);
 
   const postCards = () => {
     if (Array.isArray(posts) && posts.length !== 0) {
