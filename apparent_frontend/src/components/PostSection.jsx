@@ -19,7 +19,7 @@ export function PostSection({ firstName, lastName, profilePicture }) {
         const response = await apiClient("application/json").get(
           `/posts/profile_feed/`
         );
-        setPosts(response.data[0]);
+        setPosts(response.data);
         console.log(response.data);
         setUpdatedPosts(false);
       } catch (err) {
@@ -33,6 +33,22 @@ export function PostSection({ firstName, lastName, profilePicture }) {
     fetchProfileFeed();
   }, [updatedPosts]);
 
+  const postCards = () => {
+    if (Array.isArray(posts) && posts.length !== 0) {
+      return posts.map((post) => (
+        <PostCard
+          key={post.id}
+          firstName={firstName}
+          lastName={lastName}
+          profilePicture={profilePicture}
+          title={post.title}
+          createdAt={post.created_at}
+          content={post.content}
+        />
+      ));
+    }
+    return "You have no posts.";
+  };
   return (
     <>
       <ToggleButtonGroup
@@ -66,15 +82,11 @@ export function PostSection({ firstName, lastName, profilePicture }) {
             id="tbg-radio-4"
             value={4}
           >
-            Post Something
+            Post Something{/* Start here! Trying to render existing posts. */}
           </ToggleButton>
         </ToggleButtonGroup>
       </ToggleButtonGroup>
-      <PostCard
-        firstName={firstName}
-        lastName={lastName}
-        profilePicture={profilePicture}
-      />
+      {postCards()}
     </>
   );
 }
