@@ -10,7 +10,11 @@ import { faUsers } from "@fortawesome/free-solid-svg-icons";
 import "../PostCard.css";
 import { useNavigate } from "react-router-dom";
 
-export function FriendsListOverlay({ friends, setFriendsProfile }) {
+export function FriendsListOverlay({
+  friends,
+  setFriendsProfile,
+  loggedInUser,
+}) {
   const [show, setShow] = useState(false);
 
   const navigate = useNavigate();
@@ -23,8 +27,17 @@ export function FriendsListOverlay({ friends, setFriendsProfile }) {
     }
 
     const navigateToFriendsProfile = (friend) => {
-      setFriendsProfile({ id: friend.id, username: friend.username });
-      navigate(`/Profile/${friend.username}`);
+      if (friend.username !== localStorage.username) {
+        localStorage.setItem("viewedProfile", friend.username);
+        navigate(`/Profile/${friend.username}`);
+      } else {
+        navigate("/Profile/");
+        try {
+          localStorage.removeItem(viewedProfile);
+        } catch (ReferenceError) {
+          handleClose();
+        }
+      }
       handleClose();
     };
 

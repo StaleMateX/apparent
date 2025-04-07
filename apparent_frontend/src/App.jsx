@@ -17,15 +17,16 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [userName, setUsername] = useState("");
   const [friends, setFriends] = useState([]);
-  const [friendsProfile, setFriendsProfile] = useState({
-    id: "",
-    username: "",
-  });
+  const [friendsProfile, setFriendsProfile] = useState("");
 
-  const handleLogin = () => setIsLoggedIn(true);
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("username");
     setIsLoggedIn(false);
   };
 

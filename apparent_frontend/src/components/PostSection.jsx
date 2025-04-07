@@ -5,19 +5,25 @@ import ToggleButton from "react-bootstrap/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import apiClient from "../apiClient";
 
-export function PostSection({ firstName, lastName, profilePicture }) {
+export function PostSection({
+  firstName,
+  lastName,
+  userId,
+  profilePicture,
+  setUpdatedPosts,
+  updatedPosts,
+}) {
   const [checked, setChecked] = useState(false);
   const [radioValue, setRadioValue] = useState("1");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const [posts, setPosts] = useState("");
-  const [updatedPosts, setUpdatedPosts] = useState(false);
 
   useEffect(() => {
     const fetchProfileFeed = async () => {
       try {
         const response = await apiClient("application/json").get(
-          `/posts/profile_feed/`
+          `/posts/profile-feed`
         );
         setPosts(response.data);
         console.log(response.data);

@@ -36,7 +36,7 @@ class PostViewSet(ModelViewSet):
             raise PermissionDenied("You are not allowed to delete this post.")
         return super().destroy(request, *args, **kwargs)
 
-    @action(detail=False, methods=["get"], permission_classes=[IsOwnerOrFriend], url_name="profile-feed")
+    @action(detail=False, methods=["get"], permission_classes=[IsOwnerOrFriend], url_path="profile-feed")
     def profile_feed(self, request):
         print("Inside profile_feed")
         print("Request user:", request.user)

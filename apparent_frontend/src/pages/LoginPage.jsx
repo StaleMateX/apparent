@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Login } from "../components/Forms/Login.jsx";
 import { HomePageInfo } from "../components/HomePageInfo.jsx";
 
-export function LoginPage({onLogin}) {
+export function LoginPage({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -19,6 +19,7 @@ export function LoginPage({onLogin}) {
     console.log("Data:", data);
     if (response.ok) {
       localStorage.setItem("token", data.access); // Save token for authenticated requests
+      localStorage.setItem("username", username);
       onLogin(); // Trigger login state update
       navigate("/Profile"); // Redirect to profile page
     } else {

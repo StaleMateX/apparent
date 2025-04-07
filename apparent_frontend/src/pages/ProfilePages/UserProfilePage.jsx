@@ -14,6 +14,8 @@ export function UserProfilePage({
   setUpdatedProfile,
   friends,
   setFriendsProfile,
+  setUpdatedPosts,
+  updatedPosts,
 }) {
   return (
     <>
@@ -27,11 +29,18 @@ export function UserProfilePage({
           setProfileData={setProfileData}
           setUpdatedProfile={setUpdatedProfile}
         />
-        <FriendsListOverlay friends={friends} setFriendsProfile={setFriendsProfile} />
+        <FriendsListOverlay
+          friends={friends}
+          setFriendsProfile={setFriendsProfile}
+          loggedInUser={profileData.username || ""}
+        />
         <PostSection
           firstName={firstName}
           lastName={lastName}
+          userId={profileData.username || ""}
           profilePicture={profilePicture}
+          setUpdatedPosts={setUpdatedPosts}
+          updatedPosts={updatedPosts}
         />
       </Stack>
     </>

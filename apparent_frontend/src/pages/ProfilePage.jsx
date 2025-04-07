@@ -15,6 +15,7 @@ export function ProfilePage({
 }) {
   const [profileData, setProfileData] = useState(null || "");
   const [updatedProfile, setUpdatedProfile] = useState(false);
+  const [updatedPosts, setUpdatedPosts] = useState(false);
   const [profilePicture, setProfilePicture] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -22,9 +23,15 @@ export function ProfilePage({
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const endpoint = friendsProfile
-          ? `/profile/${friendsProfile.username}/`
-          : "/profile/my_profile/";
+        const viewedProfile = localStorage.getItem("viewedProfile");
+        if (viewedProfile) {
+          setFriendsProfile(viewedProfile);
+        }
+        let endpoint = "/profile/my_profile/";
+        if (friendsProfile) {
+          endpoint = `/profile/${friendsProfile}/`;
+          setUpdatedPosts(true);
+        }
         const response = await apiClient("application/json").get(endpoint);
         setProfileData(response.data);
         setUpdatedProfile(false);
@@ -65,6 +72,8 @@ export function ProfilePage({
         setUpdatedProfile={setUpdatedProfile}
         friends={friends}
         setFriendsProfile={setFriendsProfile}
+        setUpdatedPosts={setUpdatedPosts}
+        updatedPosts={updatedPosts}
       />
       <button
         onClick={() => {
