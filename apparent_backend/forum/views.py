@@ -27,9 +27,11 @@ class PostViewSet(ModelViewSet):
     queryset = Post.objects.prefetch_related('comments')
     serializer_class = PostSerializer
     permission_classes = [IsAuthenticated]
+    # Source: https://www.django-rest-framework.org/api-guide/filtering/#orderingfilter
     filter_backends = [OrderingFilter]
     ordering = ['created_at']
 
+    # Source: https://www.django-rest-framework.org/api-guide/filtering/
     def get_queryset(self):
         queryset = self.queryset
         username = self.request.query_params.get('username')
