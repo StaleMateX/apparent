@@ -14,12 +14,10 @@ export function UserProfileInfo({
   profilePicture,
   setProfilePicture,
   profileData,
-  setProfileData,
-  updatedProfile,
   setUpdatedProfile,
+  editButtonVisibility,
 }) {
   const [show, setShow] = useState(false);
-  const [callAPI, setCallAPI] = useState(false);
   const [collegeName, setCollegeName] = useState(
     profileData.institution || "Not Shared"
   );
@@ -93,7 +91,10 @@ export function UserProfileInfo({
           <Col className="d-flex flex-column">
             <Row>
               <Col className="d-flex justify-content-end">
-                <Button onClick={handleShow} className="edit-button">
+                <Button
+                  onClick={handleShow}
+                  className={`edit-button ${editButtonVisibility}`}
+                >
                   Edit Profile
                 </Button>
               </Col>

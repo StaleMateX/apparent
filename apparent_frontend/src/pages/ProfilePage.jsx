@@ -16,6 +16,7 @@ export function ProfilePage({
   const [profileData, setProfileData] = useState(null || "");
   const [updatedProfile, setUpdatedProfile] = useState(false);
   const [updatedPosts, setUpdatedPosts] = useState("");
+  const [editButtonVisibility, setEditButtonVisibility] = useState(""); // Used to remove or add edit button to profile page
   const [posts, setPosts] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -25,12 +26,14 @@ export function ProfilePage({
     const fetchProfileData = async () => {
       try {
         const viewedProfile = localStorage.getItem("viewedProfile");
+        setEditButtonVisibility("visible");
         if (viewedProfile) {
           setFriendsProfile(viewedProfile);
         }
         let endpoint = "/profile/my_profile/";
         if (friendsProfile) {
           endpoint = `/profile/${friendsProfile}/`;
+          setEditButtonVisibility("invisible");
         }
         const response = await apiClient("application/json").get(endpoint);
         setProfileData(response.data);
@@ -100,6 +103,7 @@ export function ProfilePage({
         setUpdatedPosts={setUpdatedPosts}
         updatedPosts={updatedPosts}
         posts={posts}
+        editButtonVisibility={editButtonVisibility}
       />
       <button
         onClick={() => {
