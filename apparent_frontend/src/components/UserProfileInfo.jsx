@@ -14,12 +14,11 @@ export function UserProfileInfo({
   profilePicture,
   setProfilePicture,
   profileData,
-  setProfileData,
-  updatedProfile,
   setUpdatedProfile,
+  editButtonVisibility,
+  sendFriendRequest,
 }) {
   const [show, setShow] = useState(false);
-  const [callAPI, setCallAPI] = useState(false);
   const [collegeName, setCollegeName] = useState(
     profileData.institution || "Not Shared"
   );
@@ -56,7 +55,7 @@ export function UserProfileInfo({
   const updateProfileData = async (updatedProfileData) => {
     try {
       const response = await apiClient("multipart/form-data").patch(
-        "/profile/update/",
+        `/profile/${profileData.username}/`,
         updatedProfileData
       );
       setUpdatedProfile(true);
@@ -85,7 +84,7 @@ export function UserProfileInfo({
         <Row className="align-items-center">
           <Col xs={12} md={4} className="text-center">
             <ProfilePicture
-              /* className="profile-picture" */ firstName={firstName}
+              firstName={firstName}
               lastName={lastName}
               path={profilePicture}
             />
@@ -93,9 +92,20 @@ export function UserProfileInfo({
           <Col className="d-flex flex-column">
             <Row>
               <Col className="d-flex justify-content-end">
-                <Button onClick={handleShow} className="edit-button">
-                  Edit Profile
-                </Button>
+                {editButtonVisibility === "self" ? (
+                  <Button onClick={handleShow} className={`edit-button`}>
+                    Edit Profile
+                  </Button>
+                ) : editButtonVisibility === "friend" ? (
+                  <Button
+                    onClick={() => sendFriendRequest(profileData)}
+                    className={`edit-button`}
+                  >
+                    Add Friend
+                  </Button>
+                ) : (
+                  ""
+                )}
               </Col>
             </Row>
             <Row>

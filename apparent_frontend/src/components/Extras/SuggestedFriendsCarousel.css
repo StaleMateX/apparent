@@ -1,0 +1,21 @@
+.card-image{
+    min-width: 150px;
+    max-width: 180px;
+}
+
+.suggested-card{
+    max-width: 250px;
+}
+
+.carousel-inner{
+    padding-left: 2.1rem;
+    padding-right: 2.1rem;
+}
+
+.carousel-control-next{
+    width: 2rem;
+}
+
+.carousel-control-prev{
+    width: 2rem;
+}

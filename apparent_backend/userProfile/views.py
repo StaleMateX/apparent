@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.permissions import IsAuthenticated, BasePermission
+from rest_framework.permissions import IsAuthenticated, BasePermission, SAFE_METHODS
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser, FormParser
@@ -10,23 +10,37 @@ from .serializers import ProfileSerializer, HobbySerializer, FriendRequestSerial
 from django.shortcuts import get_object_or_404
 from django.http import Http404
 
+class IsOwnerOrReadOnly(BasePermission):
+    """
+    Custom permission to allow owners full access and others read-only access.
+    """
+
+    def has_object_permission(self, request, view, obj):
+        # SAFE_METHODS are methods like Get (read-only methods)
+        if request.method in SAFE_METHODS:
+            return True
+        return obj.user == request.user
+
 class ProfileViewSet(ModelViewSet):
     queryset = Profile.objects.all()
     serializer_class = ProfileSerializer
     parser_classes = [MultiPartParser, FormParser]
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsOwnerOrReadOnly]
+    lookup_field = 'user__username'
 
-    def get_queryset(self):
-        user = self.request.user
-        if user.is_staff:  # Allow admins to see all profiles
-            return self.queryset
-        return self.queryset.filter(user=user)
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def my_profile(self, request):
+        profile = self.get_queryset().get(user=request.user)
+        serializer = self.get_serializer(profile)
+        return Response(serializer.data)
 
-    def get_object(self):
-        queryset = self.get_queryset()
-        obj = get_object_or_404(queryset, user=self.request.user)
-        self.check_object_permissions(self.request, obj)
-        return obj
+    @action(detail=False, methods=['get'], url_path='suggested_friends')
+    def suggested_friends(self, request):
+        friends = self.get_queryset().get(user=request.user).friends.all()
+        profiles = self.get_queryset().exclude(user=request.user).exclude(id__in=friends.values_list('id', flat=True))
+        serializer = self.get_serializer(profiles, many=True)
+        return Response(serializer.data)
+
 
 class HobbyViewSet(ModelViewSet):
     queryset = Hobby.objects.all()

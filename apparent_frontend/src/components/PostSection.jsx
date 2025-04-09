@@ -5,34 +5,36 @@ import ToggleButton from "react-bootstrap/ToggleButton";
 import ToggleButtonGroup from "react-bootstrap/ToggleButtonGroup";
 import apiClient from "../apiClient";
 
-export function PostSection({ firstName, lastName, profilePicture }) {
+export function PostSection({
+  firstName,
+  lastName,
+  userId,
+  profilePicture,
+  setUpdatedPosts,
+  updatedPosts,
+  posts,
+}) {
   const [checked, setChecked] = useState(false);
-  const [radioValue, setRadioValue] = useState("1");
+  const [radioValue, setRadioValue] = useState("2");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
-  const [posts, setPosts] = useState("");
-  const [updatedPosts, setUpdatedPosts] = useState(false);
 
-  useEffect(() => {
-    const fetchProfileFeed = async () => {
-      try {
-        const response = await apiClient("application/json").get(
-          `/posts/profile_feed/`
-        );
-        setPosts(response.data[0]);
-        console.log(response.data);
-        setUpdatedPosts(false);
-      } catch (err) {
-        setError("Error fetching profile feed");
-        console.error("Error fetching profile feed:", err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchProfileFeed();
-  }, [updatedPosts]);
-
+  const postCards = () => {
+    if (Array.isArray(posts) && posts.length !== 0) {
+      return posts.map((post) => (
+        <PostCard
+          key={post.id}
+          firstName={firstName}
+          lastName={lastName}
+          profilePicture={profilePicture}
+          title={post.title}
+          createdAt={post.created_at}
+          content={post.content}
+        />
+      ));
+    }
+    return "You have no posts.";
+  };
   return (
     <>
       <ToggleButtonGroup
@@ -44,7 +46,7 @@ export function PostSection({ firstName, lastName, profilePicture }) {
         <ToggleButtonGroup
           className="custom-button-group me-3"
           aria-label="First group"
-          defaultValue={1}
+          defaultValue={2}
         >
           <ToggleButton
             className="custom-button first"
@@ -66,15 +68,11 @@ export function PostSection({ firstName, lastName, profilePicture }) {
             id="tbg-radio-4"
             value={4}
           >
-            Post Something
+            Post Something{/* Start here! Trying to render existing posts. */}
           </ToggleButton>
         </ToggleButtonGroup>
       </ToggleButtonGroup>
-      <PostCard
-        firstName={firstName}
-        lastName={lastName}
-        profilePicture={profilePicture}
-      />
+      {postCards()}
     </>
   );
 }

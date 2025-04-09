@@ -17,11 +17,16 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem("token"));
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [userName, setUsername] = useState("");
   const [friends, setFriends] = useState([]);
+  const [friendsProfile, setFriendsProfile] = useState("");
 
-  const handleLogin = () => setIsLoggedIn(true);
+  const handleLogin = () => {
+    setIsLoggedIn(true);
+  };
   const handleLogout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("username");
     setIsLoggedIn(false);
   };
 
@@ -43,7 +48,8 @@ function App() {
               firstName={firstName}
               lastName={lastName}
               friends={friends}
-              setFriends={setFriends}
+              setFriends={setFriendsProfile}
+              setFriendsProfile={setFriendsProfile}
             />
           }
         >
@@ -55,20 +61,6 @@ function App() {
               <PrivateRoutes onLogin={setIsLoggedIn} isLoggedIn={isLoggedIn} />
             }
           >
-            {/* Route to user profile page */}
-            <Route
-              path="/profile"
-              element={
-                <ProfilePage
-                  firstName={firstName}
-                  lastName={lastName}
-                  friends={friends}
-                  setFirstName={setFirstName}
-                  setLastName={setLastName}
-                  setFriends={setFriends}
-                />
-              }
-            />
             {/* Route to a friend's profile page */}
             <Route
               path="profile/:username"
@@ -80,6 +72,23 @@ function App() {
                   setFirstName={setFirstName}
                   setLastName={setLastName}
                   setFriends={setFriends}
+                  friendsProfile={friendsProfile}
+                  setFriendsProfile={setFriendsProfile}
+                />
+              }
+            />
+            {/* Route to user profile page */}
+            <Route
+              path="/profile"
+              element={
+                <ProfilePage
+                  firstName={firstName}
+                  lastName={lastName}
+                  friends={friends}
+                  setFirstName={setFirstName}
+                  setLastName={setLastName}
+                  setFriends={setFriends}
+                  setFriendsProfile={setFriendsProfile}
                 />
               }
             />

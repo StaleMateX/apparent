@@ -10,9 +10,15 @@ export function ProfilePage({
   setFirstName,
   setLastName,
   setFriends,
+  friendsProfile,
+  setFriendsProfile,
 }) {
-  const [profileData, setProfileData] = useState(null);
+  const [profileData, setProfileData] = useState(null || "");
   const [updatedProfile, setUpdatedProfile] = useState(false);
+  const [updatedPosts, setUpdatedPosts] = useState("");
+  const [suggestedFriends, setSuggestedFriends] = useState([]);
+  const [editButtonVisibility, setEditButtonVisibility] = useState(""); // Used to remove or add edit button to profile page
+  const [posts, setPosts] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,19 +26,63 @@ export function ProfilePage({
   useEffect(() => {
     const fetchProfileData = async () => {
       try {
-        const response = await apiClient("application/json").get(`/profile/`);
-        setProfileData(response.data[0]);
-        setUpdatedProfile(false);
+        const viewedProfile = localStorage.getItem("viewedProfile");
+        setEditButtonVisibility("self");
+        if (viewedProfile) {
+          setFriendsProfile(viewedProfile);
+        }
+        let endpoint = "/profile/my_profile/";
+        if (friendsProfile) {
+          endpoint = `/profile/${friendsProfile}/`;
+          const isFriend = profileData
+            ? profileData.friends.filter(
+                (friend) => profileData.username === friend.username
+              )
+            : "";
+          if (isFriend) {
+            setEditButtonVisibility("stranger");
+          } else {
+            setEditButtonVisibility("friend");
+          }
+        }
+        const response = await apiClient("application/json").get(endpoint);
+        setProfileData(response.data);
+        setUpdatedPosts(true);
       } catch (err) {
         setError("Error fetching profile data");
         console.error("Error fetching profile data:", err);
       } finally {
         setIsLoading(false);
+        setUpdatedProfile(false);
       }
     };
 
     fetchProfileData();
-  }, [updatedProfile]);
+  }, [updatedProfile, friendsProfile]);
+
+  useEffect(() => {
+    const fetchProfileFeed = async () => {
+      try {
+        let username = localStorage.username;
+        if (friendsProfile) {
+          username = friendsProfile;
+        }
+        const response = await apiClient("application/json").get(
+          `/posts/?username=${username}&ordering=-created_at`
+        );
+        setPosts(response.data);
+        console.log(response.data);
+      } catch (err) {
+        setError("Error fetching profile feed");
+        console.error("Error fetching profile feed:", err);
+      } finally {
+        setIsLoading(false);
+        setUpdatedPosts(false);
+      }
+    };
+
+    fetchProfileFeed();
+  }, [updatedPosts]);
 
   useEffect(() => {
     if (profileData) {
@@ -59,51 +109,14 @@ export function ProfilePage({
         profileData={profileData}
         setUpdatedProfile={setUpdatedProfile}
         friends={friends}
+        setFriendsProfile={setFriendsProfile}
+        setUpdatedPosts={setUpdatedPosts}
+        updatedPosts={updatedPosts}
+        posts={posts}
+        editButtonVisibility={editButtonVisibility}
+        setSuggestedFriends={setSuggestedFriends}
+        suggestedFriends={suggestedFriends}
       />
-      <button
-        onClick={() => {
-          apiClient("application/json")
-            .post("/friend-requests/send_request/", { to_user_id: 18 })
-            .then((res) => console.log("Success", res.data))
-            .catch((err) => console.error("Error", err.response?.data || err));
-        }}
-      >
-        Send Friend Request
-      </button>
-      <button
-        onClick={() => {
-          apiClient("application/json")
-            .get("/friend-requests/")
-            .then((res) => console.log("My Friend Requests:", res.data))
-            .catch((err) =>
-              console.error(
-                "Error getting requests:",
-                err.response?.data || err
-              )
-            );
-        }}
-      >
-        Get My Friend Requests
-      </button>
-      <button
-        onClick={() => {
-          const requestId = 5; // Replace this with a real FriendRequest ID
-          apiClient("application/json")
-            .put(`/friend-requests/${requestId}/`, {
-              status: "AC", // AC = accepted
-              to_user_id: 18,
-            })
-            .then((res) => console.log("Friend request accepted!", res.data))
-            .catch((err) =>
-              console.error(
-                "Error accepting request:",
-                err.response?.data || err
-              )
-            );
-        }}
-      >
-        Accept Friend Request
-      </button>
     </Container>
   );
 }
