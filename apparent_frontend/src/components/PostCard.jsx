@@ -18,17 +18,19 @@ export function PostCard({
       const year = date.getFullYear();
       const month = date.getMonth();
       const day = date.getDate();
+      const hours = date.getHours();
       const time = date.getTime();
       const todaysDate = new Date(Date.now());
       // Content was created in the same year
       if (year === todaysDate.getFullYear()) {
         if (month === todaysDate.getMonth()) {
           if (day === todaysDate.getDate()) {
-            const hours = todaysDate.getTime() - time;
-            if (hours > 1) {
-              return `${hours} hours ago`;
+            const hoursDiff = todaysDate.getHours() - hours;
+            if (hoursDiff > 1) {
+              return `${hoursDiff} hours ago`;
             } else {
-              return `${hours.getMinutes()} min ago`;
+              const minutes = parseInt((todaysDate.getTime() - time) / 60000);
+              return `${minutes < 1 ? "now" : minutes + " min ago"} `;
             }
           } else {
             const numDays = todaysDate.getDate() - day;

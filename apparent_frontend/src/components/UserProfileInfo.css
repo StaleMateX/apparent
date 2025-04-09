@@ -68,3 +68,10 @@
 strong {
   color: var(--color-primary-light);
 }
+
+.visible {
+  visibility: visible;
+}
+.invisible {
+  visibility: hidden;
+}

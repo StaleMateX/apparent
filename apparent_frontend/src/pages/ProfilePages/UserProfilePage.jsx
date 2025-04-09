@@ -20,6 +20,7 @@ export function UserProfilePage({
   setUpdatedPosts,
   updatedPosts,
   posts,
+  editButtonVisibility,
   setSuggestedFriends,
   suggestedFriends,
 }) {
@@ -72,6 +73,7 @@ export function UserProfilePage({
           profileData={profileData}
           setProfileData={setProfileData}
           setUpdatedProfile={setUpdatedProfile}
+          editButtonVisibility={editButtonVisibility}
         />
         <FriendsListOverlay
           friends={friends}

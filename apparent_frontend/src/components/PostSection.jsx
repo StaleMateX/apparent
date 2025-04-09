@@ -46,7 +46,7 @@ export function PostSection({
         <ToggleButtonGroup
           className="custom-button-group me-3"
           aria-label="First group"
-          defaultValue={1}
+          defaultValue={2}
         >
           <ToggleButton
             className="custom-button first"
