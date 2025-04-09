@@ -17,7 +17,8 @@ export function ProfilePage({
   const [updatedProfile, setUpdatedProfile] = useState(false);
   const [updatedPosts, setUpdatedPosts] = useState("");
   const [suggestedFriends, setSuggestedFriends] = useState([]);
-  const [editButtonVisibility, setEditButtonVisibility] = useState(""); // Used to remove or add edit button to profile page
+  const [editButtonVisibility, setEditButtonVisibility] = useState(""); // Used to change edit button to "Add Friend" or no button
+  const [viewRequestsLink, setViewRequestsLink] = useState(true);
   const [posts, setPosts] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -44,6 +45,7 @@ export function ProfilePage({
           } else {
             setEditButtonVisibility("friend");
           }
+          setViewRequestsLink(false);
         }
         const response = await apiClient("application/json").get(endpoint);
         setProfileData(response.data);
@@ -116,6 +118,7 @@ export function ProfilePage({
         editButtonVisibility={editButtonVisibility}
         setSuggestedFriends={setSuggestedFriends}
         suggestedFriends={suggestedFriends}
+        viewRequestsLink={viewRequestsLink}
       />
     </Container>
   );

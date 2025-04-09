@@ -75,7 +75,7 @@ class FriendRequestManager(models.Manager):
 class FriendRequest(models.Model):
     class RequestOptions(models.TextChoices):
         ACCEPTED = 'AC', "accepted"
-        DECLINED = 'RE', "declined"
+        DECLINED = 'DE', "declined"
         IGNORED = 'IG', "ignored"
         BLOCKED = 'BL', "blocked"
         PENDING = 'Pe', "pending"
