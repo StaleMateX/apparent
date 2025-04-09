@@ -85,7 +85,7 @@ export function UserProfileInfo({
         <Row className="align-items-center">
           <Col xs={12} md={4} className="text-center">
             <ProfilePicture
-              /* className="profile-picture" */ firstName={firstName}
+              firstName={firstName}
               lastName={lastName}
               path={profilePicture}
             />
