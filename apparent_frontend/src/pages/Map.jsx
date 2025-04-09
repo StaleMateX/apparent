@@ -3,6 +3,8 @@ import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import "./Map.css";
 import { useNavigate } from "react-router-dom";
+import TimePicker from "react-time-picker";
+import "react-time-picker/dist/TimePicker.css";
 
 export function Map() {
   const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_ACCESS_TOKEN;
@@ -10,44 +12,59 @@ export function Map() {
   // console.log("Mapbox Token:", MAPBOX_TOKEN);
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState(null);
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/profile/", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => {
-          console.log("User Profile Data:", data);
-          setCurrentUser(data[0]); // Save user data
-      })
-      .catch((error) => console.error("Error fetching user profile:", error));
-
-      fetch("http://127.0.0.1:8000/api/pins/", {
-          headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-      })
-          .then((response) => response.json())
-          .then((data) =>
-              setPins(
-                  data.map((pin) => ({
-                      ...pin,
-                      specificLocation: pin.specific_location,
-                      availableTime: pin.available_time,
-                      contactInfo: pin.contact_info,
-                  }))
-              )
-          )
-          .catch((error) => console.error("Error fetching pins:", error));
-  }, []);
-
   const [viewport, setViewport] = useState({
-    latitude: 40.77,
-    longitude: -111.838,
-    zoom: 14.5,
+      latitude: 40.77,
+      longitude: -111.838,
+      zoom: 14.5,
   });
+  const [userLocation, setUserLocation] = useState(null); // Store user location
+
+    const [pins, setPins] = useState([]); // Local state for pins
+    const [newPin, setNewPin] = useState(null); // Temporarily store coordinates of a new pin
+    const [formData, setFormData] = useState({
+        title: "",
+        about: "",
+        specificLocation: "",
+        startTime: "",
+        endTime: "",
+        contactInfo: "",
+    }); // Form data for new pin
+    const [selectedPin, setSelectedPin] = useState(null); // Pin currently selected
+    const [isEditing, setIsEditing] = useState(false); // Track if editing mode is active
+
+    useEffect(() => {
+        fetch("http://127.0.0.1:8000/api/profile/", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+          .then((res) => res.json())
+          .then((data) => {
+              console.log("User Profile Data:", data);
+              setCurrentUser(data[0]); // Save user data
+          })
+          .catch((error) => console.error("Error fetching user profile:", error));
+
+          fetch("http://127.0.0.1:8000/api/pins/", {
+              headers: {
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+              },
+          })
+              .then((response) => response.json())
+              .then((data) =>
+                  setPins(
+                      data.map((pin) => ({
+                          ...pin,
+                          specificLocation: pin.specific_location,
+                          startTime: pin.start_time,
+                          endTime: pin.end_time,
+                          contactInfo: pin.contact_info,
+                      }))
+                      .reverse()
+                  )
+              )
+              .catch((error) => console.error("Error fetching pins:", error));
+      }, []);
 
     const handleSidebarClick = (pin) => {
         setSelectedPin(pin);
@@ -57,8 +74,6 @@ export function Map() {
             zoom: 16,
         });
     };
-
-    const [userLocation, setUserLocation] = useState(null); // Store user location
 
     useEffect(() => {
         // Get current location
@@ -79,18 +94,6 @@ export function Map() {
         );
     }, []);
 
-  const [pins, setPins] = useState([]); // Local state for pins
-  const [newPin, setNewPin] = useState(null); // Temporarily store coordinates of a new pin
-  const [formData, setFormData] = useState({
-    title: "",
-    about: "",
-    specificLocation: "",
-    availableTime: "",
-    contactInfo: "",
-  }); // Form data for new pin
-  const [selectedPin, setSelectedPin] = useState(null); // Pin currently selected
-  const [isEditing, setIsEditing] = useState(false); // Track if editing mode is active
-
   // Fetch pins from backend on component load
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/pins/", {
@@ -103,10 +106,14 @@ export function Map() {
         setPins(
           data.map((pin) => ({
             ...pin,
+            title: pin.title,
+            about: pin.about,
             specificLocation: pin.specific_location,
-            availableTime: pin.available_time,
+            startTime: pin.start_time,
+            endTime: pin.end_time,
             contactInfo: pin.contact_info,
           }))
+          .reverse()
         )
       )
       .catch((error) => console.error("Error fetching pins:", error));
@@ -115,11 +122,30 @@ export function Map() {
   // Handle right click to add a pin
   const handleRightClick = (event) => {
     const { lngLat } = event;
-    setNewPin({ longitude: lngLat.lng, latitude: lngLat.lat });
+    setNewPin({
+        longitude: lngLat.lng,
+        latitude: lngLat.lat });
+    setFormData({
+      title: "",
+      about: "",
+      specificLocation: "",
+      startTime: "",
+      endTime: "",
+      contactInfo: "",
+    });
+  };
+
+  const validatePhoneNumber = (phone) => {
+      const phoneRegex = /^\d{10}$/; // Matches exactly 10 digits
+      return phoneRegex.test(phone);
   };
 
   // Save new pin to backend
   const handleSavePin = () => {
+    if (!validatePhoneNumber(formData.contactInfo)) {
+        alert("Please enter a valid 10-digit phone number.");
+        return;
+    }
     fetch("http://127.0.0.1:8000/api/pins/", {
       method: "POST",
       headers: {
@@ -129,7 +155,8 @@ export function Map() {
       body: JSON.stringify({
         ...formData,
         specific_location: formData.specificLocation,
-        available_time: formData.availableTime,
+        start_time: formData.startTime,
+        end_time: formData.endTime,
         contact_info: formData.contactInfo,
         longitude: newPin.longitude,
         latitude: newPin.latitude,
@@ -137,21 +164,21 @@ export function Map() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setPins([
-          ...pins,
-          {
-            ...data,
-            specificLocation: data.specific_location,
-            availableTime: data.available_time,
-            contactInfo: data.contact_info,
-          },
-        ]); // Add the new pin to the state
+        const formattedPin = {
+          ...data,
+          specificLocation: data.specific_location,
+          startTime: data.start_time,
+          endTime: data.end_time,
+          contactInfo: data.contact_info,
+        };
+        setPins([formattedPin, ...pins]); // Add the new pin to the state
         setNewPin(null); // Close the popup
         setFormData({
           title: "",
           about: "",
           specificLocation: "",
-          availableTime: "",
+          startTime: "",
+          endTime: "",
           contactInfo: "",
         }); // Reset form data
       })
@@ -174,6 +201,10 @@ export function Map() {
   };
 
   const handleSaveEdit = () => {
+    if (!validatePhoneNumber(formData.contactInfo)) {
+        alert("Please enter a valid 10-digit phone number.");
+        return;
+    }
     fetch(`http://127.0.0.1:8000/api/pins/${selectedPin.id}/`, {
       method: "PUT",
       headers: {
@@ -182,26 +213,39 @@ export function Map() {
       },
       body: JSON.stringify({
         ...selectedPin,
+        title: formData.title,
+        about: formData.about,
         specific_location: formData.specificLocation,
-        available_time: formData.availableTime,
+        startTime: formData.startTime,
+        endTime: formData.endTime,
         contact_info: formData.contactInfo,
       }),
     })
       .then((response) => response.json())
       .then((updatedPin) => {
-        setPins(
-          pins.map((pin) =>
-            pin.id === updatedPin.id
-              ? {
-                  ...updatedPin,
-                  specificLocation: updatedPin.specific_location,
-                  availableTime: updatedPin.available_time,
-                  contactInfo: updatedPin.contact_info,
-                }
-              : pin
-          )
+          const formattedPin = {
+              ...updatedPin,
+              specificLocation: updatedPin.specific_location,
+              startTime: updatedPin.start_time,
+              endTime: updatedPin.end_time,
+              contactInfo: updatedPin.contact_info,
+          };
+
+          setPins(
+              pins.map((pin) =>
+                  pin.id === updatedPin.id ? formattedPin : pin
+              )
         ); // Update the pin in local state
         setIsEditing(false); // Exit editing mode
+        setSelectedPin(null);
+        setFormData({
+          title: "",
+          about: "",
+          specificLocation: "",
+          startTime: "",
+          endTime: "",
+          contactInfo: "",
+        });
       })
       .catch((error) => console.error("Error updating pin:", error));
   };
@@ -220,7 +264,20 @@ export function Map() {
                           <h4>{pin.title}</h4>
                           <p>{pin.about}</p>
                           <p><strong>Location:</strong> {pin.specificLocation}</p>
-                          <p><strong>Time:</strong> {pin.availableTime}</p>
+                          <p>
+                              <strong>Time:</strong>{" "}
+                              {new Date(`1970-01-01T${pin.startTime}`).toLocaleTimeString([], {
+                                  hour: "numeric",
+                                  minute: "2-digit",
+                                  hour12: true,
+                              })}{" "}
+                              -{" "}
+                              {new Date(`1970-01-01T${pin.endTime}`).toLocaleTimeString([], {
+                                  hour: "numeric",
+                                  minute: "2-digit",
+                                  hour12: true,
+                              })}
+                          </p>
                       </li>
                   ))}
               </ul>
@@ -316,22 +373,23 @@ export function Map() {
                                   border: "1px solid #ccc",
                               }}
                           />
+                          <div className="time-picker">
+                              <TimePicker
+                                  onChange={(value) => setFormData({...formData, startTime: value})}
+                                  value={formData.startTime}
+                                  disableClock={true}
+                                  format="h:mm a" // AM/PM format
+                              />
+                              <span>to</span>
+                              <TimePicker
+                                  onChange={(value) => setFormData({...formData, endTime: value})}
+                                  value={formData.endTime}
+                                  disableClock={true}
+                                  format="h:mm a"
+                              />
+                          </div>
                           <textarea
-                              placeholder="Available Time"
-                              value={formData.availableTime || ""}
-                              onChange={(e) =>
-                                  setFormData({...formData, availableTime: e.target.value})
-                              }
-                              style={{
-                                  width: "100%",
-                                  marginBottom: "5px",
-                                  padding: "5px",
-                                  borderRadius: "3px",
-                                  border: "1px solid #ccc",
-                              }}
-                          />
-                          <textarea
-                              placeholder="Contact Information"
+                              placeholder="Contact Information: Please enter 10-digit phone number"
                               value={formData.contactInfo || ""}
                               onChange={(e) =>
                                   setFormData({...formData, contactInfo: e.target.value})
@@ -426,25 +484,23 @@ export function Map() {
                                           border: "1px solid #ccc",
                                       }}
                                   />
+                                  <div className="time-picker">
+                                      <TimePicker
+                                          onChange={(value) => setFormData({...formData, startTime: value})}
+                                          value={formData.startTime}
+                                          disableClock={true}
+                                          format="h:mm a" // AM/PM format
+                                      />
+                                      <span>to</span>
+                                      <TimePicker
+                                          onChange={(value) => setFormData({...formData, endTime: value})}
+                                          value={formData.endTime}
+                                          disableClock={true}
+                                          format="h:mm a"
+                                      />
+                                  </div>
                                   <textarea
-                                      placeholder="Available Time"
-                                      value={formData.availableTime}
-                                      onChange={(e) =>
-                                          setFormData({
-                                              ...formData,
-                                              availableTime: e.target.value,
-                                          })
-                                      }
-                                      style={{
-                                          width: "100%",
-                                          marginBottom: "5px",
-                                          padding: "5px",
-                                          borderRadius: "3px",
-                                          border: "1px solid #ccc",
-                                      }}
-                                  />
-                                  <textarea
-                                      placeholder="Contact Information"
+                                      placeholder="Contact Information: Please enter 10-digit phone number"
                                       value={formData.contactInfo}
                                       onChange={(e) =>
                                           setFormData({...formData, contactInfo: e.target.value})
@@ -485,7 +541,18 @@ export function Map() {
                                       {selectedPin.specificLocation}
                                   </p>
                                   <p>
-                                      <strong>Available Time:</strong> {selectedPin.availableTime}
+                                      <strong>Time:</strong>{" "}
+                                      {new Date(`1970-01-01T${selectedPin.startTime}`).toLocaleTimeString([], {
+                                          hour: "numeric",
+                                          minute: "2-digit",
+                                          hour12: true,
+                                      })}{" "}
+                                      -{" "}
+                                      {new Date(`1970-01-01T${selectedPin.endTime}`).toLocaleTimeString([], {
+                                          hour: "numeric",
+                                          minute: "2-digit",
+                                          hour12: true,
+                                      })}
                                   </p>
                                   <p>
                                       <strong>Contact Information:</strong>{" "}
@@ -502,7 +569,8 @@ export function Map() {
                                                           title: selectedPin.title,
                                                           about: selectedPin.about,
                                                           specificLocation: selectedPin.specificLocation,
-                                                          availableTime: selectedPin.availableTime,
+                                                          startTime: selectedPin.startTime,
+                                                          endTime: selectedPin.endTime,
                                                           contactInfo: selectedPin.contactInfo,
                                                       });
                                                   }}

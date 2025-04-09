@@ -33,3 +33,25 @@ h4 {
     font-size: 18px;
     margin: 0;
 }
+
+.time-picker {
+    width: 100px;
+}
+
+.time-picker .react-time-picker__inputGroup {
+    background-color: #f0f0f0;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.time-picker .react-time-picker__clockButton {
+    color: #333;
+}
+
+.time-picker .react-time-picker__wrapper {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
