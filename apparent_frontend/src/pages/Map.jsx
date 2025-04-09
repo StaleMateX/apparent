@@ -143,9 +143,9 @@ export function Map() {
   // Save new pin to backend
   const handleSavePin = () => {
     if (!formData.title.trim() || !formData.about.trim() || !formData.specificLocation.trim()) {
-      alert("Please fill out all required fields: Title, About, and Specific Location.");
-      return;
-    }
+        alert("Please fill out all required fields: Title, About, and Specific Location.");
+        return;
+      }
     if (!validatePhoneNumber(formData.contactInfo)) {
         alert("Please enter a valid 10-digit phone number.");
         return;
@@ -206,9 +206,9 @@ export function Map() {
 
   const handleSaveEdit = () => {
     if (!formData.title.trim() || !formData.about.trim() || !formData.specificLocation.trim()) {
-      alert("Please fill out all required fields: Title, About, and Specific Location.");
-      return;
-    }
+        alert("Please fill out all required fields: Title, About, and Specific Location.");
+        return;
+      }
     if (!validatePhoneNumber(formData.contactInfo)) {
         alert("Please enter a valid 10-digit phone number.");
         return;
