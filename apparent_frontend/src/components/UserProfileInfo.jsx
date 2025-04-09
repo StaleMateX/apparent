@@ -16,6 +16,7 @@ export function UserProfileInfo({
   profileData,
   setUpdatedProfile,
   editButtonVisibility,
+  sendFriendRequest,
 }) {
   const [show, setShow] = useState(false);
   const [collegeName, setCollegeName] = useState(
@@ -91,12 +92,20 @@ export function UserProfileInfo({
           <Col className="d-flex flex-column">
             <Row>
               <Col className="d-flex justify-content-end">
-                <Button
-                  onClick={handleShow}
-                  className={`edit-button ${editButtonVisibility}`}
-                >
-                  Edit Profile
-                </Button>
+                {editButtonVisibility === "self" ? (
+                  <Button onClick={handleShow} className={`edit-button`}>
+                    Edit Profile
+                  </Button>
+                ) : editButtonVisibility === "friend" ? (
+                  <Button
+                    onClick={() => sendFriendRequest(profileData)}
+                    className={`edit-button`}
+                  >
+                    Add Friend
+                  </Button>
+                ) : (
+                  ""
+                )}
               </Col>
             </Row>
             <Row>

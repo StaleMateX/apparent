@@ -26,10 +26,13 @@ export function UserProfilePage({
 }) {
   const navigate = useNavigate();
 
+  /* TODO: MOVE THIS TO EDIT PROFILE SECTION */
   const sendFriendRequest = (user) => {
     apiClient("application/json")
       .post("/friend-requests/send_request/", { to_user_id: user.id })
-      .then((res) => console.log("Success", res.data))
+      .then((res) => {
+        console.log("Success", res.data);
+      })
       .catch((err) => console.error("Error", err.response?.data || err));
   };
 
@@ -74,6 +77,7 @@ export function UserProfilePage({
           setProfileData={setProfileData}
           setUpdatedProfile={setUpdatedProfile}
           editButtonVisibility={editButtonVisibility}
+          sendFriendRequest={sendFriendRequest}
         />
         <FriendsListOverlay
           friends={friends}
@@ -87,9 +91,6 @@ export function UserProfilePage({
           navigateToProfile={navigateToProfile}
         />
         <div>
-          <button onClick={() => sendFriendRequest(profileData)}>
-            Send Friend Request
-          </button>
           <button
             onClick={() => {
               apiClient("application/json")

@@ -27,14 +27,23 @@ export function ProfilePage({
     const fetchProfileData = async () => {
       try {
         const viewedProfile = localStorage.getItem("viewedProfile");
-        setEditButtonVisibility("visible");
+        setEditButtonVisibility("self");
         if (viewedProfile) {
           setFriendsProfile(viewedProfile);
         }
         let endpoint = "/profile/my_profile/";
         if (friendsProfile) {
           endpoint = `/profile/${friendsProfile}/`;
-          setEditButtonVisibility("invisible");
+          const isFriend = profileData
+            ? profileData.friends.filter(
+                (friend) => profileData.username === friend.username
+              )
+            : "";
+          if (isFriend) {
+            setEditButtonVisibility("stranger");
+          } else {
+            setEditButtonVisibility("friend");
+          }
         }
         const response = await apiClient("application/json").get(endpoint);
         setProfileData(response.data);
