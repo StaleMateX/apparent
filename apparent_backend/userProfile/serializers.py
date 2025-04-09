@@ -22,7 +22,7 @@ class HobbySerializer(serializers.ModelSerializer):
         return [{"hobby_type": choices.value, "hobby_type_display": choices.label} for choices in Hobby.Hobbies]
 
 class ProfileSerializer(serializers.ModelSerializer):
-    id = serializers.IntegerField(read_only=True)
+    id = serializers.IntegerField(source="user.id", read_only=True)
     username = serializers.CharField(source="user.username", read_only=True)
     first_name = serializers.CharField(source="user.first_name", read_only=True)
     last_name = serializers.CharField(source="user.last_name", read_only=True)
@@ -95,11 +95,20 @@ class FriendRequestSerializer(serializers.ModelSerializer):
         from_user = self.context["request"].user
         to_user = validated_data.get('to_user')
 
+        # User can not send a request to themself.
         if to_user == from_user:
             raise serializers.ValidationError("Can't friend yourself.")
 
+        # User can not send request to an existing request.
         if FriendRequest.objects.filter(to_user=to_user, from_user=from_user).exists():
             raise serializers.ValidationError("Friend request already exists.")
+
+        # User can not send request to existing friends.
+        to_user_profile = Profile.objects.get(user=to_user)
+        from_user_profile = Profile.objects.get(user=from_user)
+        friends = from_user_profile.friends.all()
+        if to_user_profile in friends:
+            raise serializers.ValidationError("Friend already exists.")
 
         return FriendRequest.objects.create(to_user=to_user, from_user=from_user)
 

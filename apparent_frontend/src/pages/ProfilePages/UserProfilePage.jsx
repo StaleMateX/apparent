@@ -87,7 +87,9 @@ export function UserProfilePage({
           navigateToProfile={navigateToProfile}
         />
         <div>
-          <button onClick={sendFriendRequest}>Send Friend Request</button>
+          <button onClick={() => sendFriendRequest(profileData)}>
+            Send Friend Request
+          </button>
           <button
             onClick={() => {
               apiClient("application/json")
