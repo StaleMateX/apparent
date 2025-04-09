@@ -23,10 +23,10 @@ export function UserProfilePage({
   editButtonVisibility,
   setSuggestedFriends,
   suggestedFriends,
+  viewRequestsLink,
 }) {
   const navigate = useNavigate();
 
-  /* TODO: MOVE THIS TO EDIT PROFILE SECTION */
   const sendFriendRequest = (user) => {
     apiClient("application/json")
       .post("/friend-requests/send_request/", { to_user_id: user.id })
@@ -84,51 +84,13 @@ export function UserProfilePage({
           setFriendsProfile={setFriendsProfile}
           loggedInUser={profileData.username || ""}
           asButton={true}
+          viewRequestsLink={viewRequestsLink}
         />
         <SuggestedFriendsCarousel
           suggestedFriends={suggestedFriends}
           sendFriendRequest={sendFriendRequest}
           navigateToProfile={navigateToProfile}
         />
-        <div>
-          <button
-            onClick={() => {
-              apiClient("application/json")
-                .get("/friend-requests/")
-                .then((res) => console.log("My Friend Requests:", res.data))
-                .catch((err) =>
-                  console.error(
-                    "Error getting requests:",
-                    err.response?.data || err
-                  )
-                );
-            }}
-          >
-            Get My Friend Requests
-          </button>
-          <button
-            onClick={() => {
-              const requestId = 5; // Replace this with a real FriendRequest ID
-              apiClient("application/json")
-                .put(`/friend-requests/${requestId}/`, {
-                  status: "AC", // AC = accepted
-                  to_user_id: 18,
-                })
-                .then((res) =>
-                  console.log("Friend request accepted!", res.data)
-                )
-                .catch((err) =>
-                  console.error(
-                    "Error accepting request:",
-                    err.response?.data || err
-                  )
-                );
-            }}
-          >
-            Accept Friend Request
-          </button>
-        </div>
-
         <PostSection
           firstName={firstName}
           lastName={lastName}

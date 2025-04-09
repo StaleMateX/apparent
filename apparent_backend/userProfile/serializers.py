@@ -85,10 +85,12 @@ class FriendRequestSerializer(serializers.ModelSerializer):
                                                     source = 'to_user',
                                                     write_only = True)
     status_display = serializers.CharField(source='get_status_display', read_only=True)
+    to_user_picture = serializers.ImageField(source='to_user.profile.profile_image', use_url=True, read_only=True)
+    from_user_picture = serializers.ImageField(source='from_user.profile.profile_image', use_url=True, read_only=True)
 
     class Meta:
         model = FriendRequest
-        fields = ['id', 'to_user_id', 'to_user', 'from_user', 'status', 'status_display', 'created_at']
+        fields = ['id', 'to_user_id', 'to_user', 'from_user', 'to_user_picture', 'from_user_picture', 'status', 'status_display', 'created_at']
         read_only_fields = ['from_user', 'to_user', 'created_at']
 
     def create(self, validated_data):
