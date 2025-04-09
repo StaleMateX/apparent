@@ -34,6 +34,14 @@ class ProfileViewSet(ModelViewSet):
         serializer = self.get_serializer(profile)
         return Response(serializer.data)
 
+    @action(detail=False, methods=['get'], url_path='suggested_friends')
+    def suggested_friends(self, request):
+        friends = self.get_queryset().get(user=request.user).friends.all()
+        profiles = self.get_queryset().exclude(user=request.user).exclude(id__in=friends.values_list('id', flat=True))
+        serializer = self.get_serializer(profiles, many=True)
+        return Response(serializer.data)
+
+
 class HobbyViewSet(ModelViewSet):
     queryset = Hobby.objects.all()
     serializer_class = HobbySerializer

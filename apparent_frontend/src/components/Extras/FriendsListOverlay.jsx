@@ -14,6 +14,7 @@ export function FriendsListOverlay({
   friends,
   setFriendsProfile,
   loggedInUser,
+  asButton,
 }) {
   const [show, setShow] = useState(false);
 
@@ -64,12 +65,15 @@ export function FriendsListOverlay({
 
   return (
     <>
-      <Nav.Link onClick={handleShow}>
-        <FontAwesomeIcon icon={faUsers} /> Friends{" "}
-      </Nav.Link>
-      {/* <Button variant="primary" onClick={handleShow}>
-        Launch
-      </Button> */}
+      {asButton ? (
+        <Button variant="primary" onClick={handleShow}>
+          <FontAwesomeIcon icon={faUsers} /> Friends{" "}
+        </Button>
+      ) : (
+        <Nav.Link as="button" onClick={handleShow}>
+          <FontAwesomeIcon icon={faUsers} /> Friends{" "}
+        </Nav.Link>
+      )}
 
       <Offcanvas
         show={show}

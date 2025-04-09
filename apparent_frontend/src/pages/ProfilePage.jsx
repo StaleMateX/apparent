@@ -16,6 +16,7 @@ export function ProfilePage({
   const [profileData, setProfileData] = useState(null || "");
   const [updatedProfile, setUpdatedProfile] = useState(false);
   const [updatedPosts, setUpdatedPosts] = useState("");
+  const [suggestedFriends, setSuggestedFriends] = useState([]);
   const [posts, setPosts] = useState("");
   const [profilePicture, setProfilePicture] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -100,51 +101,9 @@ export function ProfilePage({
         setUpdatedPosts={setUpdatedPosts}
         updatedPosts={updatedPosts}
         posts={posts}
+        setSuggestedFriends={setSuggestedFriends}
+        suggestedFriends={suggestedFriends}
       />
-      <button
-        onClick={() => {
-          apiClient("application/json")
-            .post("/friend-requests/send_request/", { to_user_id: 18 })
-            .then((res) => console.log("Success", res.data))
-            .catch((err) => console.error("Error", err.response?.data || err));
-        }}
-      >
-        Send Friend Request
-      </button>
-      <button
-        onClick={() => {
-          apiClient("application/json")
-            .get("/friend-requests/")
-            .then((res) => console.log("My Friend Requests:", res.data))
-            .catch((err) =>
-              console.error(
-                "Error getting requests:",
-                err.response?.data || err
-              )
-            );
-        }}
-      >
-        Get My Friend Requests
-      </button>
-      <button
-        onClick={() => {
-          const requestId = 5; // Replace this with a real FriendRequest ID
-          apiClient("application/json")
-            .put(`/friend-requests/${requestId}/`, {
-              status: "AC", // AC = accepted
-              to_user_id: 18,
-            })
-            .then((res) => console.log("Friend request accepted!", res.data))
-            .catch((err) =>
-              console.error(
-                "Error accepting request:",
-                err.response?.data || err
-              )
-            );
-        }}
-      >
-        Accept Friend Request
-      </button>
     </Container>
   );
 }

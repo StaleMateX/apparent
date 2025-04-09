@@ -1,0 +1,8 @@
+.card-image{
+    min-width: 150px;
+    max-width: 180px;
+}
+
+.suggested-card{
+    max-width: 250px;
+}
