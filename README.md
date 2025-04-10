@@ -31,12 +31,12 @@ Depending on what you are making, it can be a good idea to include screenshots o
 - **Hosting**: AWS: S3 + EC2 + RDS
 
 ### Steps
-1. Clone the repository:
+1. Clone the repository:   
    git clone https://github.com/your-username/APParent.git
-2. Navigate to the backend directory:  
+2. Navigate to the backend directory:   
    cd apparent_backend
 3. Create a virtual environment and activate it:
-   python -m venv venv
+   python -m venv venv   
    source venv/bin/activate
 4. Install dependencies:  
    pip install -r requirements.txt
@@ -44,13 +44,13 @@ Depending on what you are making, it can be a good idea to include screenshots o
    python manage.py migrate
 6. Run the backend server:   
    python manage.py runserver
-7. Navigate to the frontend directory:
+7. Navigate to the frontend directory:   
    cd apparent_frontend
-8. Install frontend dependencies:
+8. Install frontend dependencies:   
    npm install
-9. Create a .env file and add your Mapbox token:
+9. Create a .env file and add your Mapbox token:   
    VITE_MAPBOX_ACCESS_TOKEN=your-mapbox-token 
-10. Start the frontend development server:
+10. Start the frontend development server:    
    npm run dev         
 
 ## Usage
