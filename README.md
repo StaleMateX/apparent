@@ -35,7 +35,7 @@ Depending on what you are making, it can be a good idea to include screenshots o
    git clone https://github.com/your-username/APParent.git
 2. Navigate to the backend directory:   
    cd apparent_backend
-3. Create a virtual environment and activate it:
+3. Create a virtual environment and activate it:    
    python -m venv venv   
    source venv/bin/activate
 4. Install dependencies:  
