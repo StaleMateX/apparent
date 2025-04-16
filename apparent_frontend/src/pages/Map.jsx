@@ -41,7 +41,7 @@ export function Map() {
           .then((res) => res.json())
           .then((data) => {
               console.log("User Profile Data:", data);
-              setCurrentUser(data[0]); // Save user data
+              setCurrentUser(data); // Save user data
           })
           .catch((error) => console.error("Error fetching user profile:", error));
 
