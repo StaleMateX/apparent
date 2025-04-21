@@ -12,7 +12,6 @@ export function UserProfileInfo({
   firstName,
   lastName,
   profilePicture,
-  setProfilePicture,
   profileData,
   setUpdatedProfile,
   editButtonVisibility,
@@ -25,6 +24,9 @@ export function UserProfileInfo({
   const [city, setCity] = useState(profileData.city || "");
   const [state, setState] = useState(profileData.state || "Not Shared");
   const [hobbies, setHobbies] = useState(profileData.hobbies_ro || []);
+  const [hobby_options, setHobbyOptions] = useState(
+    profileData.hobby_options || []
+  );
   const [backgroundCheck, setBackgroundCheck] = useState(
     profileData.background_check_display || "No"
   );
@@ -158,21 +160,14 @@ export function UserProfileInfo({
         handleClose={handleClose}
         props={{
           profilePicture,
-          setProfilePicture,
           collegeName,
-          setCollegeName,
           city,
-          setCity,
           state,
-          setState,
           hobbies,
-          setHobbies,
+          hobby_options,
           backgroundCheck,
-          setBackgroundCheck,
           phoneNumber,
-          setPhoneNumber,
           aboutMe,
-          setAboutMe,
           updateProfileData,
         }}
       />

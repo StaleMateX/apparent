@@ -5,20 +5,13 @@ import Multiselect from "react-widgets/Multiselect";
 import "react-widgets/styles.css";
 
 export function EditProfileForm({
-  profilePicture,
-  setProfilePicture,
   city,
-  setCity,
   state,
-  setState,
   collegeName,
-  setCollegeName,
   phoneNumber,
-  setPhoneNumber,
   hobbies,
-  setHobbies,
+  hobby_options,
   aboutMe,
-  setAboutMe,
   handleClose,
   updateProfileData,
 }) {
@@ -39,8 +32,8 @@ export function EditProfileForm({
   const [newAboutMe, setNewAboutMe] = useState(aboutMe);
 
   const hobbyOptions =
-    hobbies.length > 0 && Array.isArray(hobbies[0].hobby_options)
-      ? hobbies[0].hobby_options
+    hobby_options.length > 0 && Array.isArray(hobby_options)
+      ? hobby_options
       : [];
 
   const handleSelectedPath = (event) => {

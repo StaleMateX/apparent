@@ -18,7 +18,9 @@ export function LoginPage({ onLogin }) {
     console.log("Response:", response);
     console.log("Data:", data);
     if (response.ok) {
+      localStorage.clear();
       localStorage.setItem("token", data.access); // Save token for authenticated requests
+      localStorage.setItem("refresh_token", data.refresh);
       localStorage.setItem("username", username);
       onLogin(); // Trigger login state update
       navigate("/Profile"); // Redirect to profile page

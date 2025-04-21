@@ -15,17 +15,8 @@ export function SuggestedFriendsCarousel({
     setIndex(selectedIndex);
   };
   const carouselItems = () => {
-    if (suggestedFriends.length > 0) {
-      return suggestedFriends.map((profile) => (
-        <Carousel.Item className="ml-5 mb-5 mt-2 mr-2" key={profile.id}>
-          <SuggestedFriendCard
-            profile={profile}
-            sendFriendRequest={sendFriendRequest}
-            navigateToProfile={navigateToProfile}
-          />
-        </Carousel.Item>
-      ));
-    } else {
+    const num_suggestions = suggestedFriends.length;
+    if (num_suggestions <= 0) {
       return (
         <Carousel.Item key={0}>
           <Image
@@ -38,6 +29,27 @@ export function SuggestedFriendsCarousel({
           </Carousel.Caption>
         </Carousel.Item>
       );
+    } else {
+      const slides = [];
+      for (let i = 0; i < suggestedFriends.length; i += 3) {
+        const chunk = suggestedFriends.slice(i, i + 3);
+        slides.push(
+          <Carousel.Item className="ml-5 mb-5 mt-2 mr-2" key={i}>
+            <div className="d-flex justify-content-center">
+              {chunk.map((friend) => (
+                <div key={friend.id} className="mx-2">
+                  <SuggestedFriendCard
+                    profile={friend}
+                    sendFriendRequest={sendFriendRequest}
+                    navigateToProfile={navigateToProfile}
+                  />
+                </div>
+              ))}
+            </div>
+          </Carousel.Item>
+        );
+      }
+      return slides;
     }
   };
 
