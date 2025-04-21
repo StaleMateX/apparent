@@ -41,7 +41,9 @@ export function Map() {
           .then((res) => res.json())
           .then((data) => {
               console.log("User Profile Data:", data);
-              setCurrentUser(data[0]); // Save user data
+              const user = data.find((user) => user.username === localStorage.getItem("username")); // Match stored username
+              setCurrentUser(user); // Set current user
+              //setCurrentUser(data); // Save user data
           })
           .catch((error) => console.error("Error fetching user profile:", error));
 
