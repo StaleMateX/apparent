@@ -26,36 +26,41 @@ export function ProfilePage({
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      try {
-        const viewedProfile = localStorage.getItem("viewedProfile");
-        setEditButtonVisibility("self");
-        if (viewedProfile) {
-          setFriendsProfile(viewedProfile);
-        }
-        let endpoint = "/profile/my_profile/";
-        if (friendsProfile) {
-          endpoint = `/profile/${friendsProfile}/`;
-          const isFriend = profileData
-            ? profileData.friends.filter(
-                (friend) => profileData.username === friend.username
-              )
-            : "";
-          if (isFriend) {
-            setEditButtonVisibility("stranger");
-          } else {
-            setEditButtonVisibility("friend");
+      if (localStorage.getItem("token") === null) {
+        window.location.href = "/login";
+      } else {
+        try {
+          const viewedProfile = localStorage.getItem("viewedProfile");
+          setEditButtonVisibility("self");
+          if (viewedProfile) {
+            setFriendsProfile(viewedProfile);
           }
-          setViewRequestsLink(false);
+          let endpoint = "/profile/my_profile/";
+          if (friendsProfile) {
+            endpoint = `/profile/${friendsProfile}/`;
+            const isFriend = profileData
+              ? profileData.friends.filter(
+                  (friend) => profileData.username === friend.username
+                )
+              : "";
+            if (isFriend) {
+              setEditButtonVisibility("stranger");
+            } else {
+              setEditButtonVisibility("friend");
+            }
+            setViewRequestsLink(false);
+          }
+          const response = await apiClient("application/json").get(endpoint);
+          setProfileData(response.data);
+          setUpdatedPosts(true);
+        } catch (err) {
+          window.location.href = "/login";
+          alert("Something went wrong, please log back in.");
+          console.error("Error fetching profile data:", err);
+        } finally {
+          setIsLoading(false);
+          setUpdatedProfile(false);
         }
-        const response = await apiClient("application/json").get(endpoint);
-        setProfileData(response.data);
-        setUpdatedPosts(true);
-      } catch (err) {
-        setError("Error fetching profile data");
-        console.error("Error fetching profile data:", err);
-      } finally {
-        setIsLoading(false);
-        setUpdatedProfile(false);
       }
     };
 
@@ -75,7 +80,8 @@ export function ProfilePage({
         setPosts(response.data);
         console.log(response.data);
       } catch (err) {
-        setError("Error fetching profile feed");
+        window.location.href = "/login";
+        alert("Something went wrong, please log back in.");
         console.error("Error fetching profile feed:", err);
       } finally {
         setIsLoading(false);
