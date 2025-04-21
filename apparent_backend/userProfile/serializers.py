@@ -11,15 +11,11 @@ class UserSerializer(serializers.ModelSerializer):
 
 class HobbySerializer(serializers.ModelSerializer):
     hobby_type_display = serializers.CharField(source="get_hobby_type_display", read_only=True)
-    # This will call the get_hobby_options by convention of naming the function with get_var_name
-    hobby_options = serializers.SerializerMethodField()
 
     class Meta:
         model = Hobby
-        fields = ["hobby_type", "hobby_type_display", "hobby_options"]
+        fields = ["hobby_type", "hobby_type_display"]
 
-    def get_hobby_options(self, obj):
-        return [{"hobby_type": choices.value, "hobby_type_display": choices.label} for choices in Hobby.Hobbies]
 
 class ProfileSerializer(serializers.ModelSerializer):
     id = serializers.IntegerField(source="user.id", read_only=True)
@@ -28,6 +24,8 @@ class ProfileSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(source="user.last_name", read_only=True)
     profile_image = serializers.ImageField(required=False)
     hobbies_ro = HobbySerializer(many=True, source="hobbies", read_only=True)
+    # This will call the get_hobby_options by convention of naming the function with get_var_name
+    hobby_options = serializers.SerializerMethodField()
 
     hobbies = serializers.ListField(child = serializers.ChoiceField(choices=Hobby.Hobbies.choices),
                                     write_only=True,
@@ -42,10 +40,12 @@ class ProfileSerializer(serializers.ModelSerializer):
         "id",
         "username", "first_name", "last_name", "profile_image",
         "background_check_display", "phone_number", "city", "state",
-        "institution", "about_me", "hobbies", "hobbies_ro",
+        "institution", "about_me", "hobbies", "hobby_options", "hobbies_ro",
         "class_standing", "class_standing_display", "friends"
         ]
 
+    def get_hobby_options(self, obj):
+        return [{"hobby_type": choices.value, "hobby_type_display": choices.label} for choices in Hobby.Hobbies]
 
     # Overriding the update function for the hobbies field specifically.
     def update(self, instance, validated_data):
@@ -73,7 +73,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             return []
 
         user = request.user
-        queryset = queryset = FriendRequest.objects.for_user(user)
+        queryset = FriendRequest.objects.for_user(user)
         return FriendRequestSerializer(queryset, many=True).data
 
 

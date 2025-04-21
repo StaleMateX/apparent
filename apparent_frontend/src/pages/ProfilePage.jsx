@@ -107,7 +107,6 @@ export function ProfilePage({
         firstName={firstName}
         lastName={lastName}
         profilePicture={profilePicture}
-        setProfilePicture={setProfilePicture}
         profileData={profileData}
         setUpdatedProfile={setUpdatedProfile}
         friends={friends}

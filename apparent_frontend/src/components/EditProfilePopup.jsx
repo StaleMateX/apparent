@@ -6,8 +6,6 @@ export function EditProfilePopup({
   popupTitle,
   show,
   handleClose,
-  path,
-  editPicture,
   props,
 }) {
   return (
