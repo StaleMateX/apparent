@@ -1,10 +1,24 @@
 # APParent
 
+APParent is a full-stack web application designed to support student parents through community interaction, resource sharing, and real-time discussion features.
+
+This project was developed as a senior capstone project at the University of Utah.
+
+## Contributors
+
+This was a collaborative group project developed by:
+
+- Brandi Keylor
+- Jacob Xu
+
 ## Name
 APParent: Helping Student Parents Through Community and Resources
 
 ## Description
-APParent is a web-based application designed to support student parents in navigating the challenges of college life. Many student parents face difficulties balancing education and family responsibilities, leading to high dropout rates. APParent aims to address this issue by creating a supportive platform where users can share experiences, donate items, find resources, and build connections. 
+APParent is a full-stack web application designed to support student parents through community interaction, resource sharing, and location-based networking tools.
+
+The platform allows users to create forum discussions, share parenting advice, donate items, connect with other student parents, and organize meetups through interactive map features.
+The project was developed as a senior capstone project at the University of Utah with the goal of helping student parents balance academic and family responsibilities.
 
 ### Key Features:
 - **Forum**: A space to share stories, offer advice, and build community. Users can post about topics like childcare, study tips, or item donations (clothes, toys, etc.).
@@ -16,11 +30,36 @@ APParent is a web-based application designed to support student parents in navig
 - Combines community engagement with location-based features for real-time interactions.
 - Encourages resource-sharing and collaboration among users.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
-
 ## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+Project Demo Video
+
+A full demonstration of APParent, including the forum system, interactive map features, user profiles, and deployment overview:
+
+https://www.youtube.com/watch?v=H9t5cUsyxRc
+
+The demo also highlights individual project contributions from both team members throughout development.
+
+## Tech Stack
+
+### Frontend
+- React
+- Vite
+- Bootstrap
+- React Router
+- React Modal
+
+### Backend
+- Django
+- Django REST Framework
+- JWT Authentication
+
+### Database
+- PostgreSQL
+- SQLite (development)
+
+### Cloud & Deployment
+- AWS EC2
+- AWS S3
 
 ## Installation
 
@@ -32,25 +71,36 @@ Depending on what you are making, it can be a good idea to include screenshots o
 
 ### Steps
 1. Clone the repository:   
-   git clone https://github.com/your-username/APParent.git
+   git clone https://github.com/StaleMateX/apparent.git
 2. Navigate to the backend directory:   
    cd apparent_backend
 3. Create a virtual environment and activate it:    
    python -m venv venv   
+   Windows:
+
+   venv\Scripts\activate
+
+   macOS/Linux:
+
    source venv/bin/activate
 4. Install dependencies:  
    pip install -r requirements.txt
-5. Apply migrations:  
+5. Create a `.env` file inside `apparent_backend` and add:
+
+   SECRET_KEY=your-django-secret-key
+
+   DEBUG=True
+6. Apply migrations:  
    python manage.py migrate
-6. Run the backend server:   
+7. Run the backend server:   
    python manage.py runserver
-7. Navigate to the frontend directory:   
+8. Navigate to the frontend directory:   
    cd apparent_frontend
-8. Install frontend dependencies:   
+9. Install frontend dependencies:   
    npm install
-9. Create a .env file and add your Mapbox token:   
+10. Create a .env file and add your Mapbox token:   
    VITE_MAPBOX_ACCESS_TOKEN=your-mapbox-token 
-10. Start the frontend development server:    
+11. Start the frontend development server:    
    npm run dev         
 
 ## Usage
@@ -60,7 +110,9 @@ Depending on what you are making, it can be a good idea to include screenshots o
 4. Participate in the Forum to share advice and insights.
 
 ## Support
-For issues, contact our support team u1448572@umail.utah.edu
+For questions or issues, please open a GitHub issue or contact:
+
+u1448572@umail.utah.edu
 
 ## Roadmap
 - Implement advanced search and filtering for forum and map pins.
@@ -68,11 +120,22 @@ For issues, contact our support team u1448572@umail.utah.edu
 - Enhance user profile customization.
 
 ## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
+This project was developed collaboratively by Jacob Xu and Brandi Keylor.
 
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
+### Brandi Keylor
+- Set up the initial frontend structure and Bootstrap styling
+- Implemented profile and comment backend functionality
+- Improved responsive layouts across different screen sizes
+- Contributed additional frontend features and UI enhancements
+
+### Jacob Xu
+- Developed the forum system with modal-based post and comment interactions
+- Implemented JWT authentication handling
+- Configured AWS EC2 deployment and backend setup
+- Built responsive forum UI improvements and dynamic post suggestions
+- Integrated React frontend with Django REST API
+- Added comment/post delete confirmation modals and user-specific styling
 
 ## Authors and acknowledgment
 Developed by the APParent team. Special thanks to student parents who provided feedback during development.
@@ -80,5 +143,3 @@ Developed by the APParent team. Special thanks to student parents who provided f
 ## License
 This project is licensed under the MIT License.
 
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
