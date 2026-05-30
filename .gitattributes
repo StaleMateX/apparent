@@ -1,0 +1,4 @@
+# ignore bootstrap and vendor css
+frontend/node_modules/* linguist-vendored=true
+frontend/src/assets/* linguist-vendored=true
+frontend/dist/* linguist-vendored=true
