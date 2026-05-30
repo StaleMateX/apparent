@@ -1,4 +1,12 @@
-# ignore bootstrap and vendor css
+# ignore these folders for language stats
 frontend/node_modules/* linguist-vendored=true
 frontend/src/assets/* linguist-vendored=true
 frontend/dist/* linguist-vendored=true
+
+# ignore all CSS
+*.css linguist-vendored=true
+
+# set main languages
+*.py linguist-language=Python
+*.jsx linguist-language=JavaScript
+*.js linguist-language=JavaScript
