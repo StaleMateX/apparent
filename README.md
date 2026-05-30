@@ -35,7 +35,7 @@ Project Demo Video
 
 A full demonstration of APParent, including the forum system, interactive map features, user profiles, and deployment overview:
 
-https://www.youtube.com/watch?v=H9t5cUsyxRc
+[![APParent Demo](https://img.youtube.com/vi/H9t5cUsyxRc/maxresdefault.jpg)](https://www.youtube.com/watch?v=H9t5cUsyxRc)
 
 The demo also highlights individual project contributions from both team members throughout development.
 
